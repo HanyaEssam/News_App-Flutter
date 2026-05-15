@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/bottomnav.dart';
+import '../../../core/widgets/bottomnav.dart';
 import '../../search/search_screen.dart';
 import '../../profile/profile_screen.dart';
 import '../../save/save_screen.dart';
@@ -60,6 +60,7 @@ class HomeTabContent extends StatelessWidget {
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.bold,
+              fontFamily: 'Times New Roman',
             ),
           ),
         ),
