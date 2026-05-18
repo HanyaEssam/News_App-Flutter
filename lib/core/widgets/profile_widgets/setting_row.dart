@@ -15,15 +15,18 @@ class SettingsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
-          Icon(leadingIcon, color: AppColors.mutedText, size: 24),
+          Icon(leadingIcon,
+            color: theme.textTheme.bodyMedium?.color,
+          ),
           const SizedBox(width: 16),
           // Title (titleMedium)
           Expanded(

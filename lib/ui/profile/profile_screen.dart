@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Wrap content height snuggly
+              mainAxisSize: MainAxisSize.min,
               children: [
                 // Title Header
                 Text(
@@ -91,117 +91,113 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: AppBackground(
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
 
-                // 1. Profile Header Widget
-                const ProfileHeader(
-                  userName: 'Farida Ahmed',
-                  avatarPath: 'assets/images/avatar.png', // Ensure this image exists in assets!
-                ),
-                const SizedBox(height: 40),
+                  // 1. Profile Header Widget
+                  const ProfileHeader(
+                    userName: 'Farida Ahmed',
+                    avatarPath: 'assets/images/avatar.png',
+                  ),
+                  const SizedBox(height: 40),
 
-                // 2. Metrics Block Rows
-                Row(
-                  children: const [
-                    MetricCard(
-                      title: 'Articles Read',
-                      value: '1,248',
+                  // 2. Metrics Block Rows
+                  Row(
+                    children: const [
+                      MetricCard(
+                        title: 'Articles Read',
+                        value: '1,248',
+                      ),
+                      SizedBox(width: 16),
+                      MetricCard(
+                        title: 'Minutes Saved',
+                        value: '452',
+                        unit: 'm',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+
+                  // 3. APPEARANCE Category Label (labelMedium)
+                  Text(
+                    'APPEARANCE',
+                    style: Theme.of(context).textTheme.labelMedium
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Dark Mode row item
+                  SettingsRow(
+                    leadingIcon: isDarkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+                    title: isDarkMode ? 'Dark Mode' : 'Light Mode',
+                    trailing: Switch(
+                      value: isDarkMode,
+                      activeColor: AppColors.primary,
+                      activeTrackColor: AppColors.inputFill,
+                      inactiveThumbColor: AppColors.mutedText,
+                      onChanged: (value) {
+                        setState(() {
+                          isDarkMode = value;
+                        });
+                      },
                     ),
-                    SizedBox(width: 16),
-                    MetricCard(
-                      title: 'Minutes Saved',
-                      value: '452',
-                      unit: 'm',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-
-                // 3. APPEARANCE Category Label (labelMedium)
-                Text(
-                  'APPEARANCE',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AppColors.mutedText,
                   ),
-                ),
-                const SizedBox(height: 12),
+                  const SizedBox(height: 32),
 
-                // Dark Mode row item
-                SettingsRow(
-                  leadingIcon: Icons.dark_mode_outlined,
-                  title: 'Dark Mode',
-                  trailing: Switch(
-                    value: isDarkMode,
-                    activeColor: AppColors.primary,
-                    activeTrackColor: AppColors.inputFill,
-                    inactiveThumbColor: AppColors.mutedText,
-                    onChanged: (value) {
-                      setState(() {
-                        isDarkMode = value;
-                      });
-                    },
+                  // 4. LANGUAGE Category Label (labelMedium)
+                  Text(
+                    'LANGUAGE',
+                    style: Theme.of(context).textTheme.labelMedium
                   ),
-                ),
-                const SizedBox(height: 32),
+                  const SizedBox(height: 12),
 
-                // 4. LANGUAGE Category Label (labelMedium)
-                Text(
-                  'LANGUAGE',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AppColors.mutedText,
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Language selection item row updated
-                SettingsRow(
-                  leadingIcon: Icons.language,
-                  title: 'Language',
-                  trailing: TextButton(
-                    onPressed: () {
-                      // Call our newly added bottom sheet function!
-                      _showLanguagePicker(context);
-                    },
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    child: Text(
-                      selectedLanguage, // <-- DYNAMICALLY SHOW SELECTED LANG
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.primary,
+                  // Language selection item row updated
+                  SettingsRow(
+                    leadingIcon: Icons.language,
+                    title: 'Language',
+                    trailing: TextButton(
+                      onPressed: () {
+                        _showLanguagePicker(context);
+                      },
+                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                      child: Text(
+                        selectedLanguage,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 48),
+                  const SizedBox(height: 48),
 
-                // 5. LOGOUT SESSION Button Element (labelMedium text style matched)
-                OutlinedButton(
-                  onPressed: () {
-                    // Action handler for sessions exit
-                  },
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 56),
-                    side: const BorderSide(color: AppColors.error, width: 1.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                  // 5. LOGOUT SESSION Button Element
+                  OutlinedButton(
+                    onPressed: () {
+                      // Action handler for sessions exit
+                    },
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                      side: const BorderSide(color: AppColors.error, width: 1.5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: Text(
+                      'LOGOUT SESSION',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: AppColors.error,
+                        letterSpacing: 2,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    'LOGOUT SESSION',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: AppColors.error,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-              ],
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
-          ),
+
         ),
       ),
     );

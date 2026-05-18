@@ -3,6 +3,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/models/article_model.dart';
 import 'package:news/ui/article_details/article_details_screen.dart';
 import '../../../core/utils/saved_articles_manager.dart';
+import '../bookmark/bookmark_button.dart';
 
 class ForYouCard extends StatelessWidget {
   final String label;
@@ -26,33 +27,26 @@ class ForYouCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Package the article data for the global manager
-    final Map<String, String> articleData = {
-      'category': label,
-      'title': title,
-      'source': source,
-      'readTime': readTime,
-      'imageUrl': imageUrl,
-    };
+    // 1. Create the unified ArticleModel instance here so everything can use it
+    final articleModel = ArticleModel(
+      title: title,
+      content: '$description\n\nHere is the rest of the full article content explaining the details in depth...',
+      category: label.replaceAll('Based on your interest in ', '').replaceAll('Discovery of the week', 'Discovery'),
+      categoryColor: AppColors.blue, // Or use a dynamic color map if needed
+      source: source,
+      date: 'Oct 24, 2023', // Dummy date
+      time: time,
+      imageUrl: imageUrl,
+      readtime: readTime,
+    );
 
     return InkWell(
       onTap: () {
-        // Kept your navigation logic!
+        // 2. Simply pass the created articleModel here
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ArticleDetailsScreen(
-              article: ArticleModel(
-                title: title,
-                content: '$description\n\nHere is the rest of the full article content explaining the details in depth...',
-                category: label.replaceAll('Based on your interest in ', '').replaceAll('Discovery of the week', 'Discovery'),
-                categoryColor: AppColors.blue,
-                source: source,
-                date: 'Oct 24, 2023', // Dummy date
-                time: time,
-                imageUrl: imageUrl, // Now using the dynamic image URL
-              ),
-            ),
+            builder: (context) => ArticleDetailsScreen(article: articleModel),
           ),
         );
       },
@@ -84,34 +78,11 @@ class ForYouCard extends StatelessWidget {
                   ],
                 ),
 
-                // Listening to Farida's global manager
-                ValueListenableBuilder<List<Map<String, String>>>(
-                    valueListenable: SavedArticlesManager.savedArticles,
-                    builder: (context, savedList, child) {
-                      // Check if THIS article's title exists in the global saved list
-                      bool isCurrentlySaved = savedList.any((a) => a['title'] == title);
-
-                      return IconButton(
-                        icon: Icon(
-                          isCurrentlySaved ? Icons.bookmark : Icons.bookmark_border,
-                        ),
-                        color: isCurrentlySaved ? AppColors.primary : AppColors.mutedText,
-                        onPressed: () {
-                          // Tell the manager to add or remove this article
-                          SavedArticlesManager.toggleSave(articleData);
-
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(isCurrentlySaved ? 'Removed from Saved' : 'Article Saved!'),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                ),
-              ],
+                // 3. Update the listenable type to expect ArticleModel elements
+                BookmarkButton(
+                  article: articleModel,
+                  unselectedColor: AppColors.mutedText, // Uses muted/grey color inside cards
+                ),              ],
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +112,7 @@ class ForYouCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     image: DecorationImage(
-                      image: AssetImage(imageUrl), // Using the dynamic imageUrl variable
+                      image: AssetImage(imageUrl),
                       fit: BoxFit.cover,
                     ),
                   ),

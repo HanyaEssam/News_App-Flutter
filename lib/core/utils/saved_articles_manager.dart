@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+import '../models/article_model.dart'; // Make sure this path matches your project structure
 
 abstract class SavedArticlesManager {
-  // This is our global list that any screen can listen to!
-  static final ValueNotifier<List<Map<String, String>>> savedArticles = ValueNotifier([]);
+  // 1. Change the notifier type to hold ArticleModel objects
+  static final ValueNotifier<List<ArticleModel>> savedArticles = ValueNotifier([]);
 
-  // Function to add or remove an article
-  static void toggleSave(Map<String, String> article) {
-    // Make a copy of the current list
-    final currentList = List<Map<String, String>>.from(savedArticles.value);
+  // 2. Accept an ArticleModel object directly
+  static void toggleSave(ArticleModel article) {
+    final currentList = List<ArticleModel>.from(savedArticles.value);
 
-    // Check if the article is already in the list (matching by title)
-    final existingIndex = currentList.indexWhere((a) => a['title'] == article['title']);
+    // Check if already in the list by matching titles
+    final existingIndex = currentList.indexWhere((a) => a.title == article.title);
 
     if (existingIndex >= 0) {
-      currentList.removeAt(existingIndex); // Remove it if it's already saved
+      currentList.removeAt(existingIndex);
     } else {
-      currentList.add(article); // Add it if it's new
+      currentList.add(article);
     }
 
-    // Update the global list, which automatically triggers a screen refresh!
     savedArticles.value = currentList;
+  }
+
+  // Helper method to check if a specific article is saved
+  static bool isSaved(ArticleModel article) {
+    return savedArticles.value.any((a) => a.title == article.title);
   }
 }

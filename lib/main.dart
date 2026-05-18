@@ -9,9 +9,13 @@ import 'package:news/ui/save/save_screen.dart';
 import 'package:news/ui/profile/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-void main() async {
+import 'firebase_options.dart';
+
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

@@ -3,6 +3,8 @@ import '../../../../core/theme/app_colors.dart';
 
 import '../../models/article_model.dart';
 import '../../../ui/article_details/article_details_screen.dart';
+import '../../utils/saved_articles_manager.dart';
+import '../bookmark/bookmark_button.dart';
 
 class FeedArticleCard extends StatefulWidget {
   final String category;
@@ -36,6 +38,18 @@ class _FeedArticleCardState extends State<FeedArticleCard> {
 
   @override
   Widget build(BuildContext context) {
+    final articleModel = ArticleModel(
+      title: widget.title,
+      // If there is no description, we provide a default text
+      content: '${widget.description ?? "Full article text goes here..."}\n\nThis is the detailed view of the article retrieved directly from the ${widget.category} category feed.',
+      category: widget.category,
+      categoryColor: widget.categoryColor,
+      source: widget.source,
+      date: 'Oct 24, 2023', // Dummy date since the feed card doesn't pass one
+      time: widget.timeAgo ?? 'Just now',
+      imageUrl: widget.imageUrl,
+      readtime: widget.readTime,
+    );
     return Padding(
       // External padding to separate the cards from each other
       padding: const EdgeInsets.only(bottom: 24.0),
@@ -49,17 +63,7 @@ class _FeedArticleCardState extends State<FeedArticleCard> {
             context,
             MaterialPageRoute(
               builder: (context) => ArticleDetailsScreen(
-                article: ArticleModel(
-                  title: widget.title,
-                  // If there is no description, we provide a default text
-                  content: '${widget.description ?? "Full article text goes here..."}\n\nThis is the detailed view of the article retrieved directly from the ${widget.category} category feed.',
-                  category: widget.category,
-                  categoryColor: widget.categoryColor,
-                  source: widget.source,
-                  date: 'Oct 24, 2023', // Dummy date since the feed card doesn't pass one
-                  time: widget.timeAgo ?? 'Just now',
-                  imageUrl: widget.imageUrl,
-                ),
+                article: articleModel,
               ),
             ),
           );
@@ -156,26 +160,11 @@ class _FeedArticleCardState extends State<FeedArticleCard> {
                         ),
 
                         // Local state toggle bookmark button
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              isSaved = !isSaved;
-                            });
-                            ScaffoldMessenger.of(context).clearSnackBars();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(isSaved ? 'Article Saved!' : 'Removed from Saved'),
-                                duration: const Duration(seconds: 1),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            isSaved ? Icons.bookmark : Icons.bookmark_border,
-                            color: isSaved ? AppColors.primary : AppColors.mutedText,
-                            size: 24,
-                          ),
-                        ),
-                      ],
+                        // 3. Wrap bookmark button with the global manager listener
+                        BookmarkButton(
+                          article: articleModel,
+                          unselectedColor: AppColors.mutedText, // Uses muted/grey color inside cards
+                        ),                      ],
                     ),
                   ],
                 ),

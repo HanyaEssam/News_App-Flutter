@@ -1,36 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/saved_articles_manager.dart'; // 1. Import the global manager
+import '../../../core/models/article_model.dart'; // Import your model
+import '../../../core/utils/saved_articles_manager.dart';
+import '../bookmark/bookmark_button.dart';
 
 class SavedArticleCard extends StatelessWidget {
-  final String category;
-  final String title;
-  final String source;
-  final String readTime;
-  final String imageUrl;
-  final Color categoryColor;
+  // Pass the entire model instead of individual strings
+  final ArticleModel article;
 
   const SavedArticleCard({
     super.key,
-    required this.category,
-    required this.title,
-    required this.source,
-    required this.readTime,
-    required this.imageUrl,
-    required this.categoryColor,
+    required this.article,
   });
 
   @override
   Widget build(BuildContext context) {
-    // 2. Re-package this specific card's data into a map so the manager can find it
-    final Map<String, String> articleData = {
-      'category': category,
-      'title': title,
-      'source': source,
-      'readTime': readTime,
-      'imageUrl': imageUrl,
-    };
-
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
@@ -46,7 +30,8 @@ class SavedArticleCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
               image: DecorationImage(
-                image: AssetImage(imageUrl),
+                // Use the image asset or network from your model
+                image: AssetImage(article.imageUrl),
                 fit: BoxFit.cover,
               ),
             ),
@@ -61,59 +46,34 @@ class SavedArticleCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Category Text (titleSmall)
+                    // Category Text
                     Text(
-                      category.toUpperCase(),
+                      article.category.toUpperCase(),
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: categoryColor,
+                        color: article.categoryColor, // Handled automatically by model
                       ),
                     ),
 
-                    // 3. Wrap the icon in the global manager listener
-                    ValueListenableBuilder<List<Map<String, String>>>(
-                      valueListenable: SavedArticlesManager.savedArticles,
-                      builder: (context, savedList, child) {
-                        // Check if this article is still present in the global manager list
-                        bool isCurrentlySaved = savedList.any((a) => a['title'] == title);
-
-                        return IconButton(
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          icon: Icon(
-                            isCurrentlySaved ? Icons.bookmark : Icons.bookmark_border,
-                          ),
-                          color: isCurrentlySaved ? AppColors.primary : AppColors.mutedText,
-                          onPressed: () {
-                            // This deletes it from the shared memory bank!
-                            SavedArticlesManager.toggleSave(articleData);
-
-                            ScaffoldMessenger.of(context).clearSnackBars();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Article Removed from Saved'),
-                                duration: Duration(seconds: 1),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
+                    // ValueListenableBuilder listening to our unified ArticleModel list
+                    BookmarkButton(
+                      article: article,
+                      unselectedColor: AppColors.mutedText, // Uses muted/grey color inside cards
+                    ),                  ],
                 ),
                 const SizedBox(height: 12),
 
-                // Article Title (headlineSmall)
+                // Article Title
                 Text(
-                  title,
+                  article.title,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 16),
 
-                // Footer (bodySmall)
+                // Footer Info
                 Row(
                   children: [
                     Text(
-                      source,
+                      article.source,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const Padding(
@@ -121,7 +81,8 @@ class SavedArticleCard extends StatelessWidget {
                       child: Text('•', style: TextStyle(color: AppColors.border)),
                     ),
                     Text(
-                      readTime,
+                      // Assuming readTime or time exists in your model mapping
+                      article.readtime,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],

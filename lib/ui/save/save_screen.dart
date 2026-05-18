@@ -3,11 +3,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
 import '../../../core/widgets/saved_widgets/empty_saved_state.dart';
 import '../../../core/widgets/saved_widgets/save_article_card.dart';
-
-// 1. IMPORT THE MANAGER!
+import '../../../core/models/article_model.dart'; // 1. Make sure to import ArticleModel
 import '../../../core/utils/saved_articles_manager.dart';
 
-// 2. Changed to StatelessWidget since ValueListenableBuilder manages the state now
 class SaveScreen extends StatelessWidget {
   static const String routeName = '/save';
   const SaveScreen({super.key});
@@ -35,22 +33,21 @@ class SaveScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
-                // 3. WRAP THE REST OF THE UI IN THE LISTENER
-                ValueListenableBuilder<List<Map<String, String>>>(
+                // 2. Update the listener type signature to look for ArticleModel elements
+                ValueListenableBuilder<List<ArticleModel>>(
                   valueListenable: SavedArticlesManager.savedArticles,
                   builder: (context, savedList, child) {
 
-                    // We dynamically check if the global list is empty
                     bool hasSavedArticles = savedList.isNotEmpty;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Subtitle dynamically showing the exact count
+                        // Subtitle showing the dynamic count
                         Text(
                           hasSavedArticles
-                              ? '${savedList.length} ARCHIVED ARTICLES'
-                              : '0 ARCHIVED ARTICLES',
+                              ? '${savedList.length} SAVED ARTICLES'
+                              : '0 SAVED ARTICLES',
                           style: Theme.of(context).textTheme.labelMedium?.copyWith(
                             color: AppColors.mutedText,
                           ),
@@ -67,16 +64,12 @@ class SaveScreen extends StatelessWidget {
                             itemCount: savedList.length,
                             itemBuilder: (context, index) {
 
-                              // Pull the specific article from the global savedList
+                              // 3. This is now a clean ArticleModel instance!
                               final article = savedList[index];
 
+                              // 4. Simply pass the entire object directly into the card
                               return SavedArticleCard(
-                                category: article['category']!,
-                                title: article['title']!,
-                                source: article['source']!,
-                                readTime: article['readTime']!,
-                                imageUrl: article['imageUrl']!,
-                                categoryColor: AppColors.blue, // Kept your custom color!
+                                article: article,
                               );
                             },
                           ),

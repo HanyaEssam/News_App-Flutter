@@ -27,6 +27,7 @@ class TrendingCard extends StatelessWidget {
                 date: 'Oct 24, 2023', // Dummy date
                 time: '12m ago',
                 imageUrl: 'assets/images/trending_img.png',
+                readtime: '6 min read',
               ),
             ),
           ),
