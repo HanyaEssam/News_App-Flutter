@@ -7,8 +7,11 @@ import 'package:news/ui/home/screens/home_screen.dart';
 import 'package:news/ui/search/search_screen.dart';
 import 'package:news/ui/save/save_screen.dart';
 import 'package:news/ui/profile/profile_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
