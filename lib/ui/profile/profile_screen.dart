@@ -1,158 +1,204 @@
 import 'package:flutter/material.dart';
-import '../../core/widgets/background_color/app_background.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/background_color/app_background.dart';
+import '../../core/widgets/profile_widgets/metric_card.dart';
+import '../../core/widgets/profile_widgets/profile_header.dart';
+import '../../core/widgets/profile_widgets/setting_row.dart';
 
-class ProfileScreen extends StatelessWidget {
+
+class ProfileScreen extends StatefulWidget {
   static const String routeName = '/profile';
-
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
 
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool isDarkMode = true; // State for Dark mode switch widget
+  String selectedLanguage = 'English (UK)';
+
+  void _showLanguagePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.cardDark,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // Wrap content height snuggly
+              children: [
+                // Title Header
+                Text(
+                  'CHOOSE LANGUAGE',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: AppColors.mutedText,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // English Option Row
+                ListTile(
+                  title: Text(
+                    'English (UK)',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  trailing: selectedLanguage == 'English (UK)'
+                      ? const Icon(Icons.check_circle, color: AppColors.primary)
+                      : null,
+                  onTap: () {
+                    setState(() {
+                      selectedLanguage = 'English (UK)';
+                    });
+                    Navigator.pop(context); // Close bottom sheet
+                  },
+                ),
+
+                // Arabic Option Row
+                ListTile(
+                  title: Text(
+                    'العربية (Arabic)',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  trailing: selectedLanguage == 'العربية'
+                      ? const Icon(Icons.check_circle, color: AppColors.primary)
+                      : null,
+                  onTap: () {
+                    setState(() {
+                      selectedLanguage = 'العربية';
+                    });
+                    Navigator.pop(context); // Close bottom sheet
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('INSIGHTLY'),
+      ),
       body: AppBackground(
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Text(
-                    'INSIGHTLY',
-                    style: textTheme.headlineLarge,
-                  ),
+                const SizedBox(height: 20),
+
+                // 1. Profile Header Widget
+                const ProfileHeader(
+                  userName: 'Farida Ahmed',
+                  avatarPath: 'assets/images/avatar.png', // Ensure this image exists in assets!
                 ),
+                const SizedBox(height: 40),
 
-                const SizedBox(height: 30),
+                // 2. Metrics Block Rows
+                Row(
+                  children: const [
+                    MetricCard(
+                      title: 'Articles Read',
+                      value: '1,248',
+                    ),
+                    SizedBox(width: 16),
+                    MetricCard(
+                      title: 'Minutes Saved',
+                      value: '452',
+                      unit: 'm',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 40),
 
-                Text('displayLarge - DESIGN YOUR DAILY', style: textTheme.displayLarge),
-                const SizedBox(height: 12),
-
-                Text('displayMedium - Big Article Title', style: textTheme.displayMedium),
-                const SizedBox(height: 12),
-
-                Text('displaySmall - Profile Page Title', style: textTheme.displaySmall),
-                const SizedBox(height: 20),
-
-                Text('headlineMedium - Section Title', style: textTheme.headlineMedium),
-                const SizedBox(height: 12),
-
-                Text('headlineSmall - Article/Card Title', style: textTheme.headlineSmall),
-                const SizedBox(height: 20),
-
-                Text('titleLarge - JOIN INSIGHTLY', style: textTheme.titleLarge),
-                const SizedBox(height: 12),
-
-                Text('titleMedium - Settings Title / Chip', style: textTheme.titleMedium),
-                const SizedBox(height: 12),
-
-                Text('titleSmall - TECHNOLOGY / Category', style: textTheme.titleSmall),
-                const SizedBox(height: 20),
-
+                // 3. APPEARANCE Category Label (labelMedium)
                 Text(
-                  'bodyLarge - This is a long article paragraph. It should look readable and clean for the article details screen.',
-                  style: textTheme.bodyLarge,
+                  'APPEARANCE',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: AppColors.mutedText,
+                  ),
                 ),
                 const SizedBox(height: 12),
 
+                // Dark Mode row item
+                SettingsRow(
+                  leadingIcon: Icons.dark_mode_outlined,
+                  title: 'Dark Mode',
+                  trailing: Switch(
+                    value: isDarkMode,
+                    activeColor: AppColors.primary,
+                    activeTrackColor: AppColors.inputFill,
+                    inactiveThumbColor: AppColors.mutedText,
+                    onChanged: (value) {
+                      setState(() {
+                        isDarkMode = value;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // 4. LANGUAGE Category Label (labelMedium)
                 Text(
-                  'bodyMedium - Subtitle or description text.',
-                  style: textTheme.bodyMedium,
+                  'LANGUAGE',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: AppColors.mutedText,
+                  ),
                 ),
                 const SizedBox(height: 12),
 
-                Text('bodySmall - 12m ago • 6 min read', style: textTheme.bodySmall),
-                const SizedBox(height: 20),
-
-                Text('labelLarge - BUTTON TEXT', style: textTheme.labelLarge),
-                const SizedBox(height: 12),
-
-                Text('labelMedium - EMAIL ADDRESS', style: textTheme.labelMedium),
-                const SizedBox(height: 12),
-
-                Text('labelSmall - HOME SEARCH SAVED PROFILE', style: textTheme.labelSmall),
-                const SizedBox(height: 30),
-
-                const TextField(
-                  decoration: InputDecoration(
-                    labelText: 'EMAIL ADDRESS',
-                    hintText: 'farida@gmail.com',
-                    prefixIcon: Icon(Icons.email_outlined),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                const TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'PASSWORD',
-                    hintText: 'Enter password',
-                    prefixIcon: Icon(Icons.lock_outline),
-                    suffixIcon: Icon(Icons.visibility_off_outlined),
-                  ),
-                ),
-
-                const SizedBox(height: 30),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: () {},
-                    child: const Text('FilledButton - Sign In'),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    child: const Text('LOGOUT SESSION'),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                Center(
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text('TextButton - Create Account'),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'MINUTES SAVED',
-                          style: textTheme.labelMedium,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '452 m',
-                          style: textTheme.displayMedium,
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          width: double.infinity,
-                          child: FilledButton(
-                            onPressed: () {},
-                            child: const Text('CARD BUTTON'),
-                          ),
-                        ),
-                      ],
+                // Language selection item row updated
+                SettingsRow(
+                  leadingIcon: Icons.language,
+                  title: 'Language',
+                  trailing: TextButton(
+                    onPressed: () {
+                      // Call our newly added bottom sheet function!
+                      _showLanguagePicker(context);
+                    },
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                    child: Text(
+                      selectedLanguage, // <-- DYNAMICALLY SHOW SELECTED LANG
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                 ),
+                const SizedBox(height: 48),
+
+                // 5. LOGOUT SESSION Button Element (labelMedium text style matched)
+                OutlinedButton(
+                  onPressed: () {
+                    // Action handler for sessions exit
+                  },
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 56),
+                    side: const BorderSide(color: AppColors.error, width: 1.5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: Text(
+                    'LOGOUT SESSION',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: AppColors.error,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 40),
               ],
             ),
           ),
