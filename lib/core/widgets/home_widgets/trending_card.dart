@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+
 import '../../../core/models/article_model.dart';
 import 'package:news/ui/article_details/article_details_screen.dart';
 
+
 class TrendingCard extends StatelessWidget {
   const TrendingCard({super.key});
-
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -28,6 +30,7 @@ class TrendingCard extends StatelessWidget {
               ),
             ),
           ),
+
         );
       },
       borderRadius: BorderRadius.circular(20),

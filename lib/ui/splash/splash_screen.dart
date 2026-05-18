@@ -31,16 +31,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
               /// Logo
               Container(
-              /*  decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.blueAccent.withOpacity(0.25),
-                      blurRadius: 55,
-                      spreadRadius: 12,
-                    ),
-                  ],
-                ),*/
                 child: Image.asset(
                   'assets/images/logo.png',
                   width: 190,

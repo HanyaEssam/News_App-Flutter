@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/models/article_model.dart';
 import 'package:news/ui/article_details/article_details_screen.dart';
+import '../../../core/utils/saved_articles_manager.dart';
 
-
-// 1. Changed to a StatefulWidget
-class ForYouCard extends StatefulWidget {
+class ForYouCard extends StatelessWidget {
   final String label;
   final String title;
   final String description;
   final String time;
   final String readTime;
   final String source;
+  final String imageUrl;
 
   const ForYouCard({
     super.key,
@@ -21,39 +21,41 @@ class ForYouCard extends StatefulWidget {
     required this.time,
     required this.readTime,
     required this.source,
+    required this.imageUrl,
   });
 
   @override
-  State<ForYouCard> createState() => _ForYouCardState();
-}
-
-class _ForYouCardState extends State<ForYouCard> {
-  // 2. Added a variable to track if this specific article is saved
-  bool isSaved = false;
-
-  @override
   Widget build(BuildContext context) {
+    // Package the article data for the global manager
+    final Map<String, String> articleData = {
+      'category': label,
+      'title': title,
+      'source': source,
+      'readTime': readTime,
+      'imageUrl': imageUrl,
+    };
+
     return InkWell(
       onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ArticleDetailsScreen(
-            article: ArticleModel(
-              title: widget.title,
-              content: '${widget.description}\n\nHere is the rest of the full article content explaining the details in depth...',
-              // Cleaning up the label (e.g. "BASED ON YOUR INTEREST IN TECHNOLOGY" -> "TECHNOLOGY")
-              category: widget.label.replaceAll('Based on your interest in ', '').replaceAll('Discovery of the week', 'Discovery'),
-              categoryColor: AppColors.blue,
-              source: widget.source,
-              date: 'Oct 24, 2023', // Dummy date
-              time: widget.time,
-              imageUrl: 'assets/images/foryou_img.png',
+        // Kept your navigation logic!
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ArticleDetailsScreen(
+              article: ArticleModel(
+                title: title,
+                content: '$description\n\nHere is the rest of the full article content explaining the details in depth...',
+                category: label.replaceAll('Based on your interest in ', '').replaceAll('Discovery of the week', 'Discovery'),
+                categoryColor: AppColors.blue,
+                source: source,
+                date: 'Oct 24, 2023', // Dummy date
+                time: time,
+                imageUrl: imageUrl, // Now using the dynamic image URL
+              ),
             ),
           ),
-        ),
-      );
-    },
+        );
+      },
       borderRadius: BorderRadius.circular(20),
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -74,7 +76,7 @@ class _ForYouCardState extends State<ForYouCard> {
                     const Icon(Icons.lightbulb_outline, size: 16, color: AppColors.blue),
                     const SizedBox(width: 8),
                     Text(
-                      widget.label.toUpperCase(), // Note: we use widget.label in a State class
+                      label.toUpperCase(),
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: AppColors.blue,
                       ),
@@ -82,31 +84,33 @@ class _ForYouCardState extends State<ForYouCard> {
                   ],
                 ),
 
-                // 3. The updated IconButton
-                IconButton(
-                  // Swap between filled and outlined icons
-                  icon: Icon(
-                    isSaved ? Icons.bookmark : Icons.bookmark_border,
-                  ),
-                  // Highlight the icon with your primary cyan color when saved
-                  color: isSaved ? AppColors.primary : AppColors.mutedText,
-                  onPressed: () {
-                    // Tell Flutter to redraw the widget with the new state
-                    setState(() {
-                      isSaved = !isSaved; // Toggles between true and false
-                    });
+                // Listening to Farida's global manager
+                ValueListenableBuilder<List<Map<String, String>>>(
+                    valueListenable: SavedArticlesManager.savedArticles,
+                    builder: (context, savedList, child) {
+                      // Check if THIS article's title exists in the global saved list
+                      bool isCurrentlySaved = savedList.any((a) => a['title'] == title);
 
-                    // Optional: Show a different message based on the state
-                    ScaffoldMessenger.of(context).clearSnackBars(); // Clears old popups
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(isSaved ? 'Article Saved!' : 'Article Removed from Saved'),
-                        duration: const Duration(seconds: 1),
-                      ),
-                    );
-                  },
+                      return IconButton(
+                        icon: Icon(
+                          isCurrentlySaved ? Icons.bookmark : Icons.bookmark_border,
+                        ),
+                        color: isCurrentlySaved ? AppColors.primary : AppColors.mutedText,
+                        onPressed: () {
+                          // Tell the manager to add or remove this article
+                          SavedArticlesManager.toggleSave(articleData);
+
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(isCurrentlySaved ? 'Removed from Saved' : 'Article Saved!'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                      );
+                    }
                 ),
-
               ],
             ),
             Row(
@@ -117,12 +121,12 @@ class _ForYouCardState extends State<ForYouCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.title,
+                        title,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        widget.description,
+                        description,
                         style: Theme.of(context).textTheme.bodyMedium,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -136,8 +140,8 @@ class _ForYouCardState extends State<ForYouCard> {
                   width: 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/foryou_img.png'),
+                    image: DecorationImage(
+                      image: AssetImage(imageUrl), // Using the dynamic imageUrl variable
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -147,18 +151,18 @@ class _ForYouCardState extends State<ForYouCard> {
             const SizedBox(height: 16),
             Row(
               children: [
-                Text(widget.time, style: Theme.of(context).textTheme.bodySmall),
+                Text(time, style: Theme.of(context).textTheme.bodySmall),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text('•', style: TextStyle(color: AppColors.border)),
                 ),
-                Text(widget.readTime, style: Theme.of(context).textTheme.bodySmall),
+                Text(readTime, style: Theme.of(context).textTheme.bodySmall),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text('•', style: TextStyle(color: AppColors.border)),
                 ),
                 Text(
-                  widget.source.toUpperCase(),
+                  source.toUpperCase(),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: AppColors.white,
                   ),

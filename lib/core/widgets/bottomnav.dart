@@ -13,6 +13,7 @@ class BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+
     // Wrap with Theme to override the splash and highlight colors locally
     return Theme(
       data: Theme.of(context).copyWith(
@@ -43,6 +44,7 @@ class BottomNav extends StatelessWidget {
           ),
         ],
       ),
+
 
     );
   }

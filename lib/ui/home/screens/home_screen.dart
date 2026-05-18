@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/bottomnav.dart';
+import '../../../core/widgets/bottomnav.dart';
 import '../../search/search_screen.dart';
 import '../../profile/profile_screen.dart';
 import '../../save/save_screen.dart';
@@ -20,6 +20,7 @@ class HomeLayout extends StatefulWidget {
 
 class _HomeLayoutState extends State<HomeLayout> {
   int _currentIndex = 0;
+
 
   final List<Widget> _pages = const [
     HomeTabContent(),
@@ -55,6 +56,11 @@ class HomeTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('INSIGHTLY',
+        ),
+      ),
       body: AppBackground(
 
         child: SafeArea(
@@ -64,7 +70,11 @@ class HomeTabContent extends StatelessWidget {
               children: [
                 const SizedBox(height: 20),
 
+
                 // 1. App Logo Header (headlineLarge)
+
+              /*  // 1. App Logo Header (headlineLarge)
+
                 Center(
                   child: Text(
                     'INSIGHTLY',
@@ -72,6 +82,7 @@ class HomeTabContent extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
+                  */
 
                 // 2. Daily Briefing Text (displaySmall)
                 Padding(
@@ -133,6 +144,9 @@ class HomeTabContent extends StatelessWidget {
                         time: '2h ago',
                         readTime: '12 min read',
                         source: 'Wired',
+
+                        imageUrl: 'assets/images/business_img.png',
+
                       ),
                       ForYouCard(
                         label: 'Discovery of the week',
@@ -141,6 +155,8 @@ class HomeTabContent extends StatelessWidget {
                         time: '6h ago',
                         readTime: '8 min read',
                         source: 'National Geographic',
+              imageUrl: 'assets/images/chip_img.png',
+
                       ),
                     ],
                   ),
