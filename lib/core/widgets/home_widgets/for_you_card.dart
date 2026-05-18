@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/models/article_model.dart';
+import 'package:news/ui/article_details/article_details_screen.dart';
+
 
 // 1. Changed to a StatefulWidget
 class ForYouCard extends StatefulWidget {
@@ -32,8 +35,25 @@ class _ForYouCardState extends State<ForYouCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // TODO: Navigate to Article Details Page
-      },
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ArticleDetailsScreen(
+            article: ArticleModel(
+              title: widget.title,
+              content: '${widget.description}\n\nHere is the rest of the full article content explaining the details in depth...',
+              // Cleaning up the label (e.g. "BASED ON YOUR INTEREST IN TECHNOLOGY" -> "TECHNOLOGY")
+              category: widget.label.replaceAll('Based on your interest in ', '').replaceAll('Discovery of the week', 'Discovery'),
+              categoryColor: AppColors.blue,
+              source: widget.source,
+              date: 'Oct 24, 2023', // Dummy date
+              time: widget.time,
+              imageUrl: 'assets/images/foryou_img.png',
+            ),
+          ),
+        ),
+      );
+    },
       borderRadius: BorderRadius.circular(20),
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),

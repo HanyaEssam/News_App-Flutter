@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
+import '../../theme/app_colors.dart';
+import '../../../ui/category_feed/screens/category_feed_screen.dart'; // Import your screen
 
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key});
@@ -11,13 +12,14 @@ class CategoryList extends StatefulWidget {
 class _CategoryListState extends State<CategoryList> {
   int selectedIndex = 0;
 
-  final List<Map<String, String>> categories = [
-    {'name': 'Tech', 'iconPath': 'assets/images/tech.png'},
-    {'name': 'Business', 'iconPath': 'assets/images/business.png'},
-    {'name': 'Sports', 'iconPath': 'assets/images/sport.png'},
-    {'name': 'Politics', 'iconPath': 'assets/images/politics.png'},
-    {'name': 'Science', 'iconPath': 'assets/images/science.png'},
-    {'name': 'Culture', 'iconPath': 'assets/images/culture.png'},
+  // Added the specific colors for each category based on your requirements
+  final List<Map<String, dynamic>> categories = [
+    {'name': 'Tech', 'iconPath': 'assets/images/tech.png', 'color': AppColors.primary},
+    {'name': 'Business', 'iconPath': 'assets/images/business.png', 'color': AppColors.blue},
+    {'name': 'Sports', 'iconPath': 'assets/images/sport.png', 'color': AppColors.green},
+    {'name': 'Politics', 'iconPath': 'assets/images/politics.png', 'color': AppColors.orange},
+    {'name': 'Science', 'iconPath': 'assets/images/science.png', 'color': AppColors.purple},
+    {'name': 'Culture', 'iconPath': 'assets/images/culture.png', 'color': AppColors.error},
   ];
 
   @override
@@ -37,6 +39,16 @@ class _CategoryListState extends State<CategoryList> {
               setState(() {
                 selectedIndex = index;
               });
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CategoryFeedScreen(
+                    categoryName: categories[index]['name'],
+                    categoryColor: categories[index]['color'],
+                  ),
+                ),
+              );
             },
             child: Column(
               children: [
@@ -50,14 +62,14 @@ class _CategoryListState extends State<CategoryList> {
                     border: isSelected ? Border.all(color: AppColors.border) : null,
                   ),
                   child: Image.asset(
-                    categories[index]['iconPath']!,
+                    categories[index]['iconPath'],
                     width: 32,
                     height: 32,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  categories[index]['name']!,
+                  categories[index]['name'],
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: isSelected ? AppColors.primary : AppColors.mutedText,
                   ),

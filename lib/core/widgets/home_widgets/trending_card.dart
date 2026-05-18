@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/models/article_model.dart';
+import 'package:news/ui/article_details/article_details_screen.dart';
 
 class TrendingCard extends StatelessWidget {
   const TrendingCard({super.key});
+
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Opening Trending Article...')),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ArticleDetailsScreen(
+              // Passing the hardcoded data from this card into the Model
+              article: ArticleModel(
+                title: 'The Future of Cryptography in the Quantum Era',
+                content: 'As the global race for computational supremacy accelerates, researchers are pioneering a new wave of computing that will redefine cybersecurity...', // Dummy full text
+                category: 'Technology',
+                categoryColor: AppColors.primary,
+                source: 'TechCrunch',
+                date: 'Oct 24, 2023', // Dummy date
+                time: '12m ago',
+                imageUrl: 'assets/images/trending_img.png',
+              ),
+            ),
+          ),
         );
       },
       borderRadius: BorderRadius.circular(20),
