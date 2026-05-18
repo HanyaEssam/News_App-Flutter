@@ -14,7 +14,6 @@ class AuthService {
   // Stream that notifies when user logs in/out
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  // ============ SIGN UP WITH EMAIL ============
   Future<User?> signUpWithEmail({
     required String fullName,
     required String email,
@@ -53,7 +52,7 @@ class AuthService {
     }
   }
 
-  // ============ SIGN IN WITH EMAIL ============
+
   Future<User?> signInWithEmail({
     required String email,
     required String password,
@@ -69,7 +68,7 @@ class AuthService {
     }
   }
 
-  // ============ SIGN IN WITH GOOGLE ============
+
   Future<User?> signInWithGoogle() async {
     try {
       // Open Google sign-in popup
@@ -116,13 +115,13 @@ class AuthService {
     }
   }
 
-  // ============ SIGN OUT ============
+
   Future<void> signOut() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
   }
 
-  // ============ ERROR HANDLER ============
+
   String _handleAuthError(FirebaseAuthException e) {
     switch (e.code) {
       case 'weak-password':

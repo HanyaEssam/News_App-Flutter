@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         ProfileScreen.routeName: (_) => const ProfileScreen(),
         SignupScreen.routeName: (_) => const SignupScreen(),
       },
-      initialRoute: LoginScreen.routeName,
+      initialRoute: SplashScreen.routeName,
     );
   }
 }
