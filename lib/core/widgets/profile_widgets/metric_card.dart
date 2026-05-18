@@ -15,21 +15,22 @@ class MetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.cardDark,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Metric Label (labelMedium)
             Text(
               title.toUpperCase(),
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: AppColors.primaryDark.withOpacity(0.8),
+                color: theme.colorScheme.secondary.withOpacity(0.8),
               ),
             ),
             const SizedBox(height: 12),

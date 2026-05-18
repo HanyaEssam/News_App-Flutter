@@ -12,14 +12,18 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Row(
       children: [
-        // Avatar Container with custom neon framing glow matching your image
         Container(
           height: 80,
           width: 80,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: theme.colorScheme.primary,
+              width: 2),
             image: DecorationImage(
               image: AssetImage(avatarPath),
               fit: BoxFit.cover,

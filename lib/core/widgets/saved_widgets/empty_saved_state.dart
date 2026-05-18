@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../ui/home/screens/home_screen.dart';
 
 class EmptySavedState extends StatelessWidget {
   const EmptySavedState({super.key});
@@ -15,7 +16,7 @@ class EmptySavedState extends StatelessWidget {
         Icon(
           Icons.bookmark_border,
           size: 80,
-          color: AppColors.inputFill, // Using inputFill for a subtle faded look
+          color: AppColors.inputFill,
         ),
         const SizedBox(height: 32),
 
@@ -39,28 +40,24 @@ class EmptySavedState extends StatelessWidget {
         const SizedBox(height: 40),
 
         // Custom Outlined Button (labelMedium text)
-        InkWell(
-          onTap: () {
-            // TODO: Navigate to Home or Search to explore
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Navigating to Home...')),
-            );
+        FilledButton(
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, HomeLayout.routeName);
           },
-          borderRadius: BorderRadius.circular(14),
-          child: Container(
+          style: FilledButton.styleFrom(
+            backgroundColor: AppColors.inputFill,
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            decoration: BoxDecoration(
-              color: AppColors.inputFill,
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Text(
-              'START EXPLORING',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: AppColors.primary,
-              ),
+          ),
+          child: Text(
+            'START EXPLORING',
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: AppColors.primary,
             ),
           ),
-        ),
+        )
       ],
     );
   }

@@ -70,20 +70,6 @@ class HomeTabContent extends StatelessWidget {
               children: [
                 const SizedBox(height: 20),
 
-
-                // 1. App Logo Header (headlineLarge)
-
-              /*  // 1. App Logo Header (headlineLarge)
-
-                Center(
-                  child: Text(
-                    'INSIGHTLY',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                ),
-                const SizedBox(height: 30),
-                  */
-
                 // 2. Daily Briefing Text (displaySmall)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -144,7 +130,6 @@ class HomeTabContent extends StatelessWidget {
                         time: '2h ago',
                         readTime: '12 min read',
                         source: 'Wired',
-
                         imageUrl: 'assets/images/business_img.png',
 
                       ),
@@ -155,7 +140,7 @@ class HomeTabContent extends StatelessWidget {
                         time: '6h ago',
                         readTime: '8 min read',
                         source: 'National Geographic',
-              imageUrl: 'assets/images/chip_img.png',
+                        imageUrl: 'assets/images/chip_img.png',
 
                       ),
                     ],

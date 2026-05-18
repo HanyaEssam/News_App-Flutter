@@ -5,21 +5,34 @@ import '../../../core/models/article_model.dart';
 import 'package:news/core/widgets/article_content/article_content.dart';
 import 'package:news/core/widgets/article_content/comment_section.dart';
 
-class ArticleDetailsScreen extends StatelessWidget {
+import '../../core/utils/saved_articles_manager.dart';
+import '../../core/widgets/bookmark/bookmark_button.dart';
+
+class ArticleDetailsScreen extends StatefulWidget {
   static const String routeName = '/article-details';
   final ArticleModel article;
 
   const ArticleDetailsScreen({super.key, required this.article});
 
   @override
+  State<ArticleDetailsScreen> createState() => _ArticleDetailsScreenState();
+}
+
+class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text('INSIGHTLY', style: Theme.of(context).textTheme.headlineLarge),
+        title: const Text('INSIGHTLY'),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.bookmark_border)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.share_outlined)),
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: BookmarkButton(
+              article: widget.article,
+              unselectedColor: AppColors.mutedText, // White when unselected for the appBar
+            ),
+          ),
         ],
       ),
       body: AppBackground(
@@ -31,11 +44,11 @@ class ArticleDetailsScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     children: [
-                      ArticleContent(article: article),
+                      ArticleContent(article: widget.article),
                       const SizedBox(height: 40),
                       const Divider(color: AppColors.border),
                       const SizedBox(height: 24),
-                      CommentsSection(categoryColor: article.categoryColor),
+                      CommentsSection(categoryColor: widget.article.categoryColor),
                       const SizedBox(height: 40),
                     ],
                   ),

@@ -9,6 +9,7 @@ class ArticleModel {
   final String time;
   final String imageUrl;
   final Color categoryColor;
+  final String readtime;
 
   ArticleModel({
     required this.title,
@@ -19,5 +20,6 @@ class ArticleModel {
     required this.time,
     required this.imageUrl,
     required this.categoryColor,
+    required this.readtime,
   });
 }
