@@ -4,6 +4,8 @@ import '../../../core/widgets/background_color/app_background.dart';
 import '../../core/widgets/profile_widgets/metric_card.dart';
 import '../../core/widgets/profile_widgets/profile_header.dart';
 import '../../core/widgets/profile_widgets/setting_row.dart';
+import '../../../core/theme/theme_controller.dart';
+import '../auth/login/login_screen.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -15,7 +17,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool isDarkMode = true; // State for Dark mode switch widget
   String selectedLanguage = 'English (UK)';
 
   void _showLanguagePicker(BuildContext context) {
@@ -84,6 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark; // ADD THIS
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -139,9 +141,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       activeTrackColor: AppColors.inputFill,
                       inactiveThumbColor: AppColors.mutedText,
                       onChanged: (value) {
-                        setState(() {
-                          isDarkMode = value;
-                        });
+                        ThemeController.toggleTheme(value); // ADD THIS
+
                       },
                     ),
                   ),
@@ -176,7 +177,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // 5. LOGOUT SESSION Button Element
                   OutlinedButton(
                     onPressed: () {
-                      // Action handler for sessions exit
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        LoginScreen.routeName,
+                            (route) => false,
+                      );
                     },
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 56),

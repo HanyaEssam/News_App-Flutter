@@ -39,8 +39,8 @@ class TrendingCard extends StatelessWidget {
         width: 280,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
-          color: AppColors.cardDark,
           borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.surface, // CHANGED
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,10 +70,11 @@ class TrendingCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.inputFill,
+                          color: Theme.of(context).colorScheme.primary.withOpacity(0.15), // CHANGED
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.border),
-                        ),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.primary.withOpacity(0.5), // CHANGED
+                          ),                        ),
                         child: Text(
                           'Technology',
                           style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -98,8 +99,11 @@ class TrendingCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.auto_awesome, size: 16, color: AppColors.mutedText),
-                          const SizedBox(width: 6),
+                          Icon(
+                            Icons.auto_awesome,
+                            size: 16,
+                            color: Theme.of(context).textTheme.bodySmall?.color, // CHANGED
+                          ),                          const SizedBox(width: 6),
                           Text('TechCrunch', style: Theme.of(context).textTheme.bodySmall),
                         ],
                       ),

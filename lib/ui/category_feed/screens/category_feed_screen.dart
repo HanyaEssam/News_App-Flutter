@@ -26,7 +26,9 @@ class CategoryFeedScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back, color: AppColors.white),
+                      icon:  Icon(Icons.arrow_back,
+                        color: Theme.of(context).colorScheme.primary, // CHANGED
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                     Expanded(

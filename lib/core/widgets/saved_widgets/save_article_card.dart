@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/models/article_model.dart'; // Import your model
-import '../../../core/utils/saved_articles_manager.dart';
+import '../../../core/models/article_model.dart';
 import '../bookmark/bookmark_button.dart';
 
 class SavedArticleCard extends StatelessWidget {
-  // Pass the entire model instead of individual strings
   final ArticleModel article;
 
   const SavedArticleCard({
@@ -15,29 +13,31 @@ class SavedArticleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // CHANGED
+
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: theme.colorScheme.surface, // CHANGED
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: theme.colorScheme.primary.withOpacity(0.25), // CHANGED
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Image
           Container(
             height: 180,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
               image: DecorationImage(
-                // Use the image asset or network from your model
                 image: AssetImage(article.imageUrl),
                 fit: BoxFit.cover,
               ),
             ),
           ),
 
-          // Card Content
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -46,44 +46,49 @@ class SavedArticleCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Category Text
                     Text(
                       article.category.toUpperCase(),
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: article.categoryColor, // Handled automatically by model
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: article.categoryColor,
                       ),
                     ),
 
-                    // ValueListenableBuilder listening to our unified ArticleModel list
                     BookmarkButton(
                       article: article,
-                      unselectedColor: AppColors.mutedText, // Uses muted/grey color inside cards
-                    ),                  ],
+                      unselectedColor: theme.textTheme.bodySmall?.color ?? AppColors.lightMutedText,
+                    ),
+                  ],
                 ),
+
                 const SizedBox(height: 12),
 
-                // Article Title
                 Text(
                   article.title,
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: theme.textTheme.headlineSmall,
                 ),
+
                 const SizedBox(height: 16),
 
-                // Footer Info
                 Row(
                   children: [
                     Text(
                       article.source,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: theme.textTheme.bodySmall,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text('•', style: TextStyle(color: AppColors.border)),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        '•',
+                        style: TextStyle(
+                          color: theme.colorScheme.primary.withOpacity(0.5), // CHANGED
+                        ),
+                      ),
                     ),
+
                     Text(
-                      // Assuming readTime or time exists in your model mapping
                       article.readtime,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: theme.textTheme.bodySmall,
                     ),
                   ],
                 ),

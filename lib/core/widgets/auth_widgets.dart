@@ -9,6 +9,11 @@ class AuthTextField extends StatelessWidget {
   final bool obscureText;
   final VoidCallback? onToggleVisibility;
 
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
+
+
+
   const AuthTextField({
     super.key,
     required this.label,
@@ -16,6 +21,8 @@ class AuthTextField extends StatelessWidget {
     this.isPassword = false,
     this.obscureText = false,
     this.onToggleVisibility,
+    this.controller,
+    this.keyboardType,
   });
 
   @override
@@ -32,6 +39,8 @@ class AuthTextField extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
           obscureText: obscureText,
           style: const TextStyle(color: AppColors.white),
           decoration: InputDecoration(

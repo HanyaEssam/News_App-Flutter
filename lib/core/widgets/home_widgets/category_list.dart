@@ -63,9 +63,13 @@ class _CategoryListState extends State<CategoryList> {
                   width: 60,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.inputFill : AppColors.cardDark,
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary.withOpacity(0.15) // CHANGED
+                        : Theme.of(context).colorScheme.surface, // CHANGED
                     borderRadius: BorderRadius.circular(16),
-                    border: isSelected ? Border.all(color: AppColors.border) : null,
+                    border: isSelected
+                        ? Border.all(color: Theme.of(context).colorScheme.primary) // CHANGED
+                        : null,
                   ),
                   child: Image.asset(
 
@@ -83,7 +87,9 @@ class _CategoryListState extends State<CategoryList> {
                   categories[index]['name']!,
 
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: isSelected ? AppColors.primary : AppColors.mutedText,
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary // CHANGED
+                        : Theme.of(context).textTheme.bodySmall?.color, // CHANGED
                   ),
                 ),
               ],

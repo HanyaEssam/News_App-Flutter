@@ -5,18 +5,20 @@ import '../../utils/saved_articles_manager.dart';
 
 class BookmarkButton extends StatelessWidget {
   final ArticleModel article;
-  final Color unselectedColor;
+  final Color? unselectedColor; // CHANGED
   final double size;
 
   const BookmarkButton({
     super.key,
     required this.article,
-    this.unselectedColor = AppColors.white,
+    this.unselectedColor, // CHANGED
     this.size = 24,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // CHANGED
+
     return ValueListenableBuilder<List<ArticleModel>>(
       valueListenable: SavedArticlesManager.savedArticles,
       builder: (context, savedList, child) {
@@ -29,12 +31,12 @@ class BookmarkButton extends StatelessWidget {
           icon: Icon(
             isCurrentlySaved ? Icons.bookmark : Icons.bookmark_border,
           ),
-          color: isCurrentlySaved ? AppColors.primary : unselectedColor,
+          color: isCurrentlySaved
+              ? theme.colorScheme.primary // CHANGED
+              : unselectedColor ?? theme.textTheme.bodySmall?.color, // CHANGED
           onPressed: () {
-            // 1. Handle global state shift
             SavedArticlesManager.toggleSave(article);
 
-            // 2. Clear previous snackbars and show current notification context
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

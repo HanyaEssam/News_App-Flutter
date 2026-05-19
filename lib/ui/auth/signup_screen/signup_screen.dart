@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:news/core/theme/app_colors.dart';
 import 'package:news/core/widgets/auth_widgets.dart';
 
+import '../../../onboarding/screens/interest_screen.dart';
+
 class SignupScreen extends StatefulWidget {
   static const String routeName = '/signup';
   const SignupScreen({super.key});
@@ -94,8 +96,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
-                        onPressed: () {},
-                        child: const Text('Create Account'),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            InterestScreen.routeName,
+                          );
+                        },                        child: const Text('Create Account'),
                       ),
                     ),
                     const SizedBox(height: 32),

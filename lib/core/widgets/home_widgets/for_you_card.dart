@@ -55,10 +55,11 @@ class ForYouCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.cardDark,
+          color: Theme.of(context).colorScheme.surface, // CHANGED
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.border.withOpacity(0.5)),
-        ),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.25), // CHANGED
+          ),        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -135,7 +136,7 @@ class ForYouCard extends StatelessWidget {
                 Text(
                   source.toUpperCase(),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.white,
+                    color: Theme.of(context).colorScheme.onSurface, // CHANGED
                   ),
                 ),
               ],
