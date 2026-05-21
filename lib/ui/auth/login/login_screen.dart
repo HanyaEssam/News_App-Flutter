@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:news/core/theme/app_colors.dart';
 import 'package:news/core/widgets/auth_widgets.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:news/core/theme/theme_controller.dart';
 import '../../../services/auth_service.dart';
+import '../../../onboarding/screens/interest_screen.dart';
+
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -14,28 +18,26 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
-  // 🔥 NEW: Controllers to read the input fields
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  // 🔥 NEW: AuthService instance
+
+  // This is the instance we will use!
   final _authService = AuthService();
 
-  // 🔥 NEW: Loading and error state
   bool _isLoading = false;
   String? _errorMessage;
-  // 🔥 NEW: Clean up controllers when widget is destroyed
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
-  // 🔥 NEW: Sign in logic
+
   Future<void> _handleSignIn() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    // Basic validation
     if (email.isEmpty || password.isEmpty) {
       setState(() => _errorMessage = 'Please fill in all fields');
       return;
@@ -55,8 +57,17 @@ class _LoginScreenState extends State<LoginScreen> {
         email: email,
         password: password,
       );
+
       if (user != null && mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
+        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+        if (doc.exists && doc.data()!.containsKey('isDarkMode')) {
+          bool userPrefersDark = doc.data()!['isDarkMode'];
+          ThemeController.toggleTheme(userPrefersDark);
+        }
+
+        // Clear the stack so no back button appears!
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       }
     } catch (e) {
       setState(() => _errorMessage = e.toString());
@@ -64,46 +75,54 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) setState(() => _isLoading = false);
     }
   }
-
-  // 🔥 NEW: Sign in logic
-  /*Future<void> _handleSignIn() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
-
-    // Basic validation
-    if (email.isEmpty || password.isEmpty) {
-      setState(() => _errorMessage = 'Please fill in all fields');
-      return;
-    }
-    if (!email.contains('@')) {
-      setState(() => _errorMessage = 'Please enter a valid email');
-      return;
-    }
-
+  Future<void> _handleGoogleSignIn() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
     try {
-      final user = await _authService.signInWithEmail(
-        email: email,
-        password: password,
-      );
+      final user = await _authService.signInWithGoogle();
+
       if (user != null && mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
+        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+        if (doc.exists) {
+
+          // 🔥 FIX 2: Apply their specific theme FIRST, before navigating anywhere!
+          if (doc.data()!.containsKey('isDarkMode')) {
+            ThemeController.toggleTheme(doc.data()!['isDarkMode']);
+          } else {
+            // Safety fallback: if they somehow don't have the field, default to Dark
+            ThemeController.toggleTheme(true);
+          }
+
+          List topics = doc.data()?['selectedTopics'] ?? [];
+
+          if (topics.isEmpty) {
+            // 🚀 BRAND NEW USER
+            Navigator.pushReplacementNamed(context, InterestScreen.routeName);
+          } else {
+            // 🏠 RETURNING USER
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          }
+        }
       }
     } catch (e) {
-      setState(() => _errorMessage = e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
-*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Using your dark background from app_theme
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -112,8 +131,6 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-
-              // 1. Header Texts
               Text('INSIGHTLY', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 12),
               Text(
@@ -122,8 +139,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
-
-              // 2. The Main Dark Card Container
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
@@ -132,30 +147,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: Column(
                   children: [
-                    // Email Field
-                     AuthTextField(
+                    AuthTextField(
                       label: 'EMAIL ADDRESS',
                       hintText: 'farida@gmail.com',
-                      controller: _emailController, // 🔥 NEW
-                      keyboardType: TextInputType.emailAddress, // 🔥 NEW
-
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 20),
-
-                    // Password Field
                     AuthTextField(
                       label: 'PASSWORD',
                       hintText: '• • • • • • • •',
                       isPassword: true,
                       obscureText: _obscurePassword,
-                      controller: _passwordController, // 🔥 NEW
+                      controller: _passwordController,
                       onToggleVisibility: () {
                         setState(() {
                           _obscurePassword = !_obscurePassword;
                         });
                       },
                     ),
-                    // 🔥 NEW: Error message
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 16),
                       Container(
@@ -163,25 +173,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                           color: Colors.red.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Colors.red.withOpacity(0.5),
-                          ),
+                          border: Border.all(color: Colors.red.withOpacity(0.5)),
                         ),
                         child: Row(
                           children: [
-                            const Icon(
-                              Icons.error_outline,
-                              color: Colors.redAccent,
-                              size: 18,
-                            ),
+                            const Icon(Icons.error_outline, color: Colors.redAccent, size: 18),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 _errorMessage!,
-                                style: const TextStyle(
-                                  color: Colors.redAccent,
-                                  fontSize: 13,
-                                ),
+                                style: const TextStyle(color: Colors.redAccent, fontSize: 13),
                               ),
                             ),
                           ],
@@ -189,27 +190,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                     const SizedBox(height: 32),
-
-                    // Sign In Button
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
                         onPressed: _isLoading ? null : _handleSignIn,
                         child: _isLoading
                             ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.black,
-                          ),
+                          height: 20, width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
                         )
                             : const Text('Sign In'),
                       ),
                     ),
                     const SizedBox(height: 32),
-
-                    // OR Divider
                     Row(
                       children: [
                         const Expanded(child: Divider(color: AppColors.border)),
@@ -217,81 +210,68 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
                             'OR CONTINUE WITH',
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(
-                                  color: AppColors.mutedText,
-                                  letterSpacing: 1.5,
-                                ),
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: AppColors.mutedText, letterSpacing: 1.5,
+                            ),
                           ),
                         ),
                         const Expanded(child: Divider(color: AppColors.border)),
                       ],
                     ),
                     const SizedBox(height: 24),
-
-                    // Social Buttons
                     SocialAuthButton(
                       text: 'Continue with Google',
-                      icon: Icons.g_mobiledata, // Replace with asset later
-                      iconColor: Colors.blue,
-                      onPressed: () {},
+                      imagePath: 'assets/images/google.png',
+                      onPressed: _isLoading ? () {} : _handleGoogleSignIn,
                     ),
-                    const SizedBox(height: 12),
-                    SocialAuthButton(
+                   // const SizedBox(height: 12),
+                   /* SocialAuthButton(
                       text: 'Continue with Apple',
                       icon: Icons.apple,
                       iconColor: Colors.white,
                       onPressed: () {},
-                    ),
+                    ),*/
                     const SizedBox(height: 32),
-
-                    // Create Account Link
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Don't have an account? ",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
+                        Text("Don't have an account? ", style: Theme.of(context).textTheme.bodyMedium),
                         GestureDetector(
                           onTap: () {
-                            // Navigate to Create Account
-                            Navigator.pushNamed(context, '/signup');
+                            Navigator.pushReplacementNamed(context, '/signup');
                           },
                           child: Text(
                             "Create Account",
-                            style: Theme.of(context).textTheme.labelLarge
-                                ?.copyWith(color: AppColors.primary),
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.primary),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 24),
 
-                    // Guest Button
+                    // 🔥 FIX: Use _authService instead of AuthService.instance
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/home');
+                        onPressed: () async {
+                          // Force clear any old test accounts stored in Firebase cache
+                          await _authService.signOut();
+
+                          if (context.mounted) {
+                            // Clear history so no back button appears!
+                            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                          }
                         },
-                        style: FilledButton.styleFrom(
-                          // Using a slightly different style for the guest button if needed
-                        ),
                         child: const Text('Continue as a guest'),
                       ),
                     ),
                   ],
                 ),
               ),
-
-              // Footer
               const SizedBox(height: 32),
               Text(
                 '© 2026 INSIGHTFUL PRIVACY & TERMS.',
-                style: Theme.of(
-                  context,
-                ).textTheme.labelSmall?.copyWith(color: AppColors.border),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.border),
               ),
               const SizedBox(height: 24),
             ],

@@ -68,40 +68,46 @@ class AuthTextField extends StatelessWidget {
 // --- 2. Social Login Button ---
 class SocialAuthButton extends StatelessWidget {
   final String text;
-  final IconData icon;
-  final Color iconColor;
   final VoidCallback onPressed;
+  final IconData? icon;
+  final String? imagePath;
+  final Color? iconColor;
 
   const SocialAuthButton({
     super.key,
     required this.text,
-    required this.icon,
-    required this.iconColor,
     required this.onPressed,
+    this.icon,
+    this.imagePath,
+    this.iconColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: OutlinedButton.icon(
+      child: FilledButton(
         onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          backgroundColor:
-              AppColors.inputFill, // Using the dark fill from your theme
-          side: const BorderSide(color: Colors.transparent), // No border
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-        icon: Icon(icon, color: iconColor),
-        label: Text(
-          text,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: AppColors.white,
-            fontWeight: FontWeight.w600,
-          ),
+        // Removed the hardcoded styles! It now relies 100% on your AppTheme.
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (imagePath != null)
+              Image.asset(
+                imagePath!,
+                height: 24,
+                width: 24,
+              )
+            else if (icon != null)
+              Icon(
+                icon,
+                size: 24,
+                color: iconColor,
+              ),
+
+            const SizedBox(width: 12),
+            Text(text),
+          ],
         ),
       ),
     );

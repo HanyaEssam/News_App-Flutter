@@ -41,6 +41,7 @@ class AuthService {
           'selectedTopics': [],
           'articlesRead': 0,
           'minutesSaved': 0,
+          'isDarkMode': true,
           'createdAt': FieldValue.serverTimestamp(),
         });
       }
@@ -71,6 +72,7 @@ class AuthService {
 
   Future<User?> signInWithGoogle() async {
     try {
+      await _googleSignIn.signOut();
       // Open Google sign-in popup
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
@@ -105,6 +107,7 @@ class AuthService {
           'selectedTopics': [],
           'articlesRead': 0,
           'minutesSaved': 0,
+          'isDarkMode': true,
           'createdAt': FieldValue.serverTimestamp(),
         });
       }
@@ -117,7 +120,14 @@ class AuthService {
 
 
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
+    try {
+      // 🔥 FIX: Completely severs the connection to the Google account
+      await _googleSignIn.disconnect();
+    } catch (e) {
+      print("Google disconnect error: $e");
+    }
+
+    // Sign out of Firebase
     await _auth.signOut();
   }
 

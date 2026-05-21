@@ -22,7 +22,11 @@ class _CategoryListState extends State<CategoryList> {
     {'name': 'Sports', 'iconPath': 'assets/images/sport.png', 'color': AppColors.green},
     {'name': 'Politics', 'iconPath': 'assets/images/politics.png', 'color': AppColors.orange},
     {'name': 'Science', 'iconPath': 'assets/images/science.png', 'color': AppColors.purple},
-    {'name': 'Culture', 'iconPath': 'assets/images/culture.png', 'color': AppColors.error},];
+    {'name': 'Health', 'iconPath': 'assets/images/health.png', 'color': AppColors.error},
+    {'name': 'Travel', 'iconPath': 'assets/images/travel.png', 'color': AppColors.yellow},
+    {'name': 'Entertainment', 'iconPath': 'assets/images/entertainment.png', 'color': AppColors.pink},
+    {'name': 'General', 'iconPath': 'assets/images/general.png', 'color': AppColors.grey},
+  ];
 
 
 

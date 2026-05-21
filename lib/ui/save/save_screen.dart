@@ -3,8 +3,12 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
 import '../../../core/widgets/saved_widgets/empty_saved_state.dart';
 import '../../../core/widgets/saved_widgets/save_article_card.dart';
-import '../../../core/models/article_model.dart'; // 1. Make sure to import ArticleModel
+import '../../../core/models/article_model.dart';
 import '../../../core/utils/saved_articles_manager.dart';
+
+// 🔥 IMPORTS:
+import '../../../core/utils/guest_checker.dart';
+import '../../../core/widgets/guest/guest_widget.dart';
 
 class SaveScreen extends StatelessWidget {
   static const String routeName = '/save';
@@ -12,8 +16,27 @@ class SaveScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Intercept Guests
+    if (GuestChecker.isGuest()) {
+      return Scaffold(
+        appBar: AppBar(
+            automaticallyImplyLeading: false, // 🔥 FIX: STRICTLY FORBID BACK BUTTON
+            backgroundColor: Colors.transparent,
+            title: const Text('INSIGHTLY')
+        ),
+        body: AppBackground(
+          child: const GuestWidget(
+            icon: Icons.bookmark_outline,
+            title: 'Your Private Library',
+            subtitle: 'Create an account to bookmark articles and build your curated intelligence feed.',
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // 🔥 FIX: STRICTLY FORBID BACK BUTTON
         backgroundColor: Colors.transparent,
         title: const Text('INSIGHTLY'),
       ),
@@ -33,7 +56,6 @@ class SaveScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
-                // 2. Update the listener type signature to look for ArticleModel elements
                 ValueListenableBuilder<List<ArticleModel>>(
                   valueListenable: SavedArticlesManager.savedArticles,
                   builder: (context, savedList, child) {
@@ -43,7 +65,6 @@ class SaveScreen extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Subtitle showing the dynamic count
                         Text(
                           hasSavedArticles
                               ? '${savedList.length} SAVED ARTICLES'
@@ -54,7 +75,6 @@ class SaveScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 32),
 
-                        // Conditional UI Logic
                         if (!hasSavedArticles)
                           const EmptySavedState()
                         else
@@ -63,11 +83,8 @@ class SaveScreen extends StatelessWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: savedList.length,
                             itemBuilder: (context, index) {
-
-                              // 3. This is now a clean ArticleModel instance!
                               final article = savedList[index];
 
-                              // 4. Simply pass the entire object directly into the card
                               return SavedArticleCard(
                                 article: article,
                               );
@@ -78,7 +95,7 @@ class SaveScreen extends StatelessWidget {
                   },
                 ),
 
-                const SizedBox(height: 40), // Bottom padding
+                const SizedBox(height: 40),
               ],
             ),
           ),

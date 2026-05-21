@@ -14,6 +14,17 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // 🔥 NEW: Handle both Network Images (Google) and Local Assets (Default)
+    ImageProvider imageProvider;
+    if (avatarPath.startsWith('http')) {
+      imageProvider = NetworkImage(avatarPath);
+    } else {
+      // Fallback to your default image if the path is empty
+      imageProvider = AssetImage(
+        avatarPath.isEmpty ? 'assets/images/avatar.png' : avatarPath,
+      );
+    }
+
     return Row(
       children: [
         Container(
@@ -23,9 +34,10 @@ class ProfileHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: theme.colorScheme.primary,
-              width: 2),
+              width: 2,
+            ),
             image: DecorationImage(
-              image: AssetImage(avatarPath),
+              image: imageProvider,
               fit: BoxFit.cover,
             ),
           ),

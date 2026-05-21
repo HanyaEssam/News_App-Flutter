@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-// Note: Adjust the import path below if your app_colors.dart is located elsewhere
 import '../../../../core/theme/app_colors.dart';
 
+// 🔥 NEW IMPORT:
+import '../../../../core/utils/guest_checker.dart';
+
 class CommentsSection extends StatelessWidget {
-  final Color categoryColor; // We will use this to color the button and avatar!
+  final Color categoryColor;
 
   const CommentsSection({super.key, required this.categoryColor});
 
@@ -12,7 +14,6 @@ class CommentsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. Comments Counter Header
         Row(
           children: [
             Text("Comments", style: Theme.of(context).textTheme.headlineMedium),
@@ -26,7 +27,7 @@ class CommentsSection extends StatelessWidget {
               child: Text(
                 "24",
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: categoryColor, // Colored to match category
+                  color: categoryColor,
                 ),
               ),
             ),
@@ -34,7 +35,6 @@ class CommentsSection extends StatelessWidget {
         ),
         const SizedBox(height: 24),
 
-        // 2. The Custom Input Field with Colored Button
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -43,7 +43,7 @@ class CommentsSection extends StatelessWidget {
             border: Border.all(color: AppColors.border.withOpacity(0.5)),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end, // Aligns button to the right
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               TextField(
                 maxLines: 3,
@@ -51,7 +51,6 @@ class CommentsSection extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: "Add to the briefing...",
                   hintStyle: Theme.of(context).textTheme.bodyMedium,
-                  // We remove the default borders so it blends seamlessly into the Container
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -63,13 +62,15 @@ class CommentsSection extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // The Dynamic Colored Button
               FilledButton(
                 onPressed: () {
+                  // 🔥 INTERCEPT GUESTS HERE:
+                  if (GuestChecker.checkAndPrompt(context)) return;
+
                   // TODO: Handle comment post
                 },
                 style: FilledButton.styleFrom(
-                  backgroundColor: categoryColor, // Uses the exact category color!
+                  backgroundColor: categoryColor,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -78,7 +79,7 @@ class CommentsSection extends StatelessWidget {
                 child: Text(
                   "POST COMMENT",
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.darkText, // High contrast text on top of the color
+                    color: AppColors.darkText,
                   ),
                 ),
               ),
@@ -87,16 +88,14 @@ class CommentsSection extends StatelessWidget {
         ),
         const SizedBox(height: 32),
 
-        // 3. Single Dummy Comment
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // User Avatar styled to match design
             Container(
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: categoryColor.withOpacity(0.8), // Matches the category!
+                color: categoryColor.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(12),
               ),
               alignment: Alignment.center,
@@ -109,7 +108,6 @@ class CommentsSection extends StatelessWidget {
             ),
             const SizedBox(width: 16),
 
-            // Comment Text Content
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

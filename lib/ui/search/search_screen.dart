@@ -1,4 +1,3 @@
-// lib/ui/search/screens/search_screen.dart
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
@@ -87,12 +86,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 // 🧭 1. TOP NAVIGATION HEADER
                 Row(
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(right: 48.0), // Perfect text center balancing offset

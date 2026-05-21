@@ -1,9 +1,13 @@
-// lib/ui/onboarding/screens/interest_screen.dart
+
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
 import '../../ui/home/screens/home_screen.dart';
 import '../models/category_model.dart';
+
+// 🔥 1. Add Firebase Imports
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InterestScreen extends StatefulWidget {
   static const String routeName = 'interest';
@@ -18,6 +22,9 @@ class _InterestScreenState extends State<InterestScreen> {
 
   // 🧠 Store selected categories
   final Set<String> _selectedCategories = {};
+
+  // 🔥 2. Add a loading state for the button
+  bool _isLoading = false;
 
   // 🎨 Categories (NOW using AppColors only)
   final List<CategoryModel> _categories = const [
@@ -49,11 +56,45 @@ class _InterestScreenState extends State<InterestScreen> {
     });
   }
 
+  // 🔥 3. Create the Save Function
+  Future<void> _saveInterestsAndContinue() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Get the currently logged-in user
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Update their specific document in Firestore
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          // Convert the Set to a List so Firebase can store it as an array
+          'selectedTopics': _selectedCategories.toList(),
+        });
+      }
+
+      // Navigate to Home upon success
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, HomeLayout.routeName);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save interests: $e')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
     final theme = Theme.of(context);
-
     final bool isSelectionValid = _selectedCategories.isNotEmpty;
 
     return Scaffold(
@@ -98,28 +139,22 @@ class _InterestScreenState extends State<InterestScreen> {
                 Expanded(
                   child: GridView.builder(
                     itemCount: _categories.length,
-
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 14,
                       mainAxisSpacing: 14,
                       childAspectRatio: 0.85,
                     ),
-
                     itemBuilder: (context, index) {
-
                       final category = _categories[index];
                       final isSelected = _selectedCategories.contains(category.title);
 
                       return GestureDetector(
                         onTap: () => _toggleCategory(category.title),
-
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
-
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(18),
-
                             // ✅ BORDER (THEME-CONSISTENT)
                             border: Border.all(
                               color: isSelected
@@ -128,13 +163,10 @@ class _InterestScreenState extends State<InterestScreen> {
                               width: 2.5,
                             ),
                           ),
-
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
-
                             child: Stack(
                               children: [
-
                                 // 🖼️ IMAGE
                                 Positioned.fill(
                                   child: Image.asset(
@@ -142,7 +174,6 @@ class _InterestScreenState extends State<InterestScreen> {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-
                                 // 🌑 DARK OVERLAY
                                 Container(
                                   decoration: BoxDecoration(
@@ -156,7 +187,6 @@ class _InterestScreenState extends State<InterestScreen> {
                                     ),
                                   ),
                                 ),
-
                                 // ✅ CHECK ICON
                                 if (isSelected)
                                   Positioned(
@@ -175,7 +205,6 @@ class _InterestScreenState extends State<InterestScreen> {
                                       ),
                                     ),
                                   ),
-
                                 // 🏷️ TITLE
                                 Positioned(
                                   bottom: 12,
@@ -184,7 +213,7 @@ class _InterestScreenState extends State<InterestScreen> {
                                     category.title,
                                     style: theme.textTheme.headlineSmall?.copyWith(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold, // Makes it pop even more against the image overlay
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
@@ -207,19 +236,22 @@ class _InterestScreenState extends State<InterestScreen> {
 
                 const SizedBox(height: 20),
 
-                // 🚀 BUTTON (USING YOUR THEME)
+                // 🔥 4. UPDATE BUTTON
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
-                    onPressed: isSelectionValid
-                        ? () {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        HomeLayout.routeName,
-                      );
-                    }
+                    // Disable button if no topics are selected OR if it's currently loading
+                    onPressed: isSelectionValid && !_isLoading
+                        ? _saveInterestsAndContinue
                         : null,
-                    child: const Text("Continue Briefing"),
+                    // Show a loading spinner if it is saving
+                    child: _isLoading
+                        ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2)
+                    )
+                        : const Text("Continue Briefing"),
                   ),
                 ),
 
