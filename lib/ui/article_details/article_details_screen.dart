@@ -48,7 +48,7 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
                       const SizedBox(height: 40),
                       const Divider(color: AppColors.border),
                       const SizedBox(height: 24),
-                      CommentsSection(categoryColor: widget.article.categoryColor),
+                      CommentsSection(article: widget.article),
                       const SizedBox(height: 40),
                     ],
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../core/utils/saved_articles_manager.dart';
 import '../../../core/widgets/bottomnav.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../search/search_screen.dart';
@@ -75,6 +76,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
   @override
   void initState() {
     super.initState();
+    SavedArticlesManager.loadUserSavedArticles();
     _loadTrendingNews();
     _loadForYouNews();
   }
