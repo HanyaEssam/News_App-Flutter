@@ -36,6 +36,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     _fetchUserData();
   }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchUserData();
+  }
 
   Future<void> _fetchUserData() async {
     try {
@@ -145,12 +150,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 20),
                 ProfileHeader(userName: _userName, avatarPath: _avatarUrl),
                 const SizedBox(height: 40),
-                Row(
-                  children: [
-                    MetricCard(title: 'Articles Read', value: _articlesRead),
-                    const SizedBox(width: 16),
-                    MetricCard(title: 'Minutes Saved', value: _minutesSaved, unit: 'm'),
-                  ],
+                StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const CircularProgressIndicator();
+                    }
+
+                    final data = snapshot.data!.data() as Map<String, dynamic>;
+
+                    final articlesRead = (data['articlesRead'] ?? 0).toString();
+                    final minutesSaved = (data['minutesSaved'] ?? 0).toString();
+
+                    return Row(
+                      children: [
+                        MetricCard(title: 'Articles Read', value: articlesRead),
+                        const SizedBox(width: 16),
+                        MetricCard(title: 'Minutes Saved', value: minutesSaved, unit: 'm'),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 40),
                 Text('APPEARANCE', style: Theme.of(context).textTheme.labelMedium),

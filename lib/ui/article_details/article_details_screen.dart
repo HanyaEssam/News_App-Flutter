@@ -4,6 +4,8 @@ import '../../../core/widgets/background_color/app_background.dart';
 import '../../../core/models/article_model.dart';
 import 'package:news/core/widgets/article_content/article_content.dart';
 import 'package:news/core/widgets/article_content/comment_section.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../core/utils/saved_articles_manager.dart';
 import '../../core/widgets/bookmark/bookmark_button.dart';
@@ -20,6 +22,28 @@ class ArticleDetailsScreen extends StatefulWidget {
 
 class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
   @override
+  Future<void> _markArticleAsCompleted() async {
+    debugPrint("🔥 COMPLETED BUTTON PRESSED");
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      debugPrint("❌ USER IS NULL (guest or not logged in)");
+      return;
+    }
+
+    debugPrint("✅ USER ID: ${user.uid}");
+
+    final userRef =
+    FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    await userRef.update({
+      'articlesRead': FieldValue.increment(1),
+      'minutesSaved': FieldValue.increment(5),
+    });
+
+    debugPrint("✅ FIRESTORE UPDATED SUCCESSFULLY");
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +72,10 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
                       const SizedBox(height: 40),
                       const Divider(color: AppColors.border),
                       const SizedBox(height: 24),
-                      CommentsSection(categoryColor: widget.article.categoryColor),
+                      CommentsSection(
+                        categoryColor: widget.article.categoryColor,
+                        articleId: widget.article.title, // ⚠️ TEMP (better later replace with real ID)
+                      ),
                       const SizedBox(height: 40),
                     ],
                   ),
@@ -59,7 +86,12 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: FilledButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () async {
+                    await _markArticleAsCompleted();
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
                   style: FilledButton.styleFrom(
                     minimumSize: const Size(double.infinity, 56),
                     backgroundColor: AppColors.cardDark,
