@@ -6,50 +6,22 @@ import '../bookmark/bookmark_button.dart';
 
 class ForYouCard extends StatelessWidget {
   final String label;
-  final String title;
-  final String description;
-  final String time;
-  final String readTime;
-  final String source;
-  final String imageUrl;
-  final Color categoryColor; // ✅ Added this line
+  final ArticleModel article; // ✅ We now accept the FULL article model!
 
   const ForYouCard({
     super.key,
     required this.label,
-    required this.title,
-    required this.description,
-    required this.time,
-    required this.readTime,
-    required this.source,
-    required this.imageUrl,
-    required this.categoryColor, // ✅ Added to constructor
+    required this.article,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Build ArticleModel from params
-    final articleModel = ArticleModel(
-      title: title,
-      content:
-      '$description\n\nHere is the rest of the full article content explaining the details in depth...',
-      category: label
-          .replaceAll('Based on your interest in ', '')
-          .replaceAll('Discovery of the week', 'Discovery'),
-      categoryColor: categoryColor, // ✅ Replaced AppColors.blue with categoryColor
-      source: source,
-      date: 'Oct 24, 2023',
-      time: time,
-      imageUrl: imageUrl,
-      readtime: readTime,
-    );
-
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ArticleDetailsScreen(article: articleModel),
+            builder: (context) => ArticleDetailsScreen(article: article),
           ),
         );
       },
@@ -73,16 +45,15 @@ class ForYouCard extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      // ✅ Removed "const" from Icon and used categoryColor
                       Icon(Icons.lightbulb_outline,
-                          size: 16, color: categoryColor),
+                          size: 16, color: article.categoryColor),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           label.toUpperCase(),
                           style:
                           Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: categoryColor, // ✅ Replaced AppColors.blue with categoryColor
+                            color: article.categoryColor,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -91,7 +62,7 @@ class ForYouCard extends StatelessWidget {
                   ),
                 ),
                 BookmarkButton(
-                  article: articleModel,
+                  article: article,
                   unselectedColor: AppColors.mutedText,
                 ),
               ],
@@ -105,14 +76,14 @@ class ForYouCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        article.title, // ✅ Using article data directly
                         style: Theme.of(context).textTheme.headlineSmall,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        description,
+                        article.content, // ✅ Using article data directly
                         style: Theme.of(context).textTheme.bodyMedium,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -121,7 +92,6 @@ class ForYouCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                // 🔥 Smart image: network OR asset
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: _buildSmallImage(),
@@ -133,7 +103,7 @@ class ForYouCard extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    time,
+                    article.date, // ✅ This will now show the clean, formatted API date!
                     style: Theme.of(context).textTheme.bodySmall,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -144,7 +114,7 @@ class ForYouCard extends StatelessWidget {
                 ),
                 Flexible(
                   child: Text(
-                    readTime,
+                    article.readtime, // ✅ Using article data directly
                     style: Theme.of(context).textTheme.bodySmall,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -155,7 +125,7 @@ class ForYouCard extends StatelessWidget {
                 ),
                 Flexible(
                   child: Text(
-                    source.toUpperCase(),
+                    article.source.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -170,76 +140,26 @@ class ForYouCard extends StatelessWidget {
     );
   }
 
-  // Smart image builder — handles network URLs and asset paths
   Widget _buildSmallImage() {
-    if (imageUrl.isEmpty) {
+    if (article.imageUrl.isEmpty) {
       return Container(
-        height: 80,
-        width: 80,
-        color: Colors.grey.shade900,
-        child: const Icon(
-          Icons.image_not_supported_outlined,
-          color: Colors.white24,
-          size: 24,
-        ),
+        height: 80, width: 80, color: Colors.grey.shade900,
+        child: const Icon(Icons.image_not_supported_outlined, color: Colors.white24, size: 24),
       );
     }
 
-    final isNetwork =
-        imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
-
+    final isNetwork = article.imageUrl.startsWith('http');
     if (isNetwork) {
       return Image.network(
-        imageUrl,
-        height: 80,
-        width: 80,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            height: 80,
-            width: 80,
-            color: Colors.grey.shade900,
-            child: const Icon(
-              Icons.broken_image_outlined,
-              color: Colors.white24,
-              size: 24,
-            ),
-          );
-        },
-        loadingBuilder: (context, child, progress) {
-          if (progress == null) return child;
-          return Container(
-            height: 80,
-            width: 80,
-            color: Colors.grey.shade900,
-            child: const Center(
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
-          );
-        },
+        article.imageUrl,
+        height: 80, width: 80, fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(height: 80, width: 80, color: Colors.grey.shade900, child: const Icon(Icons.broken_image_outlined, color: Colors.white24, size: 24)),
       );
     } else {
       return Image.asset(
-        imageUrl,
-        height: 80,
-        width: 80,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            height: 80,
-            width: 80,
-            color: Colors.grey.shade900,
-            child: const Icon(
-              Icons.broken_image_outlined,
-              color: Colors.white24,
-              size: 24,
-            ),
-          );
-        },
+        article.imageUrl,
+        height: 80, width: 80, fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(height: 80, width: 80, color: Colors.grey.shade900, child: const Icon(Icons.broken_image_outlined, color: Colors.white24, size: 24)),
       );
     }
   }

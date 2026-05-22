@@ -1,58 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
-
 import '../../models/article_model.dart';
 import '../../../ui/article_details/article_details_screen.dart';
-import '../../utils/saved_articles_manager.dart';
 import '../bookmark/bookmark_button.dart';
 
-class FeedArticleCard extends StatefulWidget {
-  final String category;
-  final String title;
-  final String source;
-  final String readTime;
-  final String imageUrl;
-  final Color categoryColor;
-
-  final String? description;
-  final String? timeAgo;
+class FeedArticleCard extends StatelessWidget {
+  final ArticleModel article; // ✅ Only passing the full article now!
 
   const FeedArticleCard({
     super.key,
-    required this.category,
-    required this.title,
-    required this.source,
-    required this.readTime,
-    required this.imageUrl,
-    required this.categoryColor,
-    this.description,
-    this.timeAgo,
+    required this.article,
   });
 
   @override
-  State<FeedArticleCard> createState() => _FeedArticleCardState();
-}
-
-class _FeedArticleCardState extends State<FeedArticleCard> {
-  bool isSaved = false;
-
-
-  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // CHANGED
-
-    final articleModel = ArticleModel(
-      title: widget.title,
-      content:
-      '${widget.description ?? "Full article text goes here..."}\n\nThis is the detailed view of the article retrieved directly from the ${widget.category} category feed.',
-      category: widget.category,
-      categoryColor: widget.categoryColor,
-      source: widget.source,
-      date: 'Oct 24, 2023',
-      time: widget.timeAgo ?? 'Just now',
-      imageUrl: widget.imageUrl,
-      readtime: widget.readTime,
-    );
+    final theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
@@ -63,32 +25,40 @@ class _FeedArticleCardState extends State<FeedArticleCard> {
             context,
             MaterialPageRoute(
               builder: (context) => ArticleDetailsScreen(
-                article: articleModel,
+                article: article, // ✅ Passes the real article, with the real date!
               ),
             ),
           );
         },
         child: Container(
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface, // CHANGED
+            color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: theme.colorScheme.primary.withOpacity(0.25), // CHANGED
+              color: theme.colorScheme.primary.withOpacity(0.25),
             ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 🔥 Smart Image Handler
               Container(
                 height: 200,
                 decoration: BoxDecoration(
-                  borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
-                  image: DecorationImage(
-                    image: NetworkImage(widget.imageUrl),
+                  color: Colors.grey.shade900,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  image: article.imageUrl.isNotEmpty
+                      ? DecorationImage(
+                    image: article.imageUrl.startsWith('http')
+                        ? NetworkImage(article.imageUrl) as ImageProvider
+                        : AssetImage(article.imageUrl),
                     fit: BoxFit.cover,
-                  ),
+                  )
+                      : null,
                 ),
+                child: article.imageUrl.isEmpty
+                    ? const Center(child: Icon(Icons.image_not_supported, color: Colors.white24, size: 50))
+                    : null,
               ),
 
               Padding(
@@ -101,51 +71,45 @@ class _FeedArticleCardState extends State<FeedArticleCard> {
                         Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.15), // CHANGED
+                            color: theme.colorScheme.primary.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
                             Icons.article,
                             size: 16,
-                            color: widget.categoryColor,
+                            color: article.categoryColor,
                           ),
                         ),
-
                         const SizedBox(width: 12),
-
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.source,
+                              article.source,
                               style: theme.textTheme.bodySmall,
                             ),
-
-                            if (widget.description != null)
-                              Text(
-                                'MAIN SOURCE',
-                                style: theme.textTheme.labelSmall,
-                              ),
+                            Text(
+                              'MAIN SOURCE',
+                              style: theme.textTheme.labelSmall,
+                            ),
                           ],
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 12),
 
                     Text(
-                      widget.title,
+                      article.title,
                       style: theme.textTheme.headlineSmall,
                     ),
+                    const SizedBox(height: 8),
 
-                    if (widget.description != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        widget.description!,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ],
-
+                    Text(
+                      article.content,
+                      style: theme.textTheme.bodyMedium,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(height: 16),
 
                     Row(
@@ -154,35 +118,28 @@ class _FeedArticleCardState extends State<FeedArticleCard> {
                         Row(
                           children: [
                             Text(
-                              widget.readTime.toUpperCase(),
+                              article.readtime.toUpperCase(),
                               style: theme.textTheme.labelSmall,
                             ),
-
-                            if (widget.timeAgo != null) ...[
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                  '•',
-                                  style: TextStyle(
-                                    color: theme.colorScheme.primary.withOpacity(0.5), // CHANGED
-                                  ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                '•',
+                                style: TextStyle(
+                                  color: theme.colorScheme.primary.withOpacity(0.5),
                                 ),
                               ),
-
-                              Text(
-                                widget.timeAgo!.toUpperCase(),
-                                style: theme.textTheme.labelSmall,
-                              ),
-                            ],
+                            ),
+                            Text(
+                              article.date.toUpperCase(), // ✅ Shows the real date here!
+                              style: theme.textTheme.labelSmall,
+                            ),
                           ],
                         ),
-
                         BookmarkButton(
-                          article: articleModel,
+                          article: article,
                           unselectedColor:
-                          theme.textTheme.bodySmall?.color ??
-                              AppColors.lightMutedText, // CHANGED
+                          theme.textTheme.bodySmall?.color ?? AppColors.lightMutedText,
                         ),
                       ],
                     ),

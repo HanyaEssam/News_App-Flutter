@@ -63,12 +63,10 @@ class HomeTabContent extends StatefulWidget {
 class _HomeTabContentState extends State<HomeTabContent> {
   final NewsService _newsService = NewsService();
 
-  // Trending state
   List<ArticleModel> _trendingArticles = [];
   bool _isTrendingLoading = true;
   String? _trendingError;
 
-  // For You state
   List<ArticleModel> _forYouArticles = [];
   List<String> _userTopics = [];
   bool _isForYouLoading = true;
@@ -81,7 +79,6 @@ class _HomeTabContentState extends State<HomeTabContent> {
     _loadForYouNews();
   }
 
-  // ✅ NEW: Helper function to generate dynamic colors based on topic
   Color _getColorForCategory(String category) {
     switch (category.toLowerCase()) {
       case 'technology':
@@ -98,10 +95,24 @@ class _HomeTabContentState extends State<HomeTabContent> {
       case 'entertainment':
         return AppColors.pink;
       default:
-        return AppColors.blue; // Fallback color
+        return AppColors.blue;
     }
   }
 
+  // ✅ NEW: Helper function to convert raw API date into "May 20, 2026" format
+  String _formatDate(String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return 'Recent';
+    try {
+      final DateTime dt = DateTime.parse(rawDate);
+      final List<String> months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ];
+      return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
+    } catch (e) {
+      return rawDate.substring(0, 10);
+    }
+  }
 
   Future<void> _loadTrendingNews() async {
     try {
@@ -114,7 +125,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
           category: 'Trending',
           categoryColor: AppColors.primary,
           source: data['source']?['name'] ?? 'Unknown',
-          date: data['publishedAt']?.toString().substring(0, 10) ?? '',
+          date: _formatDate(data['publishedAt']), // ✅ Applied nice formatting
           time: 'Recent',
           imageUrl: data['urlToImage'] ?? '',
           readtime: '5 min read',
@@ -139,24 +150,17 @@ class _HomeTabContentState extends State<HomeTabContent> {
 
   Future<void> _loadForYouNews() async {
     try {
-      // 1. Get user's selected topics from Firestore
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        // Guest user — use default topics
         _userTopics = ['Technology', 'Business', 'Science'];
       } else {
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .get();
-
+        final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
         if (userDoc.exists && userDoc.data() != null) {
           final data = userDoc.data()!;
           final topics = data['selectedTopics'] as List<dynamic>?;
           if (topics != null && topics.isNotEmpty) {
             _userTopics = topics.cast<String>();
           } else {
-            // Fallback if user has no topics
             _userTopics = ['Technology', 'Business', 'Science'];
           }
         } else {
@@ -164,19 +168,18 @@ class _HomeTabContentState extends State<HomeTabContent> {
         }
       }
 
-      // 2. Fetch articles for those topics
       final articlesData = await _newsService.getArticlesForTopics(_userTopics);
 
       final articles = articlesData.take(6).map((data) {
-        final topic = data['matchedTopic'] ?? 'General'; // ✅ Extract topic first
+        final topic = data['matchedTopic'] ?? 'General';
 
         return ArticleModel(
           title: data['title'] ?? 'No title',
           content: data['content'] ?? data['description'] ?? 'No content',
           category: topic,
-          categoryColor: _getColorForCategory(topic), // ✅ Assign dynamic color
+          categoryColor: _getColorForCategory(topic),
           source: data['source']?['name'] ?? 'Unknown',
-          date: data['publishedAt']?.toString().substring(0, 10) ?? '',
+          date: _formatDate(data['publishedAt']), // ✅ Applied nice formatting
           time: 'Recent',
           imageUrl: data['urlToImage'] ?? '',
           readtime: '5 min read',
@@ -218,36 +221,25 @@ class _HomeTabContentState extends State<HomeTabContent> {
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text(
-                    'Your daily briefing',
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
+                  child: Text('Your daily briefing', style: Theme.of(context).textTheme.displaySmall),
                 ),
                 const SizedBox(height: 24),
                 const CategoryList(),
                 const SizedBox(height: 32),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text(
-                    'Trending Now',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
+                  child: Text('Trending Now', style: Theme.of(context).textTheme.headlineMedium),
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
                   height: 360,
                   child: _buildTrendingSection(),
                 ),
-
-                // 🔥 For You section — only for logged-in users
                 if (!isGuest) ...[
                   const SizedBox(height: 32),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
-                      'For You',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
+                    child: Text('For You', style: Theme.of(context).textTheme.headlineMedium),
                   ),
                   const SizedBox(height: 16),
                   Padding(
@@ -265,31 +257,9 @@ class _HomeTabContentState extends State<HomeTabContent> {
   }
 
   Widget _buildTrendingSection() {
-    if (_isTrendingLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_trendingError != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Text(
-            'Could not load news.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ),
-      );
-    }
-
-    if (_trendingArticles.isEmpty) {
-      return Center(
-        child: Text(
-          'No articles available',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      );
-    }
+    if (_isTrendingLoading) return const Center(child: CircularProgressIndicator());
+    if (_trendingError != null) return Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text('Could not load news.', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium)));
+    if (_trendingArticles.isEmpty) return Center(child: Text('No articles available', style: Theme.of(context).textTheme.bodyMedium));
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -302,47 +272,15 @@ class _HomeTabContentState extends State<HomeTabContent> {
   }
 
   Widget _buildForYouSection() {
-    if (_isForYouLoading) {
-      return const Padding(
-        padding: EdgeInsets.all(40.0),
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (_forYouError != null) {
-      return Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Text(
-          'Could not load personalized news.',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      );
-    }
-
-    if (_forYouArticles.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Text(
-          'No personalized articles yet.',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      );
-    }
+    if (_isForYouLoading) return const Padding(padding: EdgeInsets.all(40.0), child: Center(child: CircularProgressIndicator()));
+    if (_forYouError != null) return Padding(padding: const EdgeInsets.all(20.0), child: Text('Could not load personalized news.', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium));
+    if (_forYouArticles.isEmpty) return Padding(padding: const EdgeInsets.all(20.0), child: Text('No personalized articles yet.', style: Theme.of(context).textTheme.bodyMedium));
 
     return Column(
       children: _forYouArticles.map((article) {
         return ForYouCard(
           label: 'Based on your interest in ${article.category}',
-          title: article.title,
-          description: article.content.length > 150
-              ? '${article.content.substring(0, 150)}...'
-              : article.content,
-          time: article.time,
-          readTime: article.readtime,
-          source: article.source,
-          imageUrl: article.imageUrl,
-          categoryColor: article.categoryColor, // ✅ Passed the specific color to the card!
+          article: article, // ✅ No more breaking the article apart! Passing the whole object.
         );
       }).toList(),
     );

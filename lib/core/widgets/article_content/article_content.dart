@@ -34,14 +34,26 @@ class ArticleContent extends StatelessWidget {
         Text(article.title, style: Theme.of(context).textTheme.displayMedium),
         const SizedBox(height: 24),
 
-        // Article Image
+        // Article Image (✅ Fixed to support Network images from API)
         Container(
           height: 220,
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            image: DecorationImage(image: AssetImage(article.imageUrl), fit: BoxFit.cover),
+            color: Colors.grey.shade900, // Background color while loading
+            image: article.imageUrl.isNotEmpty
+                ? DecorationImage(
+              image: article.imageUrl.startsWith('http')
+                  ? NetworkImage(article.imageUrl) as ImageProvider
+                  : AssetImage(article.imageUrl),
+              fit: BoxFit.cover,
+            )
+                : null,
           ),
+          // Fallback icon if there is no image url at all
+          child: article.imageUrl.isEmpty
+              ? const Icon(Icons.image_not_supported, color: Colors.white24, size: 50)
+              : null,
         ),
         const SizedBox(height: 24),
 

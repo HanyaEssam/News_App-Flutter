@@ -3,7 +3,7 @@
 
 class ApiConstants {
   // 🔑 PASTE YOUR NEWSAPI KEY HERE (between the quotes)
-  static const String newsApiKey = 'dea49f30ca0540ab92247e6468f41f85';
+  static const String newsApiKey = 'e0f84d204d6747e3bd677001745d7ae8';
 
   // Base URL for NewsAPI
   static const String newsApiBaseUrl = 'https://newsapi.org/v2';

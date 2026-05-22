@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/background_color/app_background.dart';
 import 'package:news/core/widgets/category_feed_widgets/feed_article_card.dart';
+import 'package:news/services/news_service.dart';
+import 'package:news/core/models/article_model.dart';
 
-class CategoryFeedScreen extends StatelessWidget {
+class CategoryFeedScreen extends StatefulWidget {
   final String categoryName;
   final Color categoryColor;
 
@@ -12,6 +14,71 @@ class CategoryFeedScreen extends StatelessWidget {
     required this.categoryName,
     required this.categoryColor,
   });
+
+  @override
+  State<CategoryFeedScreen> createState() => _CategoryFeedScreenState();
+}
+
+class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
+  final NewsService _newsService = NewsService();
+  List<ArticleModel> _categoryArticles = [];
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCategoryNews();
+  }
+
+  // ✅ Date formatter
+  String _formatDate(String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return 'Recent';
+    try {
+      final DateTime dt = DateTime.parse(rawDate);
+      final List<String> months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ];
+      return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
+    } catch (e) {
+      return rawDate.substring(0, 10);
+    }
+  }
+
+  Future<void> _fetchCategoryNews() async {
+    try {
+      final articlesData = await _newsService.getArticlesForTopics([widget.categoryName]);
+
+      final articles = articlesData.map((data) {
+        return ArticleModel(
+          title: data['title'] ?? 'No title',
+          content: data['content'] ?? data['description'] ?? 'No content',
+          category: widget.categoryName,
+          categoryColor: widget.categoryColor,
+          source: data['source']?['name'] ?? 'Unknown',
+          date: _formatDate(data['publishedAt']),
+          time: 'Recent',
+          imageUrl: data['urlToImage'] ?? '',
+          readtime: '5 min read',
+        );
+      }).toList();
+
+      if (mounted) {
+        setState(() {
+          _categoryArticles = articles;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +93,9 @@ class CategoryFeedScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      icon:  Icon(Icons.arrow_back,
-                        color: Theme.of(context).colorScheme.primary, // CHANGED
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       onPressed: () => Navigator.pop(context),
                     ),
@@ -41,7 +109,7 @@ class CategoryFeedScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 48),
+                    const SizedBox(width: 48), // Balances the back button
                   ],
                 ),
               ),
@@ -55,48 +123,53 @@ class CategoryFeedScreen extends StatelessWidget {
                       const SizedBox(height: 20),
 
                       Text(
-                        '${categoryName.toUpperCase()} INTELLIGENCE',
+                        '${widget.categoryName.toUpperCase()} INTELLIGENCE',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: categoryColor,
+                          color: widget.categoryColor,
                           letterSpacing: 2.0,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '$categoryName Feed',
+                        '${widget.categoryName} Feed',
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
                       const SizedBox(height: 32),
 
-                      FeedArticleCard(
-                        category: categoryName,
-                        categoryColor: categoryColor,
-                        title: 'The Revolution of High-Altitude Performance Training',
-                        source: 'Global Athletics',
-                        readTime: '12 Min Read',
-                        timeAgo: '2 Hours Ago',
-                        description: 'New wave analytics indicate an increase in pushing biological boundaries through curated oxygen exposure...',
-                        imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070&auto=format&fit=crop',
-                      ),
-
-
-                      FeedArticleCard(
-                        category: categoryName,
-                        categoryColor: categoryColor,
-                        title: 'Urban Mobility: The Rise of Professional City Circuits',
-                        source: 'The Daily Sprint',
-                        readTime: '6 Min Read',
-                        imageUrl: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?q=80&w=2070&auto=format&fit=crop',
-                      ),
-
-                      FeedArticleCard(
-                        category: categoryName,
-                        categoryColor: categoryColor,
-                        title: 'Precision Analytics: How Data is Redefining the Three-Point Line',
-                        source: 'Hoop Central',
-                        readTime: '9 Min Read',
-                        imageUrl: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2090&auto=format&fit=crop',
-                      ),
+                      if (_isLoading)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(40.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      else if (_error != null)
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              'Could not load ${widget.categoryName} news.',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        )
+                      else if (_categoryArticles.isEmpty)
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Text(
+                                'No articles found for this category.',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ),
+                          )
+                        else
+                          ..._categoryArticles.map((article) {
+                            // ✅ FIXED: We are now passing the full article object!
+                            return FeedArticleCard(
+                              article: article,
+                            );
+                          }).toList(),
 
                       const SizedBox(height: 40),
                     ],
