@@ -4,15 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
+import '../../core/widgets/profile_widgets/edit_profile_screen.dart';
 import '../../core/widgets/profile_widgets/metric_card.dart';
 import '../../core/widgets/profile_widgets/profile_header.dart';
 import '../../core/widgets/profile_widgets/setting_row.dart';
 import '../../../core/theme/theme_controller.dart';
 import '../auth/login/login_screen.dart';
-
-// 🔥 IMPORTS:
 import '../../../core/utils/guest_checker.dart';
 import '../../../core/widgets/guest/guest_widget.dart';
+
+// 🔥 IMPORT YOUR NEW EDIT SCREEN
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = '/profile';
@@ -41,21 +42,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-
-        if (doc.exists) {
-          final data = doc.data()!;
-          setState(() {
-            _userName = data['fullName'] ?? 'User';
-            _avatarUrl = data['avatarUrl'] ?? '';
-            _articlesRead = (data['articlesRead'] ?? 0).toString();
-            _minutesSaved = (data['minutesSaved'] ?? 0).toString();
-            _isLoading = false;
-          });
-        }
+        // Use snapshots() so the profile updates instantly when edited!
+        FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots().listen((doc) {
+          if (doc.exists && mounted) {
+            final data = doc.data()!;
+            setState(() {
+              _userName = data['fullName'] ?? 'User';
+              _avatarUrl = data['avatarUrl'] ?? '';
+              _articlesRead = (data['articlesRead'] ?? 0).toString();
+              _minutesSaved = (data['minutesSaved'] ?? 0).toString();
+              _isLoading = false;
+            });
+          }
+        });
       }
     } catch (e) {
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
       debugPrint("Error fetching user data: $e");
     }
   }
@@ -109,11 +111,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // 🔥 Intercept Guests
     if (GuestChecker.isGuest()) {
       return Scaffold(
         appBar: AppBar(
-            automaticallyImplyLeading: false, // 🔥 FIX: STRICTLY FORBID BACK BUTTON
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             title: const Text('INSIGHTLY')
         ),
@@ -129,9 +130,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // 🔥 FIX: STRICTLY FORBID BACK BUTTON
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         title: const Text('INSIGHTLY'),
+        // 🔥 ADDED THE EDIT PENCIL ICON
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: AppBackground(
         child: SafeArea(
