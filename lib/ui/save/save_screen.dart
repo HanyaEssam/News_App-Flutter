@@ -5,7 +5,7 @@ import '../../../core/widgets/saved_widgets/empty_saved_state.dart';
 import '../../../core/widgets/saved_widgets/save_article_card.dart';
 import '../../../core/models/article_model.dart';
 import '../../../core/utils/saved_articles_manager.dart';
-
+import 'package:news/l10n/app_localizations.dart';
 // 🔥 IMPORTS:
 import '../../../core/utils/guest_checker.dart';
 import '../../../core/widgets/guest/guest_widget.dart';
@@ -20,15 +20,16 @@ class SaveScreen extends StatelessWidget {
     if (GuestChecker.isGuest()) {
       return Scaffold(
         appBar: AppBar(
-            automaticallyImplyLeading: false, // 🔥 FIX: STRICTLY FORBID BACK BUTTON
-            backgroundColor: Colors.transparent,
-            title: const Text('INSIGHTLY')
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          title: Text(AppLocalizations.of(context)!.appTitle.toUpperCase()),
         ),
         body: AppBackground(
           child: const GuestWidget(
             icon: Icons.bookmark_outline,
             title: 'Your Private Library',
-            subtitle: 'Create an account to bookmark articles and build your curated intelligence feed.',
+            subtitle:
+                'Create an account to bookmark articles and build your curated intelligence feed.',
           ),
         ),
       );
@@ -36,9 +37,9 @@ class SaveScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // 🔥 FIX: STRICTLY FORBID BACK BUTTON
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        title: const Text('INSIGHTLY'),
+        title: Text(AppLocalizations.of(context)!.appTitle.toUpperCase()),
       ),
       body: AppBackground(
         child: SafeArea(
@@ -51,7 +52,7 @@ class SaveScreen extends StatelessWidget {
 
                 // Page Title
                 Text(
-                  'Saved',
+                  AppLocalizations.of(context)!.savedPageTitle,
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 const SizedBox(height: 12),
@@ -59,19 +60,17 @@ class SaveScreen extends StatelessWidget {
                 ValueListenableBuilder<List<ArticleModel>>(
                   valueListenable: SavedArticlesManager.savedArticles,
                   builder: (context, savedList, child) {
-
                     bool hasSavedArticles = savedList.isNotEmpty;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          hasSavedArticles
-                              ? '${savedList.length} SAVED ARTICLES'
-                              : '0 SAVED ARTICLES',
-                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: AppColors.mutedText,
-                          ),
+                          AppLocalizations.of(context)!
+                              .savedArticlesCount(savedList.length.toString())
+                              .toUpperCase(),
+                          style: Theme.of(context).textTheme.labelMedium
+                              ?.copyWith(color: AppColors.mutedText),
                         ),
                         const SizedBox(height: 32),
 
@@ -85,9 +84,7 @@ class SaveScreen extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final article = savedList[index];
 
-                              return SavedArticleCard(
-                                article: article,
-                              );
+                              return SavedArticleCard(article: article);
                             },
                           ),
                       ],

@@ -1,0 +1,64 @@
+{
+  "appTitle": "Insightly",
+  "dailyBriefing": "Tu resumen diario",
+  "trendingNow": "Tendencias ahora",
+  "forYou": "Para ti",
+  "profile": "Perfil",
+  "settings": "Ajustes",
+  "articlesRead": "Artículos leídos",
+  "minutesSaved": "Minutos ahorrados",
+  "appearance": "Apariencia",
+  "darkMode": "Modo oscuro",
+  "lightMode": "Modo claro",
+  "language": "Idioma",
+  "logoutSession": "Cerrar sesión",
+  "home": "Inicio",
+  "search": "Buscar",
+  "saved": "Guardados",
+  "tech": "Tecnología",
+  "business": "Negocios",
+  "sports": "Deportes",
+  "politics": "Política",
+  "science": "Ciencia",
+  "health": "Salud",
+  "travel": "Viajes",
+  "entertainment": "Entretenimiento",
+  "general": "General",
+  "trendingLabel": "Tendencia",
+  "recent": "Reciente",
+  "minRead": "min de lectura",
+  "mainSource": "Fuente principal",
+  "basedOnInterest": "BASADO EN TU INTERÉS EN {category}",
+  "@basedOnInterest": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "feedTitle": "Noticias de {category}",
+  "@feedTitle": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "intelligence": "Inteligencia",
+  "searchPageTitle": "Buscar",
+  "searchHint": "Buscar noticias, temas o autores",
+  "recentSearches": "Búsquedas recientes",
+  "trendingTopics": "Temas del momento",
+  "savedPageTitle": "Guardados",
+  "savedArticlesCount": "ARTÍCULOS GUARDADOS {count}",
+  "@savedArticlesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "noSavedArticles": "Aún no hay artículos guardados.",
+  "curationSpaceEmpty": "Tu espacio de curación está vacío. Explora las últimas novedades y guarda artículos para crear tu feed personalizado.",
+  "startExploring": "Empezar a explorar"
+}

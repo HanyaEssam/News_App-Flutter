@@ -5,6 +5,9 @@ import 'package:news/core/widgets/category_feed_widgets/feed_article_card.dart';
 import 'package:news/services/news_service.dart';
 import 'package:news/core/models/article_model.dart';
 
+// ✅ IMPORT YOUR DICTIONARY
+import 'package:news/l10n/app_localizations.dart';
+
 class CategoryFeedScreen extends StatefulWidget {
   final String categoryName;
   final Color categoryColor;
@@ -31,14 +34,51 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
     _fetchCategoryNews();
   }
 
+  // ✅ Helper to translate the incoming category name
+  String _getTranslatedCategory(BuildContext context, String rawName) {
+    final loc = AppLocalizations.of(context)!;
+    switch (rawName) {
+      case 'Tech':
+        return loc.tech;
+      case 'Business':
+        return loc.business;
+      case 'Sports':
+        return loc.sports;
+      case 'Politics':
+        return loc.politics;
+      case 'Science':
+        return loc.science;
+      case 'Health':
+        return loc.health;
+      case 'Travel':
+        return loc.travel;
+      case 'Entertainment':
+        return loc.entertainment;
+      case 'General':
+        return loc.general;
+      default:
+        return rawName;
+    }
+  }
+
   // ✅ Date formatter
   String _formatDate(String? rawDate) {
     if (rawDate == null || rawDate.isEmpty) return 'Recent';
     try {
       final DateTime dt = DateTime.parse(rawDate);
       final List<String> months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
       ];
       return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
     } catch (e) {
@@ -48,7 +88,9 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
 
   Future<void> _fetchCategoryNews() async {
     try {
-      final articlesData = await _newsService.getArticlesForTopics([widget.categoryName]);
+      final articlesData = await _newsService.getArticlesForTopics([
+        widget.categoryName,
+      ]);
 
       final articles = articlesData.map((data) {
         return ArticleModel(
@@ -82,6 +124,12 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Grab the translated category name once to use in the titles
+    final translatedCategory = _getTranslatedCategory(
+      context,
+      widget.categoryName,
+    );
+
     return Scaffold(
       body: AppBackground(
         child: SafeArea(
@@ -89,7 +137,10 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 12.0,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -102,10 +153,12 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
                     Expanded(
                       child: Center(
                         child: Text(
-                          'INSIGHTLY',
-                          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            fontSize: 24,
-                          ),
+                          AppLocalizations.of(
+                            context,
+                          )!.appTitle.toUpperCase(), // ✅ Translated "INSIGHTLY"
+                          style: Theme.of(
+                            context,
+                          ).textTheme.headlineLarge?.copyWith(fontSize: 24),
                         ),
                       ),
                     ),
@@ -123,7 +176,8 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
                       const SizedBox(height: 20),
 
                       Text(
-                        '${widget.categoryName.toUpperCase()} INTELLIGENCE',
+                        // ✅ Translated "TECH INTELLIGENCE"
+                        '${translatedCategory.toUpperCase()} ${AppLocalizations.of(context)!.intelligence.toUpperCase()}',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: widget.categoryColor,
                           letterSpacing: 2.0,
@@ -131,7 +185,10 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${widget.categoryName} Feed',
+                        // ✅ Translated "Tech Feed"
+                        AppLocalizations.of(
+                          context,
+                        )!.feedTitle(translatedCategory),
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
                       const SizedBox(height: 32),
@@ -148,28 +205,25 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: Text(
-                              'Could not load ${widget.categoryName} news.',
+                              'Could not load $translatedCategory news.',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
                         )
                       else if (_categoryArticles.isEmpty)
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Text(
-                                'No articles found for this category.',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              'No articles found for this category.',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
-                          )
-                        else
-                          ..._categoryArticles.map((article) {
-                            // ✅ FIXED: We are now passing the full article object!
-                            return FeedArticleCard(
-                              article: article,
-                            );
-                          }).toList(),
+                          ),
+                        )
+                      else
+                        ..._categoryArticles.map((article) {
+                          return FeedArticleCard(article: article);
+                        }).toList(),
 
                       const SizedBox(height: 40),
                     ],

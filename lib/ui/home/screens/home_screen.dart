@@ -13,6 +13,7 @@ import 'package:news/core/widgets/home_widgets/for_you_card.dart';
 import 'package:news/core/models/article_model.dart';
 import 'package:news/services/news_service.dart';
 import '../../../core/utils/guest_checker.dart';
+import 'package:news/l10n/app_localizations.dart';
 
 class HomeLayout extends StatefulWidget {
   static const String routeName = '/home';
@@ -41,10 +42,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: BottomNav(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
@@ -105,8 +103,18 @@ class _HomeTabContentState extends State<HomeTabContent> {
     try {
       final DateTime dt = DateTime.parse(rawDate);
       final List<String> months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
       ];
       return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
     } catch (e) {
@@ -154,7 +162,10 @@ class _HomeTabContentState extends State<HomeTabContent> {
       if (user == null) {
         _userTopics = ['Technology', 'Business', 'Science'];
       } else {
-        final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
         if (userDoc.exists && userDoc.data() != null) {
           final data = userDoc.data()!;
           final topics = data['selectedTopics'] as List<dynamic>?;
@@ -210,7 +221,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        title: const Text('INSIGHTLY'),
+        title: Text(AppLocalizations.of(context)!.appTitle.toUpperCase()),
       ),
       body: AppBackground(
         child: SafeArea(
@@ -221,25 +232,31 @@ class _HomeTabContentState extends State<HomeTabContent> {
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text('Your daily briefing', style: Theme.of(context).textTheme.displaySmall),
+                  child: Text(
+                    AppLocalizations.of(context)!.dailyBriefing,
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 const CategoryList(),
                 const SizedBox(height: 32),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text('Trending Now', style: Theme.of(context).textTheme.headlineMedium),
+                  child: Text(
+                    AppLocalizations.of(context)!.trendingNow,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                 ),
                 const SizedBox(height: 16),
-                SizedBox(
-                  height: 360,
-                  child: _buildTrendingSection(),
-                ),
+                SizedBox(height: 360, child: _buildTrendingSection()),
                 if (!isGuest) ...[
                   const SizedBox(height: 32),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text('For You', style: Theme.of(context).textTheme.headlineMedium),
+                    child: Text(
+                      AppLocalizations.of(context)!.forYou,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Padding(
@@ -257,9 +274,26 @@ class _HomeTabContentState extends State<HomeTabContent> {
   }
 
   Widget _buildTrendingSection() {
-    if (_isTrendingLoading) return const Center(child: CircularProgressIndicator());
-    if (_trendingError != null) return Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text('Could not load news.', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium)));
-    if (_trendingArticles.isEmpty) return Center(child: Text('No articles available', style: Theme.of(context).textTheme.bodyMedium));
+    if (_isTrendingLoading)
+      return const Center(child: CircularProgressIndicator());
+    if (_trendingError != null)
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            'Could not load news.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+      );
+    if (_trendingArticles.isEmpty)
+      return Center(
+        child: Text(
+          'No articles available',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      );
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -272,15 +306,37 @@ class _HomeTabContentState extends State<HomeTabContent> {
   }
 
   Widget _buildForYouSection() {
-    if (_isForYouLoading) return const Padding(padding: EdgeInsets.all(40.0), child: Center(child: CircularProgressIndicator()));
-    if (_forYouError != null) return Padding(padding: const EdgeInsets.all(20.0), child: Text('Could not load personalized news.', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium));
-    if (_forYouArticles.isEmpty) return Padding(padding: const EdgeInsets.all(20.0), child: Text('No personalized articles yet.', style: Theme.of(context).textTheme.bodyMedium));
+    if (_isForYouLoading)
+      return const Padding(
+        padding: EdgeInsets.all(40.0),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    if (_forYouError != null)
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Text(
+          'Could not load personalized news.',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      );
+    if (_forYouArticles.isEmpty)
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Text(
+          'No personalized articles yet.',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      );
 
     return Column(
       children: _forYouArticles.map((article) {
         return ForYouCard(
-          label: 'Based on your interest in ${article.category}',
-          article: article, // ✅ No more breaking the article apart! Passing the whole object.
+          label: AppLocalizations.of(
+            context,
+          )!.basedOnInterest(article.category.toUpperCase()),
+          article:
+              article, // ✅ No more breaking the article apart! Passing the whole object.
         );
       }).toList(),
     );

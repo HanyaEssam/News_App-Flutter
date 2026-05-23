@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
+import 'package:news/l10n/app_localizations.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String routeName = 'search';
@@ -88,9 +89,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 48.0), // Perfect text center balancing offset
+                        padding: const EdgeInsets.only(
+                          right: 48.0,
+                        ), // Perfect text center balancing offset
                         child: Text(
-                          "Search",
+                          AppLocalizations.of(context)!.searchPageTitle,
                           textAlign: TextAlign.center,
                           style: theme.textTheme.displaySmall?.copyWith(
                             fontWeight: FontWeight.bold,
@@ -112,7 +115,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   // Dynamically changes text typed into the field to contrast correctly
                   style: TextStyle(color: theme.colorScheme.onSurface),
                   decoration: InputDecoration(
-                    hintText: "Search news, topics, or authors",
+                    hintText: AppLocalizations.of(context)!.searchHint,
                     // Pulls decoration styles natively from your AppTheme inputDecorationTheme!
                     prefixIcon: const Icon(Icons.search),
                   ),
@@ -126,11 +129,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.zero,
                     children: [
-
                       // 🕘 3. RECENT SEARCHES SECTION
                       if (_recentSearches.isNotEmpty) ...[
                         Text(
-                          "Recent Searches",
+                          AppLocalizations.of(context)!.recentSearches,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -144,7 +146,10 @@ class _SearchScreenState extends State<SearchScreen> {
                             final item = _recentSearches[index];
                             return ListTile(
                               contentPadding: EdgeInsets.zero,
-                              leading: Icon(Icons.history, color: theme.colorScheme.secondary),
+                              leading: Icon(
+                                Icons.history,
+                                color: theme.colorScheme.secondary,
+                              ),
                               title: Text(
                                 item,
                                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -152,7 +157,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                               ),
                               trailing: IconButton(
-                                icon: Icon(Icons.close, color: theme.colorScheme.secondary, size: 20),
+                                icon: Icon(
+                                  Icons.close,
+                                  color: theme.colorScheme.secondary,
+                                  size: 20,
+                                ),
                                 onPressed: () => _deleteHistoryItem(item),
                               ),
                               onTap: () {
@@ -167,7 +176,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                       // 🔥 4. TRENDING TOPICS SECTION
                       Text(
-                        "Trending Topics",
+                        AppLocalizations.of(context)!.trendingTopics,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -201,7 +210,9 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: Text(
                                 '#$topic',
                                 style: theme.textTheme.titleSmall?.copyWith(
-                                  color: theme.colorScheme.primary, // Clear readability pop accent
+                                  color: theme
+                                      .colorScheme
+                                      .primary, // Clear readability pop accent
                                 ),
                               ),
                             ),
@@ -217,7 +228,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-
     );
   }
 }
