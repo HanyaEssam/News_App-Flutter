@@ -1,0 +1,64 @@
+{
+  "appTitle": "إنسايتلي",
+  "dailyBriefing": "موجزك اليومي",
+  "trendingNow": "الشائع الآن",
+  "forYou": "من أجلك",
+  "profile": "الملف الشخصي",
+  "settings": "الإعدادات",
+  "articlesRead": "مقالات قرأتها",
+  "minutesSaved": "دقائق وفرتها",
+  "appearance": "المظهر",
+  "darkMode": "الوضع الداكن",
+  "lightMode": "الوضع الفاتح",
+  "language": "اللغة",
+  "logoutSession": "تسجيل الخروج",
+  "home": "الرئيسية",
+  "search": "بحث",
+  "saved": "المحفوظات",
+  "tech": "تكنولوجيا",
+  "business": "أعمال",
+  "sports": "رياضة",
+  "politics": "سياسة",
+  "science": "علوم",
+  "health": "صحة",
+  "travel": "سفر",
+  "entertainment": "ترفيه",
+  "general": "عام",
+  "trendingLabel": "شائع",
+  "recent": "حديث",
+  "minRead": "دقيقة قراءة",
+  "mainSource": "المصدر الرئيسي",
+  "basedOnInterest": "بناءً على اهتمامك في {category}",
+  "@basedOnInterest": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "feedTitle": "أخبار {category}",
+  "@feedTitle": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "intelligence": "رؤى",
+  "searchPageTitle": "بحث",
+  "searchHint": "ابحث عن الأخبار، المواضيع، أو المؤلفين",
+  "recentSearches": "عمليات البحث الأخيرة",
+  "trendingTopics": "المواضيع الشائعة",
+  "savedPageTitle": "المحفوظات",
+  "savedArticlesCount": "المقالات المحفوظة {count}",
+  "@savedArticlesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "noSavedArticles": "لا توجد مقالات محفوظة بعد.",
+  "curationSpaceEmpty": "مساحة الحفظ الخاصة بك فارغة. استكشف أحدث الرؤى واحفظ المقالات لبناء موجز الأخبار المخصص لك.",
+  "startExploring": "ابدأ الاستكشاف"
+}

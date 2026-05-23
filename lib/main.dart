@@ -14,15 +14,24 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
 import 'onboarding/screens/interest_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:news/l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+// Note: If you saved locale_provider.dart in a different folder, update this path!
+import 'package:news/core/utils/locale_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const MyApp());
+  // 🔥 WRAP YOUR APP IN THE PROVIDER
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => LocaleProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -30,6 +39,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 LISTEN TO THE LANGUAGE PROVIDER HERE
+    final localeProvider = Provider.of<LocaleProvider>(context);
+
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: ThemeController.themeMode,
       builder: (context, themeMode, child) {
@@ -39,6 +51,11 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeMode,
+
+          // 🔥 ADD THESE 3 LOCALIZATION LINES
+          locale: localeProvider.locale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
 
           routes: {
             SplashScreen.routeName: (_) => const SplashScreen(),

@@ -3,16 +3,13 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/models/article_model.dart';
 import 'package:news/ui/article_details/article_details_screen.dart';
 import '../bookmark/bookmark_button.dart';
+import 'package:news/l10n/app_localizations.dart';
 
 class ForYouCard extends StatelessWidget {
   final String label;
   final ArticleModel article; // ✅ We now accept the FULL article model!
 
-  const ForYouCard({
-    super.key,
-    required this.label,
-    required this.article,
-  });
+  const ForYouCard({super.key, required this.label, required this.article});
 
   @override
   Widget build(BuildContext context) {
@@ -45,16 +42,17 @@ class ForYouCard extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      Icon(Icons.lightbulb_outline,
-                          size: 16, color: article.categoryColor),
+                      Icon(
+                        Icons.lightbulb_outline,
+                        size: 16,
+                        color: article.categoryColor,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           label.toUpperCase(),
-                          style:
-                          Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: article.categoryColor,
-                          ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(color: article.categoryColor),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -103,7 +101,8 @@ class ForYouCard extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    article.date, // ✅ This will now show the clean, formatted API date!
+                    article
+                        .date, // ✅ This will now show the clean, formatted API date!
                     style: Theme.of(context).textTheme.bodySmall,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -114,7 +113,10 @@ class ForYouCard extends StatelessWidget {
                 ),
                 Flexible(
                   child: Text(
-                    article.readtime, // ✅ Using article data directly
+                    article.readtime.replaceAll(
+                      'min read',
+                      AppLocalizations.of(context)!.minRead,
+                    ),
                     style: Theme.of(context).textTheme.bodySmall,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -143,8 +145,14 @@ class ForYouCard extends StatelessWidget {
   Widget _buildSmallImage() {
     if (article.imageUrl.isEmpty) {
       return Container(
-        height: 80, width: 80, color: Colors.grey.shade900,
-        child: const Icon(Icons.image_not_supported_outlined, color: Colors.white24, size: 24),
+        height: 80,
+        width: 80,
+        color: Colors.grey.shade900,
+        child: const Icon(
+          Icons.image_not_supported_outlined,
+          color: Colors.white24,
+          size: 24,
+        ),
       );
     }
 
@@ -152,14 +160,36 @@ class ForYouCard extends StatelessWidget {
     if (isNetwork) {
       return Image.network(
         article.imageUrl,
-        height: 80, width: 80, fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Container(height: 80, width: 80, color: Colors.grey.shade900, child: const Icon(Icons.broken_image_outlined, color: Colors.white24, size: 24)),
+        height: 80,
+        width: 80,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          height: 80,
+          width: 80,
+          color: Colors.grey.shade900,
+          child: const Icon(
+            Icons.broken_image_outlined,
+            color: Colors.white24,
+            size: 24,
+          ),
+        ),
       );
     } else {
       return Image.asset(
         article.imageUrl,
-        height: 80, width: 80, fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Container(height: 80, width: 80, color: Colors.grey.shade900, child: const Icon(Icons.broken_image_outlined, color: Colors.white24, size: 24)),
+        height: 80,
+        width: 80,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          height: 80,
+          width: 80,
+          color: Colors.grey.shade900,
+          child: const Icon(
+            Icons.broken_image_outlined,
+            color: Colors.white24,
+            size: 24,
+          ),
+        ),
       );
     }
   }

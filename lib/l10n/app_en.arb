@@ -1,0 +1,64 @@
+{
+  "appTitle": "Insightly",
+  "dailyBriefing": "Your daily briefing",
+  "trendingNow": "Trending Now",
+  "forYou": "For You",
+  "profile": "Profile",
+  "settings": "Settings",
+  "articlesRead": "Articles Read",
+  "minutesSaved": "Minutes Saved",
+  "appearance": "Appearance",
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode",
+  "language": "Language",
+  "logoutSession": "Logout Session",
+  "home": "Home",
+  "search": "Search",
+  "saved": "Saved",
+  "tech": "Tech",
+  "business": "Business",
+  "sports": "Sports",
+  "politics": "Politics",
+  "science": "Science",
+  "health": "Health",
+  "travel": "Travel",
+  "entertainment": "Entertainment",
+  "general": "General",
+  "trendingLabel": "Trending",
+  "recent": "Recent",
+  "minRead": "min read",
+  "mainSource": "Main Source",
+  "basedOnInterest": "BASED ON YOUR INTEREST IN {category}",
+  "@basedOnInterest": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "feedTitle": "{category} Feed",
+  "@feedTitle": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "intelligence": "Intelligence",
+  "searchPageTitle": "Search",
+  "searchHint": "Search news, topics, or authors",
+  "recentSearches": "Recent Searches",
+  "trendingTopics": "Trending Topics",
+  "savedPageTitle": "Saved",
+  "savedArticlesCount": "SAVED ARTICLES {count}",
+  "@savedArticlesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "noSavedArticles": "No saved articles yet.",
+  "curationSpaceEmpty": "Your curation space is empty. Explore the latest insights and bookmark articles to build your personalized intelligence feed.",
+  "startExploring": "Start Exploring"
+}

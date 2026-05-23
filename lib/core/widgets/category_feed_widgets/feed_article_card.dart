@@ -3,14 +3,12 @@ import '../../../../core/theme/app_colors.dart';
 import '../../models/article_model.dart';
 import '../../../ui/article_details/article_details_screen.dart';
 import '../bookmark/bookmark_button.dart';
+import 'package:news/l10n/app_localizations.dart';
 
 class FeedArticleCard extends StatelessWidget {
   final ArticleModel article; // ✅ Only passing the full article now!
 
-  const FeedArticleCard({
-    super.key,
-    required this.article,
-  });
+  const FeedArticleCard({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +23,8 @@ class FeedArticleCard extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => ArticleDetailsScreen(
-                article: article, // ✅ Passes the real article, with the real date!
+                article:
+                    article, // ✅ Passes the real article, with the real date!
               ),
             ),
           );
@@ -46,18 +45,26 @@ class FeedArticleCard extends StatelessWidget {
                 height: 200,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade900,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
                   image: article.imageUrl.isNotEmpty
                       ? DecorationImage(
-                    image: article.imageUrl.startsWith('http')
-                        ? NetworkImage(article.imageUrl) as ImageProvider
-                        : AssetImage(article.imageUrl),
-                    fit: BoxFit.cover,
-                  )
+                          image: article.imageUrl.startsWith('http')
+                              ? NetworkImage(article.imageUrl) as ImageProvider
+                              : AssetImage(article.imageUrl),
+                          fit: BoxFit.cover,
+                        )
                       : null,
                 ),
                 child: article.imageUrl.isEmpty
-                    ? const Center(child: Icon(Icons.image_not_supported, color: Colors.white24, size: 50))
+                    ? const Center(
+                        child: Icon(
+                          Icons.image_not_supported,
+                          color: Colors.white24,
+                          size: 50,
+                        ),
+                      )
                     : null,
               ),
 
@@ -89,7 +96,9 @@ class FeedArticleCard extends StatelessWidget {
                               style: theme.textTheme.bodySmall,
                             ),
                             Text(
-                              'MAIN SOURCE',
+                              AppLocalizations.of(
+                                context,
+                              )!.mainSource.toUpperCase(),
                               style: theme.textTheme.labelSmall,
                             ),
                           ],
@@ -98,10 +107,7 @@ class FeedArticleCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
 
-                    Text(
-                      article.title,
-                      style: theme.textTheme.headlineSmall,
-                    ),
+                    Text(article.title, style: theme.textTheme.headlineSmall),
                     const SizedBox(height: 8),
 
                     Text(
@@ -118,20 +124,30 @@ class FeedArticleCard extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              article.readtime.toUpperCase(),
+                              article.readtime
+                                  .replaceAll(
+                                    'min read',
+                                    AppLocalizations.of(context)!.minRead,
+                                  )
+                                  .toUpperCase(),
                               style: theme.textTheme.labelSmall,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0,
+                              ),
                               child: Text(
                                 '•',
                                 style: TextStyle(
-                                  color: theme.colorScheme.primary.withOpacity(0.5),
+                                  color: theme.colorScheme.primary.withOpacity(
+                                    0.5,
+                                  ),
                                 ),
                               ),
                             ),
                             Text(
-                              article.date.toUpperCase(), // ✅ Shows the real date here!
+                              article.date
+                                  .toUpperCase(), // ✅ Shows the real date here!
                               style: theme.textTheme.labelSmall,
                             ),
                           ],
@@ -139,7 +155,8 @@ class FeedArticleCard extends StatelessWidget {
                         BookmarkButton(
                           article: article,
                           unselectedColor:
-                          theme.textTheme.bodySmall?.color ?? AppColors.lightMutedText,
+                              theme.textTheme.bodySmall?.color ??
+                              AppColors.lightMutedText,
                         ),
                       ],
                     ),

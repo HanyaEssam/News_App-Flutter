@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import '../../models/article_model.dart';
 import 'package:news/ui/article_details/article_details_screen.dart';
+import 'package:news/l10n/app_localizations.dart';
 
 class TrendingCard extends StatelessWidget {
   final ArticleModel article;
 
-  const TrendingCard({
-    super.key,
-    required this.article,
-  });
+  const TrendingCard({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +33,9 @@ class TrendingCard extends StatelessWidget {
           children: [
             // 🔥 Smart image handling
             ClipRRect(
-              borderRadius:
-              const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
               child: _buildImage(),
             ),
             Padding(
@@ -48,25 +47,25 @@ class TrendingCard extends StatelessWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.15),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withOpacity(0.5),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withOpacity(0.5),
                           ),
                         ),
                         child: Text(
-                          article.category,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
+                          article.category == 'Trending'
+                              ? AppLocalizations.of(context)!.trendingLabel
+                              : article.category,
+                          style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(color: AppColors.primary),
                         ),
                       ),
@@ -94,10 +93,9 @@ class TrendingCard extends StatelessWidget {
                             Icon(
                               Icons.auto_awesome,
                               size: 16,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.color,
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.color,
                             ),
                             const SizedBox(width: 6),
                             Expanded(
@@ -111,7 +109,10 @@ class TrendingCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        article.readtime,
+                        article.readtime.replaceAll(
+                          'min read',
+                          AppLocalizations.of(context)!.minRead,
+                        ),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],

@@ -5,6 +5,7 @@ import '../category_feed/screens/category_feed_screen.dart';
 import '../author/author_screen.dart';
 import '../topic/topic_screen.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:news/l10n/app_localizations.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String routeName = 'search';
@@ -50,7 +51,6 @@ class _SearchScreenState extends State<SearchScreen> {
     final cleanQuery = query.trim();
     if (cleanQuery.isEmpty) return;
 
-    // keep your history logic
     setState(() {
       if (_recentSearches.contains(cleanQuery)) {
         _recentSearches.remove(cleanQuery);
@@ -62,70 +62,11 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     });
 
-    final lower = cleanQuery.toLowerCase();
-
-    // ✅ CATEGORY (same as your home categories)
-    final categories = [
-      'tech',
-      'business',
-      'sports',
-      'politics',
-      'science',
-      'health',
-      'travel',
-      'entertainment',
-      'general',
-    ];
-
-    if (categories.contains(lower)) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CategoryFeedScreen(
-            categoryName: cleanQuery,
-            categoryColor: AppColors.primary,
-          ),
-        ),
-      );
-    }
-
-    // ✅ AUTHOR (if starts with @)
-    else if (cleanQuery.startsWith('@')) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AuthorScreen(
-            authorName: cleanQuery.substring(1),
-          ),
-        ),
-      );
-    }
-
-    // ✅ TOPIC (if starts with #)
-    else if (cleanQuery.startsWith('#')) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TopicScreen(
-            topicName: cleanQuery.substring(1),
-          ),
-        ),
-      );
-    }
-
-    // ✅ DEFAULT → treat as category search
-    else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CategoryFeedScreen(
-            categoryName: cleanQuery,
-            categoryColor: AppColors.primary,
-          ),
-        ),
-      );
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Navigating to results for: "$cleanQuery"')),
+    );
   }
+
   void _deleteHistoryItem(String query) {
     setState(() {
       _recentSearches.remove(query);
@@ -154,7 +95,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 48.0), // Perfect text center balancing offset
                         child: Text(
-                          "Search",
+                          AppLocalizations.of(context)!.searchPageTitle,
                           textAlign: TextAlign.center,
                           style: theme.textTheme.displaySmall?.copyWith(
                             fontWeight: FontWeight.bold,
@@ -176,7 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   // Dynamically changes text typed into the field to contrast correctly
                   style: TextStyle(color: theme.colorScheme.onSurface),
                   decoration: InputDecoration(
-                    hintText: "Search news, topics, or authors",
+                    hintText: AppLocalizations.of(context)!.searchHint,
                     // Pulls decoration styles natively from your AppTheme inputDecorationTheme!
                     prefixIcon: const Icon(Icons.search),
                   ),
@@ -194,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       // 🕘 3. RECENT SEARCHES SECTION
                       if (_recentSearches.isNotEmpty) ...[
                         Text(
-                          "Recent Searches",
+                          AppLocalizations.of(context)!.recentSearches,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -231,7 +172,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                       // 🔥 4. TRENDING TOPICS SECTION
                       Text(
-                        "Trending Topics",
+                        AppLocalizations.of(context)!.trendingTopics,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
