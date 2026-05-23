@@ -3,66 +3,120 @@ import 'package:http/http.dart' as http;
 import '../core/constants/api_constants.dart';
 
 class NewsService {
-  // Fetch top headlines (Trending)
+
+  // ==========================================
+  // 1. NEWS API FETCHER
+  // ==========================================
+  Future<List<Map<String, dynamic>>> _fetchFromNewsApi(String urlString, {String? topic}) async {
+    try {
+      final response = await http.get(Uri.parse(urlString));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List articles = data['articles'] ?? [];
+
+        return articles.map((a) {
+          if (topic != null) a['matchedTopic'] = topic;
+          return {
+            ...a as Map<String, dynamic>,
+            'urlToImage': a['urlToImage'] ?? '', // ✅ Default to empty string instead of null
+          };
+        }).where((a) => a['title'] != null).toList(); // ✅ Only filter out missing titles
+      }
+    } catch (e) {
+      print('NewsAPI Error: $e');
+    }
+    return [];
+  }
+
+  // ==========================================
+  // 2. GNEWS API FETCHER
+  // ==========================================
+  Future<List<Map<String, dynamic>>> _fetchFromGNews(String urlString, {String? topic}) async {
+    try {
+      final response = await http.get(Uri.parse(urlString));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List articles = data['articles'] ?? [];
+
+        return articles.map((a) => {
+          'title': a['title'],
+          'description': a['description'],
+          'content': a['content'],
+          'urlToImage': a['image'] ?? '', // ✅ Default to empty string
+          'url': a['url'],
+          'source': {'name': a['source']['name']},
+          'publishedAt': a['publishedAt'],
+          if (topic != null) 'matchedTopic': topic,
+        }).where((a) => a['title'] != null).toList();
+      }
+    } catch (e) {
+      print('GNews Error: $e');
+    }
+    return [];
+  }
+
+  // ==========================================
+  // 3. NEWSDATA.IO FETCHER (Egyptian News)
+  // ==========================================
+  Future<List<Map<String, dynamic>>> _fetchFromNewsData(String urlString, {String? topic}) async {
+    try {
+      final response = await http.get(Uri.parse(urlString));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List articles = data['results'] ?? [];
+
+        return articles.map((a) {
+          // 🔥 FIX: Intercept the paywall message
+          String rawContent = a['content'] ?? '';
+
+          // If it mentions paid plans or is empty, fall back to the description
+          if (rawContent.toLowerCase().contains('paid plan') || rawContent.isEmpty) {
+            rawContent = a['description'] ?? 'Click "Read Full Article" below to view the full story.';
+          }
+
+          return {
+            'title': a['title'],
+            'description': a['description'],
+            'content': rawContent, // ✅ Uses the clean summary we just generated
+            'urlToImage': a['image_url'] ?? '',
+            'url': a['link'] ?? '',
+            'source': {'name': a['source_id'] ?? 'Local News'},
+            'publishedAt': a['pubDate'],
+            if (topic != null) 'matchedTopic': topic,
+          };
+        }).where((a) => a['title'] != null).toList();
+      }
+    } catch (e) {
+      print('NewsData Error: $e');
+    }
+    return [];
+  }
+
+  // ==========================================
+  // 3. PUBLIC METHODS (Used by your UI)
+  // ==========================================
+
+  // 🔥 Fetch Top Headlines (Used for Trending)
   Future<List<Map<String, dynamic>>> getTopHeadlines() async {
-    final url = Uri.parse(
-      '${ApiConstants.newsApiBaseUrl}/top-headlines?country=us&apiKey=${ApiConstants.newsApiKey}',
-    );
+    final newsApiUrl = '${ApiConstants.newsApiBaseUrl}/top-headlines?country=us&apiKey=${ApiConstants.newsApiKey}';
+    final gNewsUrl = '${ApiConstants.gNewsBaseUrl}/top-headlines?lang=en&apikey=${ApiConstants.gNewsApiKey}';
+    final newsDataUrl = '${ApiConstants.newsDataBaseUrl}/news?country=eg&apikey=${ApiConstants.newsDataApiKey}';
 
-    try {
-      final response = await http.get(url);
+    // Fetch from all simultaneously
+    final results1 = await _fetchFromNewsApi(newsApiUrl);
+    final results2 = await _fetchFromGNews(gNewsUrl);
+    final results3 = await _fetchFromNewsData(newsDataUrl);
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List articles = data['articles'] ?? [];
-
-        return articles
-            .where((a) => a['urlToImage'] != null && a['title'] != null)
-            .cast<Map<String, dynamic>>()
-            .toList();
-      } else {
-        throw Exception('Failed to load news: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error fetching news: $e');
-    }
+    // Combine them
+    final combined = [...results1, ...results2, ...results3];
+    combined.shuffle();
+    return combined;
   }
 
-  // Fetch articles by category
-  Future<List<Map<String, dynamic>>> getArticlesByCategory(String category) async {
-    final url = Uri.parse(
-      '${ApiConstants.newsApiBaseUrl}/top-headlines?country=us&category=${category.toLowerCase()}&apiKey=${ApiConstants.newsApiKey}',
-    );
+  // 🔥 Fetch based on Topics (Used for 'For You' and 'Category Feeds')
+  Future<List<Map<String, dynamic>>> getArticlesForTopics(List<String> topics) async {
+    if (topics.isEmpty) return getTopHeadlines();
 
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List articles = data['articles'] ?? [];
-
-        return articles
-            .where((a) => a['urlToImage'] != null && a['title'] != null)
-            .cast<Map<String, dynamic>>()
-            .toList();
-      } else {
-        throw Exception('Failed to load category: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error fetching category: $e');
-    }
-  }
-
-  // 🔥 NEW: Fetch articles based on user's selected topics
-  Future<List<Map<String, dynamic>>> getArticlesForTopics(
-      List<String> topics) async {
-    // If no topics, fall back to general news
-    if (topics.isEmpty) {
-      return getTopHeadlines();
-    }
-
-    // NewsAPI categories: business, entertainment, general, health, science, sports, technology
-    // Map our topics to NewsAPI categories where possible
     final categoryMap = {
       'technology': 'technology',
       'tech': 'technology',
@@ -74,64 +128,40 @@ class NewsService {
     };
 
     final List<Map<String, dynamic>> allArticles = [];
-
-    // Take up to 3 topics to avoid too many API calls
     final topicsToFetch = topics.take(3).toList();
 
     for (final topic in topicsToFetch) {
       final lowerTopic = topic.toLowerCase();
       final category = categoryMap[lowerTopic];
 
-      try {
-        List<Map<String, dynamic>> articles = [];
+      String newsApiUrl;
+      String gNewsUrl;
+      String newsDataUrl; // ✅ ADDED NEWSDATA VARIABLE
 
-        if (category != null) {
-          // Use category endpoint
-          articles = await getArticlesByCategory(category);
-        } else {
-          // Use search endpoint for non-standard topics (Politics, Travel, etc.)
-          articles = await _searchArticles(topic);
-        }
-
-        // ✅ NEW FIX: Tag every article with the topic that successfully fetched it
-        for (var article in articles) {
-          article['matchedTopic'] = topic;
-        }
-
-        allArticles.addAll(articles.take(3));
-
-      } catch (e) {
-        // Skip this topic if it fails, continue with others
-        print('Failed to fetch topic $topic: $e');
-      }
-    }
-    allArticles.shuffle();
-
-    return allArticles;
-  }
-
-  // Search articles by keyword
-  Future<List<Map<String, dynamic>>> _searchArticles(String query) async {
-    final url = Uri.parse(
-      '${ApiConstants.newsApiBaseUrl}/everything?q=$query&sortBy=publishedAt&language=en&apiKey=${ApiConstants.newsApiKey}',
-    );
-
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List articles = data['articles'] ?? [];
-
-        return articles
-            .where((a) => a['urlToImage'] != null && a['title'] != null)
-            .cast<Map<String, dynamic>>()
-            .toList();
+      if (category != null) {
+        newsApiUrl = '${ApiConstants.newsApiBaseUrl}/top-headlines?country=us&category=$category&apiKey=${ApiConstants.newsApiKey}';
+        gNewsUrl = '${ApiConstants.gNewsBaseUrl}/top-headlines?category=$category&lang=en&apikey=${ApiConstants.gNewsApiKey}';
+        // ✅ ADDED NEWSDATA CATEGORY URL
+        newsDataUrl = '${ApiConstants.newsDataBaseUrl}/news?country=eg&category=$category&apikey=${ApiConstants.newsDataApiKey}';
       } else {
-        throw Exception('Failed to search: ${response.statusCode}');
+        newsApiUrl = '${ApiConstants.newsApiBaseUrl}/everything?q=$topic&sortBy=publishedAt&language=en&apiKey=${ApiConstants.newsApiKey}';
+        gNewsUrl = '${ApiConstants.gNewsBaseUrl}/search?q=$topic&lang=en&apikey=${ApiConstants.gNewsApiKey}';
+        // ✅ ADDED NEWSDATA SEARCH URL
+        newsDataUrl = '${ApiConstants.newsDataBaseUrl}/news?country=eg&q=$topic&apikey=${ApiConstants.newsDataApiKey}';
       }
-    } catch (e) {
-      throw Exception('Search error: $e');
+
+      // Fetch from all three
+      final newsApiResults = await _fetchFromNewsApi(newsApiUrl, topic: topic);
+      final gNewsResults = await _fetchFromGNews(gNewsUrl, topic: topic);
+      final newsDataResults = await _fetchFromNewsData(newsDataUrl, topic: topic); // ✅ FETCH NEWSDATA
+
+      // Take articles from each API per topic
+      allArticles.addAll(newsApiResults.take(3));
+      allArticles.addAll(gNewsResults.take(3));
+      allArticles.addAll(newsDataResults.take(3)); // ✅ ADD NEWSDATA TO THE LIST
     }
+
+    allArticles.shuffle();
+    return allArticles;
   }
 }

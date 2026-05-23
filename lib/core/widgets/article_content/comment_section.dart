@@ -18,7 +18,7 @@ class _CommentsSectionState extends State<CommentsSection> {
   final TextEditingController _commentController = TextEditingController();
   bool _isPosting = false;
 
-  // Helper to get user initials for the avatar
+  // Helper to get user initials for the avatar fallback
   String _getInitials(String name) {
     if (name.isEmpty) return "U";
     List<String> parts = name.trim().split(" ");
@@ -48,11 +48,15 @@ class _CommentsSectionState extends State<CommentsSection> {
     setState(() => _isPosting = true);
 
     try {
-      // Fetch user's name from Firestore, or fallback to email/default
       String userName = "Reader";
+      String avatarUrl = ""; // ✅ Default to empty
+
+      // Fetch user's data from Firestore (Matching your ProfileScreen logic)
       final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-      if (userDoc.exists && userDoc.data() != null && userDoc.data()!['name'] != null) {
-        userName = userDoc.data()!['name'];
+      if (userDoc.exists && userDoc.data() != null) {
+        final data = userDoc.data()!;
+        userName = data['fullName'] ?? data['name'] ?? userName;
+        avatarUrl = data['avatarUrl'] ?? ''; // ✅ Grab the avatar URL
       } else if (user.displayName != null && user.displayName!.isNotEmpty) {
         userName = user.displayName!;
       } else if (user.email != null) {
@@ -60,22 +64,24 @@ class _CommentsSectionState extends State<CommentsSection> {
       }
 
       await FirebaseFirestore.instance.collection('comments').add({
-        // ✅ CHANGED: Now linking the comment to the article's title instead of URL
         'articleTitle': widget.article.title,
         'userId': user.uid,
         'userName': userName,
+        'avatarUrl': avatarUrl, // ✅ Save the avatar URL with the comment
         'text': text,
         'timestamp': FieldValue.serverTimestamp(),
       });
 
       _commentController.clear();
-      FocusScope.of(context).unfocus(); // Close keyboard
+      if (mounted) FocusScope.of(context).unfocus();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to post comment: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to post comment: $e')),
+        );
+      }
     } finally {
-      setState(() => _isPosting = false);
+      if (mounted) setState(() => _isPosting = false);
     }
   }
 
@@ -85,12 +91,47 @@ class _CommentsSectionState extends State<CommentsSection> {
     super.dispose();
   }
 
+  // ✅ Helper widget to build the avatar smartly (Image or Initials)
+  Widget _buildAvatar(String avatarUrl, String userName, Color fallbackColor) {
+    if (avatarUrl.isEmpty) {
+      // Fallback to initials
+      return Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: fallbackColor.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          _getInitials(userName),
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(color: AppColors.darkText),
+        ),
+      );
+    }
+
+    // Return the actual image
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: AppColors.cardDark,
+        borderRadius: BorderRadius.circular(12),
+        image: DecorationImage(
+          image: avatarUrl.startsWith('http')
+              ? NetworkImage(avatarUrl) as ImageProvider
+              : AssetImage(avatarUrl),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = widget.article.categoryColor;
 
     return StreamBuilder<QuerySnapshot>(
-      // ✅ CHANGED: Listening for comments matching this article's title
       stream: FirebaseFirestore.instance
           .collection('comments')
           .where('articleTitle', isEqualTo: widget.article.title)
@@ -98,7 +139,6 @@ class _CommentsSectionState extends State<CommentsSection> {
           .snapshots(),
       builder: (context, snapshot) {
 
-        // Count comments
         int commentCount = 0;
         if (snapshot.hasData) {
           commentCount = snapshot.data!.docs.length;
@@ -208,24 +248,15 @@ class _CommentsSectionState extends State<CommentsSection> {
 
                   String userName = data['userName'] ?? 'Reader';
                   String text = data['text'] ?? '';
+                  String avatarUrl = data['avatarUrl'] ?? ''; // ✅ Extract avatarUrl
                   Timestamp? timestamp = data['timestamp'] as Timestamp?;
 
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: color.withOpacity(0.8),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          _getInitials(userName),
-                          style: Theme.of(context).textTheme.labelMedium?.copyWith(color: AppColors.darkText),
-                        ),
-                      ),
+                      // ✅ Smart Avatar Widget
+                      _buildAvatar(avatarUrl, userName, color),
+
                       const SizedBox(width: 16),
 
                       Expanded(

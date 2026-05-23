@@ -7,6 +7,8 @@ import 'package:news/core/widgets/article_content/comment_section.dart';
 
 import '../../core/utils/saved_articles_manager.dart';
 import '../../core/widgets/bookmark/bookmark_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ArticleDetailsScreen extends StatefulWidget {
   static const String routeName = '/article-details';
@@ -19,6 +21,26 @@ class ArticleDetailsScreen extends StatefulWidget {
 }
 
 class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
+  Future<void> _markArticleAsCompleted() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    // ❌ If guest → do nothing
+    if (user == null) return;
+
+    final userRef =
+    FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    try {
+      await userRef.update({
+        'articlesRead': FieldValue.increment(1),
+
+        // optional (remove if you don't want it)
+        'minutesSaved': FieldValue.increment(5),
+      });
+    } catch (e) {
+      debugPrint("Error updating read count: $e");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +81,12 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: FilledButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () async {
+                    await _markArticleAsCompleted();
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
                   style: FilledButton.styleFrom(
                     minimumSize: const Size(double.infinity, 56),
                     backgroundColor: AppColors.cardDark,

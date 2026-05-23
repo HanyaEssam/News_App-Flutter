@@ -10,6 +10,7 @@ class ArticleModel {
   final String imageUrl;
   final Color categoryColor;
   final String readtime;
+  final String url;
 
 
   ArticleModel({
@@ -22,6 +23,7 @@ class ArticleModel {
     required this.imageUrl,
     required this.categoryColor,
     required this.readtime,
+    required this.url,
 
   });
 
@@ -56,7 +58,7 @@ class ArticleModel {
           ? Color(map['categoryColor'])
           : Colors.blue,
       readtime: map['readtime'] ?? '',
-
+      url: map['url'] ?? '',
     );
   }
 }

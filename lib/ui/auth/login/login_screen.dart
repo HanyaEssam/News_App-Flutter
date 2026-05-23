@@ -61,9 +61,12 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null && mounted) {
         final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
-        if (doc.exists && doc.data()!.containsKey('isDarkMode')) {
+        if (doc.exists && doc.data() != null && doc.data()!.containsKey('isDarkMode')) {
           bool userPrefersDark = doc.data()!['isDarkMode'];
           ThemeController.toggleTheme(userPrefersDark);
+        } else {
+          // ✅ FIX: If the user has no saved preference, default to Dark Mode!
+          ThemeController.toggleTheme(true);
         }
 
         // Clear the stack so no back button appears!
@@ -75,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
   Future<void> _handleGoogleSignIn() async {
     setState(() {
       _isLoading = true;
@@ -86,13 +90,13 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null && mounted) {
         final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
-        if (doc.exists) {
+        if (doc.exists && doc.data() != null) {
 
-          // 🔥 FIX 2: Apply their specific theme FIRST, before navigating anywhere!
+          // 🔥 FIX: Apply their specific theme FIRST, before navigating anywhere!
           if (doc.data()!.containsKey('isDarkMode')) {
             ThemeController.toggleTheme(doc.data()!['isDarkMode']);
           } else {
-            // Safety fallback: if they somehow don't have the field, default to Dark
+            // ✅ FIX: Safety fallback: if they somehow don't have the field, default to Dark
             ThemeController.toggleTheme(true);
           }
 
@@ -224,13 +228,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       imagePath: 'assets/images/google.png',
                       onPressed: _isLoading ? () {} : _handleGoogleSignIn,
                     ),
-                   // const SizedBox(height: 12),
-                   /* SocialAuthButton(
-                      text: 'Continue with Apple',
-                      icon: Icons.apple,
-                      iconColor: Colors.white,
-                      onPressed: () {},
-                    ),*/
                     const SizedBox(height: 32),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

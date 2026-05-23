@@ -131,6 +131,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
           time: 'Recent',
           imageUrl: data['urlToImage'] ?? '',
           readtime: '5 min read',
+          url: data['url'] ?? '',
         );
       }).toList();
 
@@ -185,6 +186,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
           time: 'Recent',
           imageUrl: data['urlToImage'] ?? '',
           readtime: '5 min read',
+          url: data['url'] ?? '',
         );
       }).toList();
 

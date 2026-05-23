@@ -61,6 +61,7 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
           time: 'Recent',
           imageUrl: data['urlToImage'] ?? '',
           readtime: '5 min read',
+          url: data['url'] ?? '',
         );
       }).toList();
 

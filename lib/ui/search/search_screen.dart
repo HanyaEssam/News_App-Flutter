@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
+import '../category_feed/screens/category_feed_screen.dart';
+import '../author/author_screen.dart';
+import '../topic/topic_screen.dart';
+import '../../../core/theme/app_colors.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String routeName = 'search';
@@ -46,6 +50,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final cleanQuery = query.trim();
     if (cleanQuery.isEmpty) return;
 
+    // keep your history logic
     setState(() {
       if (_recentSearches.contains(cleanQuery)) {
         _recentSearches.remove(cleanQuery);
@@ -57,11 +62,70 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Navigating to results for: "$cleanQuery"')),
-    );
-  }
+    final lower = cleanQuery.toLowerCase();
 
+    // ✅ CATEGORY (same as your home categories)
+    final categories = [
+      'tech',
+      'business',
+      'sports',
+      'politics',
+      'science',
+      'health',
+      'travel',
+      'entertainment',
+      'general',
+    ];
+
+    if (categories.contains(lower)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CategoryFeedScreen(
+            categoryName: cleanQuery,
+            categoryColor: AppColors.primary,
+          ),
+        ),
+      );
+    }
+
+    // ✅ AUTHOR (if starts with @)
+    else if (cleanQuery.startsWith('@')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AuthorScreen(
+            authorName: cleanQuery.substring(1),
+          ),
+        ),
+      );
+    }
+
+    // ✅ TOPIC (if starts with #)
+    else if (cleanQuery.startsWith('#')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TopicScreen(
+            topicName: cleanQuery.substring(1),
+          ),
+        ),
+      );
+    }
+
+    // ✅ DEFAULT → treat as category search
+    else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CategoryFeedScreen(
+            categoryName: cleanQuery,
+            categoryColor: AppColors.primary,
+          ),
+        ),
+      );
+    }
+  }
   void _deleteHistoryItem(String query) {
     setState(() {
       _recentSearches.remove(query);
