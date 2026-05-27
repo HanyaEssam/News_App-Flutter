@@ -7,6 +7,9 @@ import 'package:news/core/theme/theme_controller.dart';
 import '../../../services/auth_service.dart';
 import '../../../onboarding/screens/interest_screen.dart';
 
+import 'package:provider/provider.dart';
+import '../../../core/utils/locale_provider.dart';
+import '../../../core/utils/saved_articles_manager.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -21,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // This is the instance we will use!
   final _authService = AuthService();
 
   bool _isLoading = false;
@@ -32,6 +34,65 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  // 🔥 NEW: Language Picker for Guests (No Firebase saving here!)
+  void _showLanguagePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.cardDark,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'CHOOSE LANGUAGE',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: AppColors.mutedText,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                ListTile(
+                  title: Text('English (UK)', style: Theme.of(context).textTheme.titleMedium),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('en'));
+                  },
+                ),
+                ListTile(
+                  title: Text('العربية (Arabic)', style: Theme.of(context).textTheme.titleMedium),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('ar'));
+                  },
+                ),
+                ListTile(
+                  title: Text('Español (Spanish)', style: Theme.of(context).textTheme.titleMedium),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('es'));
+                  },
+                ),
+                ListTile(
+                  title: Text('Français (French)', style: Theme.of(context).textTheme.titleMedium),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('fr'));
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _handleSignIn() async {
@@ -61,16 +122,26 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null && mounted) {
         final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
-        if (doc.exists && doc.data() != null && doc.data()!.containsKey('isDarkMode')) {
-          bool userPrefersDark = doc.data()!['isDarkMode'];
-          ThemeController.toggleTheme(userPrefersDark);
-        } else {
-          // ✅ FIX: If the user has no saved preference, default to Dark Mode!
-          ThemeController.toggleTheme(true);
+        if (doc.exists && doc.data() != null) {
+          if (doc.data()!.containsKey('isDarkMode')) {
+            ThemeController.toggleTheme(doc.data()!['isDarkMode']);
+          } else {
+            ThemeController.toggleTheme(true);
+          }
+
+          if (doc.data()!.containsKey('language')) {
+            String userLang = doc.data()!['language'];
+            if (context.mounted) {
+              Provider.of<LocaleProvider>(context, listen: false).setLocale(Locale(userLang));
+            }
+          }
         }
 
-        // Clear the stack so no back button appears!
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        await SavedArticlesManager.loadUserSavedArticles();
+
+        if (context.mounted) {
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        }
       }
     } catch (e) {
       setState(() => _errorMessage = e.toString());
@@ -91,23 +162,40 @@ class _LoginScreenState extends State<LoginScreen> {
         final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
         if (doc.exists && doc.data() != null) {
-
-          // 🔥 FIX: Apply their specific theme FIRST, before navigating anywhere!
           if (doc.data()!.containsKey('isDarkMode')) {
             ThemeController.toggleTheme(doc.data()!['isDarkMode']);
           } else {
-            // ✅ FIX: Safety fallback: if they somehow don't have the field, default to Dark
             ThemeController.toggleTheme(true);
           }
 
+          if (doc.data()!.containsKey('language')) {
+            String userLang = doc.data()!['language'];
+            if (context.mounted) {
+              Provider.of<LocaleProvider>(context, listen: false).setLocale(Locale(userLang));
+            }
+          }
+
+          await SavedArticlesManager.loadUserSavedArticles();
           List topics = doc.data()?['selectedTopics'] ?? [];
 
-          if (topics.isEmpty) {
-            // 🚀 BRAND NEW USER
+          if (context.mounted) {
+            if (topics.isEmpty) {
+              Navigator.pushReplacementNamed(context, InterestScreen.routeName);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+            }
+          }
+        } else {
+          await SavedArticlesManager.loadUserSavedArticles();
+
+          // 🔥 NEW: If it's a brand new Google user, save the language they selected on the Login Screen to Firebase!
+          final currentLocale = Provider.of<LocaleProvider>(context, listen: false).locale.languageCode;
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+            'language': currentLocale
+          }, SetOptions(merge: true));
+
+          if (context.mounted) {
             Navigator.pushReplacementNamed(context, InterestScreen.routeName);
-          } else {
-            // 🏠 RETURNING USER
-            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
           }
         }
       }
@@ -116,11 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
         SnackBar(content: Text(e.toString())),
       );
     } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -134,7 +218,20 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 10),
+
+              // 🔥 NEW: Top Right Globe Icon
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.language, color: AppColors.mutedText),
+                    onPressed: () => _showLanguagePicker(context),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 10),
               Text('INSIGHTLY', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 12),
               Text(
@@ -186,7 +283,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Expanded(
                               child: Text(
                                 _errorMessage!,
-                                style: const TextStyle(color: Colors.redAccent, fontSize: 13),
+                                style: const TextStyle(color: AppColors.error, fontSize: 13),
                               ),
                             ),
                           ],
@@ -245,17 +342,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 24),
-
-                    // 🔥 FIX: Use _authService instead of AuthService.instance
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
                         onPressed: () async {
-                          // Force clear any old test accounts stored in Firebase cache
                           await _authService.signOut();
-
+                          SavedArticlesManager.clearSession();
                           if (context.mounted) {
-                            // Clear history so no back button appears!
+                            // Leave the language as whatever they just selected via the Globe icon!
                             Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                           }
                         },
@@ -267,7 +361,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 32),
               Text(
-                '© 2026 INSIGHTFUL PRIVACY & TERMS.',
+                '© 2026 INSIGHTLY PRIVACY & TERMS.',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.border),
               ),
               const SizedBox(height: 24),

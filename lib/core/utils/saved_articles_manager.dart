@@ -62,4 +62,9 @@ class SavedArticlesManager {
       await docRef.set(article.toMap());
     }
   }
+
+  // 🔥 NEW: Wipes the local RAM memory clean when a user logs out!
+  static void clearSession() {
+    savedArticles.value = [];
+  }
 }
