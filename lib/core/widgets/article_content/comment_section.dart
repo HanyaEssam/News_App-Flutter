@@ -105,7 +105,8 @@ class _CommentsSectionState extends State<CommentsSection> {
         alignment: Alignment.center,
         child: Text(
           _getInitials(userName),
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(color: AppColors.darkText),
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface),
         ),
       );
     }
@@ -115,7 +116,7 @@ class _CommentsSectionState extends State<CommentsSection> {
       width: 44,
       height: 44,
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
           image: avatarUrl.startsWith('http')
@@ -171,7 +172,7 @@ class _CommentsSectionState extends State<CommentsSection> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.cardDark,
+                color:Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border.withOpacity(0.5)),
               ),
@@ -185,7 +186,8 @@ class _CommentsSectionState extends State<CommentsSection> {
                     style: Theme.of(context).textTheme.bodyMedium,
                     decoration: InputDecoration(
                       hintText: "Add to the briefing...",
-                      hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.mutedText),
+                      hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -205,7 +207,8 @@ class _CommentsSectionState extends State<CommentsSection> {
                       _postComment();
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: color,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),

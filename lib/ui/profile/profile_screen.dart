@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
+
 import '../../core/utils/saved_articles_manager.dart';
-import '../../core/widgets/profile_widgets/edit_profile_screen.dart';
+import '../../core/utils/responsive.dart';
+import '../edit_profile/edit_profile_screen.dart';
 import '../../core/widgets/profile_widgets/metric_card.dart';
 import '../../core/widgets/profile_widgets/profile_header.dart';
 import '../../core/widgets/profile_widgets/setting_row.dart';
@@ -71,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _showLanguagePicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.cardDark,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -85,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   'CHOOSE LANGUAGE',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AppColors.mutedText,
+                    color:  Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -93,7 +95,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // 🇬🇧 ENGLISH
                 ListTile(
                   title: Text('English (UK)', style: Theme.of(context).textTheme.titleMedium),
-                  trailing: selectedLanguage == 'English (UK)' ? const Icon(Icons.check_circle, color: AppColors.primary) : null,
+                  trailing: selectedLanguage == 'English (UK)' ?  Icon(Icons.check_circle,
+                      color: Theme.of(context).colorScheme.primary) : null,
                   onTap: () {
                     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
 
@@ -121,7 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   trailing: selectedLanguage == 'العربية'
-                      ? const Icon(Icons.check_circle, color: AppColors.primary)
+                      ?  Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
                       : null,
                   onTap: () {
                     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
@@ -147,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   trailing: selectedLanguage == 'Español'
-                      ? const Icon(Icons.check_circle, color: AppColors.primary)
+                      ?  Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
                       : null,
                   onTap: () {
                     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
@@ -173,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   trailing: selectedLanguage == 'Français'
-                      ? const Icon(Icons.check_circle, color: AppColors.primary)
+                      ?  Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
                       : null,
                   onTap: () {
                     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
@@ -203,6 +206,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
+    // In profile screen build method:
+    final currentCode = Provider.of<LocaleProvider>(context).locale?.languageCode ?? 'en';
+    final selectedLanguage = switch (currentCode) {
+      'ar' => 'العربية',
+      'es' => 'Español',
+      'fr' => 'Français',
+      _ => 'English (UK)',
+    };
+
     if (GuestChecker.isGuest()) {
       return Scaffold(
         appBar: AppBar(
@@ -215,11 +227,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: const GuestWidget(
             icon: Icons.person_outline,
             title: 'Guest Profile',
-            subtitle: 'Log in to track your reading stats, manage your topics, and adjust your preferences.',
+            subtitle:
+            'Log in to track your reading stats, manage your topics, and adjust your preferences.',
           ),
         ),
       );
     }
+
+    // 👇 Constrain content width on tablets/desktops
+    final double maxContentWidth = Responsive.isMobile(context) ? double.infinity : 600;
 
     return Scaffold(
       appBar: AppBar(
@@ -229,136 +245,159 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text(AppLocalizations.of(context)!.appTitle.toUpperCase()),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit_outlined),
+            icon: Icon(
+              Icons.edit_outlined,
+              size: Responsive.scale(context, 24),
+            ),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const EditProfileScreen(),
+                ),
               );
             },
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: Responsive.scale(context, 8)),
         ],
       ),
       body: AppBackground(
         child: SafeArea(
           child: _isLoading
-              ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
-              : SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                ProfileHeader(
-                  userName: _userName,
-                  avatarPath: _avatarUrl,
+              ?  Center(
+            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
+          )
+              : Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxContentWidth),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Responsive.scale(context, 20),
                 ),
-                const SizedBox(height: 40),
-                Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MetricCard(
-                      title: AppLocalizations.of(context)!.articlesRead,
-                      value: _articlesRead,
+                    SizedBox(height: Responsive.scale(context, 20)),
+                    ProfileHeader(
+                      userName: _userName,
+                      avatarPath: _avatarUrl,
                     ),
-                    const SizedBox(width: 16),
-                    MetricCard(
-                      title: AppLocalizations.of(context)!.minutesSaved,
-                      value: _minutesSaved,
-                      unit: 'm',
+                    SizedBox(height: Responsive.scale(context, 40)),
+                    Row(
+                      children: [
+                        MetricCard(
+                          title: AppLocalizations.of(context)!.articlesRead,
+                          value: _articlesRead,
+                        ),
+                        SizedBox(width: Responsive.scale(context, 16)),
+                        MetricCard(
+                          title: AppLocalizations.of(context)!.minutesSaved,
+                          value: _minutesSaved,
+                          unit: 'm',
+                        ),
+                      ],
                     ),
+                    SizedBox(height: Responsive.scale(context, 40)),
+                    Text(
+                      AppLocalizations.of(context)!
+                          .appearance
+                          .toUpperCase(),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        fontSize: Responsive.scaleText(context, 12),
+                      ),
+                    ),
+                    SizedBox(height: Responsive.scale(context, 12)),
+                    SettingsRow(
+                      leadingIcon: isDarkMode
+                          ? Icons.dark_mode_outlined
+                          : Icons.light_mode_outlined,
+                      title: isDarkMode
+                          ? AppLocalizations.of(context)!.darkMode
+                          : AppLocalizations.of(context)!.lightMode,
+                      trailing: Switch(
+                        value: isDarkMode,
+                        activeColor: Theme.of(context).colorScheme.primary,
+                        activeTrackColor: AppColors.inputFill,
+                        inactiveThumbColor: AppColors.mutedText,
+                        onChanged: (value) {
+                          ThemeController.toggleTheme(value);
+                        },
+                      ),
+                    ),
+                    SizedBox(height: Responsive.scale(context, 32)),
+                    Text(
+                      AppLocalizations.of(context)!.language.toUpperCase(),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        fontSize: Responsive.scaleText(context, 12),
+                      ),
+                    ),
+                    SizedBox(height: Responsive.scale(context, 12)),
+                    SettingsRow(
+                      leadingIcon: Icons.language,
+                      title: AppLocalizations.of(context)!.language,
+                      trailing: TextButton(
+                        onPressed: () => _showLanguagePicker(context),
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        child: Text(
+                          selectedLanguage,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: Responsive.scaleText(context, 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: Responsive.scale(context, 48)),
+                    OutlinedButton(
+                      onPressed: () async {
+                        // 1. Sign out of Firebase
+                        await FirebaseAuth.instance.signOut();
+
+                        if (context.mounted) {
+                          // 2. Wipe the Saved Articles RAM clean
+                          SavedArticlesManager.clearSession();
+
+                          // 3. Reset language to English (or device default)
+                          Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('en'));
+
+                          // 4. Kick them back to Login
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            LoginScreen.routeName,
+                                (route) => false,
+                          );
+                        }
+                      },
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: Size(
+                          double.infinity,
+                          Responsive.scale(context, 56),
+                        ),
+                        side: const BorderSide(
+                          color: AppColors.error,
+                          width: 1.5,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            Responsive.scale(context, 14),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!
+                            .logoutSession
+                            .toUpperCase(),
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: AppColors.error,
+                          letterSpacing: 2,
+                          fontSize: Responsive.scaleText(context, 12),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: Responsive.scale(context, 40)),
                   ],
                 ),
-                const SizedBox(height: 40),
-                Text(
-                  AppLocalizations.of(context)!.appearance.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-                const SizedBox(height: 12),
-                SettingsRow(
-                  leadingIcon: isDarkMode
-                      ? Icons.dark_mode_outlined
-                      : Icons.light_mode_outlined,
-                  title: isDarkMode
-                      ? AppLocalizations.of(context)!.darkMode
-                      : AppLocalizations.of(context)!.lightMode,
-                  trailing: Switch(
-                    value: isDarkMode,
-                    activeColor: AppColors.primary,
-                    activeTrackColor: AppColors.inputFill,
-                    inactiveThumbColor: AppColors.mutedText,
-                    onChanged: (value) {
-                      ThemeController.toggleTheme(value);
-                    },
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Text(
-                  AppLocalizations.of(context)!.language.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-                const SizedBox(height: 12),
-                SettingsRow(
-                  leadingIcon: Icons.language,
-                  title: AppLocalizations.of(context)!.language,
-                  // 🔥 FIX: This just opens the picker now!
-                  trailing: TextButton(
-                    onPressed: () {
-                      _showLanguagePicker(context);
-                    },
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    child: Text(
-                      selectedLanguage,
-                      style: Theme.of(context).textTheme.titleMedium
-                          ?.copyWith(color: AppColors.primary),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 48),
-                OutlinedButton(
-                  onPressed: () async {
-                    // 1. Sign out of Firebase
-                    await FirebaseAuth.instance.signOut();
-
-                    if (context.mounted) {
-                      // 2. Wipe the Saved Articles RAM clean
-                      SavedArticlesManager.clearSession();
-
-                      // 3. Reset language to English (or device default)
-                      Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('en'));
-
-                      // 4. Kick them back to Login
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        LoginScreen.routeName,
-                            (route) => false,
-                      );
-                    }
-                  },
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 56),
-                    side: const BorderSide(
-                      color: AppColors.error,
-                      width: 1.5,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(
-                      context,
-                    )!.logoutSession.toUpperCase(),
-                    style: Theme.of(context).textTheme.labelMedium
-                        ?.copyWith(
-                      color: AppColors.error,
-                      letterSpacing: 2,
-                    ),
-                  ),
-
-                ),
-                const SizedBox(height: 40),
-              ],
+              ),
             ),
           ),
         ),

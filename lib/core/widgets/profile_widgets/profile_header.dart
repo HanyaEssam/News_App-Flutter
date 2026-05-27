@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/responsive.dart';
 
 class ProfileHeader extends StatelessWidget {
   final String userName;
@@ -14,24 +15,27 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // 🔥 NEW: Handle both Network Images (Google) and Local Assets (Default)
     ImageProvider imageProvider;
     if (avatarPath.startsWith('http')) {
       imageProvider = NetworkImage(avatarPath);
     } else {
-      // Fallback to your default image if the path is empty
       imageProvider = AssetImage(
         avatarPath.isEmpty ? 'assets/images/avatar.png' : avatarPath,
       );
     }
 
+    // 👇 Bigger avatar on tablet/desktop
+    final double avatarSize = Responsive.isMobile(context)
+        ? Responsive.scale(context, 80)
+        : 110;
+
     return Row(
       children: [
         Container(
-          height: 80,
-          width: 80,
+          height: avatarSize,
+          width: avatarSize,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(Responsive.scale(context, 20)),
             border: Border.all(
               color: theme.colorScheme.primary,
               width: 2,
@@ -42,12 +46,15 @@ class ProfileHeader extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 24),
-        // User Name text (displaySmall)
+        SizedBox(width: Responsive.scale(context, 24)),
         Expanded(
           child: Text(
             userName,
-            style: Theme.of(context).textTheme.displaySmall,
+            style: theme.textTheme.displaySmall?.copyWith(
+              fontSize: Responsive.scaleText(context, 24),
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
           ),
         ),
       ],

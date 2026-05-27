@@ -137,4 +137,80 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get startExploring => 'ابدأ الاستكشاف';
+
+  @override
+  String get loginSubtitle => 'سجل الدخول لمتابعة رحلتك المعرفية.';
+
+  @override
+  String get emailAddress => 'البريد الإلكتروني';
+
+  @override
+  String get password => 'كلمة المرور';
+
+  @override
+  String get signIn => 'تسجيل الدخول';
+
+  @override
+  String get orContinueWith => 'أو تابع باستخدام';
+
+  @override
+  String get continueWithGoogle => 'المتابعة مع جوجل';
+
+  @override
+  String get dontHaveAccount => 'ليس لديك حساب؟ ';
+
+  @override
+  String get createAccount => 'إنشاء حساب';
+
+  @override
+  String get continueAsGuest => 'المتابعة كزائر';
+
+  @override
+  String get footerCopyright => '© 2026 إنسايتفول - الخصوصية والشروط.';
+
+  @override
+  String get joinInsightly => 'انضم إلى إنسايتلي';
+
+  @override
+  String get signupSubtitle => 'حيث يلتقي العالم بشاشتك.';
+
+  @override
+  String get fullName => 'الاسم الكامل';
+
+  @override
+  String get confirmPassword => 'تأكيد كلمة المرور';
+
+  @override
+  String get alreadyHaveAccount => 'هل لديك حساب بالفعل؟ ';
+
+  @override
+  String get login => 'تسجيل الدخول';
+
+  @override
+  String get pleaseFillFields => 'يرجى ملء جميع الحقول';
+
+  @override
+  String get invalidEmail => 'يرجى إدخال بريد إلكتروني صحيح';
+
+  @override
+  String get passwordsDoNotMatch => 'كلمات المرور غير متطابقة!';
+
+  @override
+  String get passwordMinLength => 'يجب أن تكون كلمة المرور 8 أحرف على الأقل.';
+
+  @override
+  String get passwordUppercase =>
+      'يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل.';
+
+  @override
+  String get passwordLowercase =>
+      'يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل.';
+
+  @override
+  String get passwordNumber =>
+      'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.';
+
+  @override
+  String get passwordSpecialChar =>
+      'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.';
 }

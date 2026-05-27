@@ -137,4 +137,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get startExploring => 'Start Exploring';
+
+  @override
+  String get loginSubtitle => 'Sign in to continue your curated narrative.';
+
+  @override
+  String get emailAddress => 'EMAIL ADDRESS';
+
+  @override
+  String get password => 'PASSWORD';
+
+  @override
+  String get signIn => 'Sign In';
+
+  @override
+  String get orContinueWith => 'OR CONTINUE WITH';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account? ';
+
+  @override
+  String get createAccount => 'Create Account';
+
+  @override
+  String get continueAsGuest => 'Continue as a guest';
+
+  @override
+  String get footerCopyright => '© 2026 INSIGHTFUL PRIVACY & TERMS.';
+
+  @override
+  String get joinInsightly => 'JOIN INSIGHTLY';
+
+  @override
+  String get signupSubtitle => 'Where the world meets your screen.';
+
+  @override
+  String get fullName => 'FULL NAME';
+
+  @override
+  String get confirmPassword => 'CONFIRM PASSWORD';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account? ';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get pleaseFillFields => 'Please fill in all fields';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match!';
+
+  @override
+  String get passwordMinLength =>
+      'Password must be at least 8 characters long.';
+
+  @override
+  String get passwordUppercase =>
+      'Password must contain at least one uppercase letter.';
+
+  @override
+  String get passwordLowercase =>
+      'Password must contain at least one lowercase letter.';
+
+  @override
+  String get passwordNumber => 'Password must contain at least one number.';
+
+  @override
+  String get passwordSpecialChar =>
+      'Password must contain at least one special character.';
 }

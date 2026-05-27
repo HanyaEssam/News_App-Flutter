@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart'; // Adjust path based on your folder structure
+import '../../theme/app_colors.dart';
 
 // --- 1. Custom Text Field with Label ---
 class AuthTextField extends StatelessWidget {
@@ -33,7 +33,7 @@ class AuthTextField extends StatelessWidget {
         Text(
           label.toUpperCase(),
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: AppColors.mutedText,
+            color: Theme.of(context).colorScheme.onSurface,
             letterSpacing: 1.2,
           ),
         ),
@@ -42,7 +42,9 @@ class AuthTextField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
-          style: const TextStyle(color: AppColors.white),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           decoration: InputDecoration(
             hintText: hintText,
             // If it's a password, show the eye icon
@@ -52,7 +54,7 @@ class AuthTextField extends StatelessWidget {
                       obscureText
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
-                      color: AppColors.mutedText,
+                      color: Theme.of(context).colorScheme.onSurface,
                       size: 20,
                     ),
                     onPressed: onToggleVisibility,
@@ -88,7 +90,6 @@ class SocialAuthButton extends StatelessWidget {
       width: double.infinity,
       child: FilledButton(
         onPressed: onPressed,
-        // Removed the hardcoded styles! It now relies 100% on your AppTheme.
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

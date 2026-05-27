@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:news/core/theme/app_colors.dart';
-import 'package:news/core/widgets/auth_widgets.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:news/l10n/app_localizations.dart';
+
+import 'package:news/core/widgets/auth_widgets/auth_widgets.dart';
+import 'package:news/core/widgets/auth_widgets/auth_card.dart';
+import 'package:news/core/widgets/auth_widgets/auth_header.dart';
+import 'package:news/core/widgets/auth_widgets/auth_error_box.dart';
+import 'package:news/core/widgets/auth_widgets/auth_divider.dart';
+import 'package:news/core/widgets/auth_widgets/auth_link_text.dart';
+import 'package:news/core/widgets/auth_widgets/auth_footer.dart';
+import 'package:news/core/widgets/language_picker.dart';
 import 'package:news/core/theme/theme_controller.dart';
+
+import '../../../core/theme/app_colors.dart';
 import '../../../services/auth_service.dart';
 import '../../../onboarding/screens/interest_screen.dart';
 
@@ -96,15 +105,16 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleSignIn() async {
+    final loc = AppLocalizations.of(context)!;
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      setState(() => _errorMessage = 'Please fill in all fields');
+      setState(() => _errorMessage = loc.pleaseFillFields);
       return;
     }
     if (!email.contains('@')) {
-      setState(() => _errorMessage = 'Please enter a valid email');
+      setState(() => _errorMessage = loc.invalidEmail);
       return;
     }
 
@@ -120,7 +130,11 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (user != null && mounted) {
-        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
 
         if (doc.exists && doc.data() != null) {
           if (doc.data()!.containsKey('isDarkMode')) {
@@ -142,6 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (context.mounted) {
           Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         }
+
       }
     } catch (e) {
       setState(() => _errorMessage = e.toString());
@@ -151,15 +166,16 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleGoogleSignIn() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
       final user = await _authService.signInWithGoogle();
 
       if (user != null && mounted) {
-        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
 
         if (doc.exists && doc.data() != null) {
           if (doc.data()!.containsKey('isDarkMode')) {
@@ -196,13 +212,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
           if (context.mounted) {
             Navigator.pushReplacementNamed(context, InterestScreen.routeName);
+
           }
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -210,6 +226,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!; // 👈 Localizations instance
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
@@ -218,6 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+
               const SizedBox(height: 10),
 
               // 🔥 NEW: Top Right Globe Icon
@@ -233,42 +252,43 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 10),
               Text('INSIGHTLY', style: Theme.of(context).textTheme.titleLarge),
+
               const SizedBox(height: 12),
-              Text(
-                'Sign in to continue your curated narrative.',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
+
+              const Align(
+                alignment: Alignment.centerRight,
+                child: LanguagePicker(),
+              ),
+              const SizedBox(height: 20),
+
+              AuthHeader(
+                title: loc.appTitle,
+                subtitle: loc.loginSubtitle,
               ),
               const SizedBox(height: 32),
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: AppColors.cardDark,
-                  borderRadius: BorderRadius.circular(30),
-                ),
+
+              AuthCard(
                 child: Column(
                   children: [
                     AuthTextField(
-                      label: 'EMAIL ADDRESS',
+                      label: loc.emailAddress,
                       hintText: 'farida@gmail.com',
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 20),
                     AuthTextField(
-                      label: 'PASSWORD',
+                      label: loc.password,
                       hintText: '• • • • • • • •',
                       isPassword: true,
                       obscureText: _obscurePassword,
                       controller: _passwordController,
-                      onToggleVisibility: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
+                      onToggleVisibility: () => setState(
+                              () => _obscurePassword = !_obscurePassword),
                     ),
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 16),
+
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -278,7 +298,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.error_outline, color: Colors.redAccent, size: 18),
+                            const Icon(Icons.error_outline, color: AppColors.error, size: 18),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -289,81 +309,70 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
+
+                      AuthErrorBox(message: _errorMessage!),
                     ],
                     const SizedBox(height: 32),
+
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
                         onPressed: _isLoading ? null : _handleSignIn,
                         child: _isLoading
-                            ? const SizedBox(
-                          height: 20, width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
+                            ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
                         )
-                            : const Text('Sign In'),
+                            : Text(loc.signIn),
                       ),
                     ),
                     const SizedBox(height: 32),
-                    Row(
-                      children: [
-                        const Expanded(child: Divider(color: AppColors.border)),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            'OR CONTINUE WITH',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: AppColors.mutedText, letterSpacing: 1.5,
-                            ),
-                          ),
-                        ),
-                        const Expanded(child: Divider(color: AppColors.border)),
-                      ],
-                    ),
+
+                    AuthDivider(text: loc.orContinueWith),
                     const SizedBox(height: 24),
+
                     SocialAuthButton(
-                      text: 'Continue with Google',
+                      text: loc.continueWithGoogle,
                       imagePath: 'assets/images/google.png',
                       onPressed: _isLoading ? () {} : _handleGoogleSignIn,
                     ),
                     const SizedBox(height: 32),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Don't have an account? ", style: Theme.of(context).textTheme.bodyMedium),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacementNamed(context, '/signup');
-                          },
-                          child: Text(
-                            "Create Account",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.primary),
-                          ),
-                        ),
-                      ],
+
+                    AuthLinkText(
+                      message: loc.dontHaveAccount,
+                      linkText: loc.createAccount,
+                      onTap: () =>
+                          Navigator.pushReplacementNamed(context, '/signup'),
                     ),
                     const SizedBox(height: 24),
+
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
                         onPressed: () async {
                           await _authService.signOut();
-                          SavedArticlesManager.clearSession();
+            SavedArticlesManager.clearSession();
                           if (context.mounted) {
                             // Leave the language as whatever they just selected via the Globe icon!
                             Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+
                           }
                         },
-                        child: const Text('Continue as a guest'),
+                        child: Text(loc.continueAsGuest),
                       ),
                     ),
                   ],
                 ),
               ),
+
               const SizedBox(height: 32),
-              Text(
-                '© 2026 INSIGHTLY PRIVACY & TERMS.',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.border),
-              ),
+
+              AuthFooter(text: loc.footerCopyright),
+
               const SizedBox(height: 24),
             ],
           ),
