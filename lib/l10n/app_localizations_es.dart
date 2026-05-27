@@ -137,4 +137,82 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get startExploring => 'Empezar a explorar';
+
+  @override
+  String get loginSubtitle =>
+      'Inicia sesión para continuar tu narrativa curada.';
+
+  @override
+  String get emailAddress => 'CORREO ELECTRÓNICO';
+
+  @override
+  String get password => 'CONTRASEÑA';
+
+  @override
+  String get signIn => 'Iniciar Sesión';
+
+  @override
+  String get orContinueWith => 'O CONTINÚA CON';
+
+  @override
+  String get continueWithGoogle => 'Continuar con Google';
+
+  @override
+  String get dontHaveAccount => '¿No tienes cuenta? ';
+
+  @override
+  String get createAccount => 'Crear Cuenta';
+
+  @override
+  String get continueAsGuest => 'Continuar como invitado';
+
+  @override
+  String get footerCopyright => '© 2026 INSIGHTFUL PRIVACIDAD Y TÉRMINOS.';
+
+  @override
+  String get joinInsightly => 'ÚNETE A INSIGHTLY';
+
+  @override
+  String get signupSubtitle => 'Donde el mundo se encuentra con tu pantalla.';
+
+  @override
+  String get fullName => 'NOMBRE COMPLETO';
+
+  @override
+  String get confirmPassword => 'CONFIRMAR CONTRASEÑA';
+
+  @override
+  String get alreadyHaveAccount => '¿Ya tienes una cuenta? ';
+
+  @override
+  String get login => 'Iniciar Sesión';
+
+  @override
+  String get pleaseFillFields => 'Por favor completa todos los campos';
+
+  @override
+  String get invalidEmail => 'Por favor ingresa un correo válido';
+
+  @override
+  String get passwordsDoNotMatch => '¡Las contraseñas no coinciden!';
+
+  @override
+  String get passwordMinLength =>
+      'La contraseña debe tener al menos 8 caracteres.';
+
+  @override
+  String get passwordUppercase =>
+      'La contraseña debe contener al menos una mayúscula.';
+
+  @override
+  String get passwordLowercase =>
+      'La contraseña debe contener al menos una minúscula.';
+
+  @override
+  String get passwordNumber =>
+      'La contraseña debe contener al menos un número.';
+
+  @override
+  String get passwordSpecialChar =>
+      'La contraseña debe contener al menos un carácter especial.';
 }

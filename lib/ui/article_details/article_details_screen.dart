@@ -4,8 +4,6 @@ import '../../../core/widgets/background_color/app_background.dart';
 import '../../../core/models/article_model.dart';
 import 'package:news/core/widgets/article_content/article_content.dart';
 import 'package:news/core/widgets/article_content/comment_section.dart';
-
-import '../../core/utils/saved_articles_manager.dart';
 import '../../core/widgets/bookmark/bookmark_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,7 +22,6 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
   Future<void> _markArticleAsCompleted() async {
     final user = FirebaseAuth.instance.currentUser;
 
-    // ❌ If guest → do nothing
     if (user == null) return;
 
     final userRef =
@@ -77,7 +74,7 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
                 ),
               ),
 
-              // COMPLETED Button at the bottom
+              //  Button at the bottom
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: FilledButton(
@@ -89,9 +86,10 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
                   },
                   style: FilledButton.styleFrom(
                     minimumSize: const Size(double.infinity, 56),
-                    backgroundColor: AppColors.cardDark,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                   ),
-                  child: Text("COMPLETED", style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.white)),
+                  child: Text("COMPLETED", style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface)),
                 ),
               ),
             ],

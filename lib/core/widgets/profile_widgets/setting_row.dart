@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
+import '../../utils/responsive.dart'; 
 
 class SettingsRow extends StatelessWidget {
   final IconData leadingIcon;
@@ -17,22 +17,28 @@ class SettingsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(
+        horizontal: Responsive.scale(context, 16),
+        vertical: Responsive.scale(context, 12),
+      ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Responsive.scale(context, 16)),
       ),
       child: Row(
         children: [
-          Icon(leadingIcon,
+          Icon(
+            leadingIcon,
             color: theme.textTheme.bodyMedium?.color,
+            size: Responsive.scale(context, 24),
           ),
-          const SizedBox(width: 16),
-          // Title (titleMedium)
+          SizedBox(width: Responsive.scale(context, 16)),
           Expanded(
             child: Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontSize: Responsive.scaleText(context, 16),
+              ),
             ),
           ),
           trailing,

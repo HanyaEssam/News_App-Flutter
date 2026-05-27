@@ -347,6 +347,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start Exploring'**
   String get startExploring;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue your curated narrative.'**
+  String get loginSubtitle;
+
+  /// No description provided for @emailAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'EMAIL ADDRESS'**
+  String get emailAddress;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'PASSWORD'**
+  String get password;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signIn;
+
+  /// No description provided for @orContinueWith.
+  ///
+  /// In en, this message translates to:
+  /// **'OR CONTINUE WITH'**
+  String get orContinueWith;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @dontHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? '**
+  String get dontHaveAccount;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccount;
+
+  /// No description provided for @continueAsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as a guest'**
+  String get continueAsGuest;
+
+  /// No description provided for @footerCopyright.
+  ///
+  /// In en, this message translates to:
+  /// **'© 2026 INSIGHTFUL PRIVACY & TERMS.'**
+  String get footerCopyright;
+
+  /// No description provided for @joinInsightly.
+  ///
+  /// In en, this message translates to:
+  /// **'JOIN INSIGHTLY'**
+  String get joinInsightly;
+
+  /// No description provided for @signupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where the world meets your screen.'**
+  String get signupSubtitle;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'FULL NAME'**
+  String get fullName;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'CONFIRM PASSWORD'**
+  String get confirmPassword;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @pleaseFillFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in all fields'**
+  String get pleaseFillFields;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get invalidEmail;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match!'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters long.'**
+  String get passwordMinLength;
+
+  /// No description provided for @passwordUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one uppercase letter.'**
+  String get passwordUppercase;
+
+  /// No description provided for @passwordLowercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one lowercase letter.'**
+  String get passwordLowercase;
+
+  /// No description provided for @passwordNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one number.'**
+  String get passwordNumber;
+
+  /// No description provided for @passwordSpecialChar.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one special character.'**
+  String get passwordSpecialChar;
 }
 
 class _AppLocalizationsDelegate

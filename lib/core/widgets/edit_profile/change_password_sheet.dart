@@ -1,0 +1,199 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/responsive.dart';
+import '../auth_widgets/auth_widgets.dart';
+
+class ChangePasswordSheet extends StatefulWidget {
+  const ChangePasswordSheet({super.key});
+
+  static Future<void> show(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(Responsive.scale(context, 24)),
+        ),
+      ),
+      builder: (_) => const ChangePasswordSheet(),
+    );
+  }
+
+  @override
+  State<ChangePasswordSheet> createState() => _ChangePasswordSheetState();
+}
+
+class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
+  final _oldPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  bool _obscureOld = true;
+  bool _obscureNew = true;
+  bool _obscureConfirm = true;
+  bool _isSaving = false;
+  String? _errorMsg;
+
+  @override
+  void dispose() {
+    _oldPasswordController.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _updatePassword() async {
+    if (_newPasswordController.text != _confirmPasswordController.text) {
+      setState(() => _errorMsg = "New passwords do not match.");
+      return;
+    }
+    if (_newPasswordController.text.length < 8) {
+      setState(() => _errorMsg = "Password must be at least 8 characters.");
+      return;
+    }
+
+    setState(() {
+      _isSaving = true;
+      _errorMsg = null;
+    });
+
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: _oldPasswordController.text,
+      );
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(_newPasswordController.text);
+
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password updated successfully!')),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMsg = e.message ?? "Authentication failed. Check your current password.";
+      });
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom +
+              Responsive.scale(context, 24),
+          left: Responsive.scale(context, 24),
+          right: Responsive.scale(context, 24),
+          top: Responsive.scale(context, 24),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                'CHANGE PASSWORD',
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  fontSize: Responsive.scaleText(context, 12),
+                ),
+              ),
+            ),
+            SizedBox(height: Responsive.scale(context, 24)),
+            AuthTextField(
+              label: 'CURRENT PASSWORD',
+              hintText: '• • • • • • • •',
+              isPassword: true,
+              obscureText: _obscureOld,
+              controller: _oldPasswordController,
+              onToggleVisibility: () =>
+                  setState(() => _obscureOld = !_obscureOld),
+            ),
+            SizedBox(height: Responsive.scale(context, 20)),
+            AuthTextField(
+              label: 'NEW PASSWORD',
+              hintText: '• • • • • • • •',
+              isPassword: true,
+              obscureText: _obscureNew,
+              controller: _newPasswordController,
+              onToggleVisibility: () =>
+                  setState(() => _obscureNew = !_obscureNew),
+            ),
+            SizedBox(height: Responsive.scale(context, 20)),
+            AuthTextField(
+              label: 'CONFIRM PASSWORD',
+              hintText: '• • • • • • • •',
+              isPassword: true,
+              obscureText: _obscureConfirm,
+              controller: _confirmPasswordController,
+              onToggleVisibility: () =>
+                  setState(() => _obscureConfirm = !_obscureConfirm),
+            ),
+            if (_errorMsg != null) ...[
+              SizedBox(height: Responsive.scale(context, 16)),
+              Container(
+                padding: EdgeInsets.all(Responsive.scale(context, 12)),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.15),
+                  borderRadius:
+                  BorderRadius.circular(Responsive.scale(context, 8)),
+                  border: Border.all(color: Colors.red.withOpacity(0.5)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.redAccent,
+                      size: Responsive.scale(context, 18),
+                    ),
+                    SizedBox(width: Responsive.scale(context, 8)),
+                    Expanded(
+                      child: Text(
+                        _errorMsg!,
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: Responsive.scaleText(context, 13),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            SizedBox(height: Responsive.scale(context, 32)),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: _isSaving ? null : _updatePassword,
+                child: _isSaving
+                    ? SizedBox(
+                  height: Responsive.scale(context, 20),
+                  width: Responsive.scale(context, 20),
+                  child: const CircularProgressIndicator(
+                    color: Colors.black,
+                    strokeWidth: 2,
+                  ),
+                )
+                    : Text(
+                  'UPDATE PASSWORD',
+                  style: TextStyle(
+                    fontSize: Responsive.scaleText(context, 14),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: Responsive.scale(context, 24)),
+          ],
+        ),
+      ),
+    );
+  }
+}

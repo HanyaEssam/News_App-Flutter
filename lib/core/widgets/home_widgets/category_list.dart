@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:news/l10n/app_localizations.dart';
 
 import '../../theme/app_colors.dart';
-import '../../../ui/category_feed/screens/category_feed_screen.dart'; // Import your screen
-
-import 'package:news/l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
+import '../../../ui/category_feed/screens/category_feed_screen.dart';
 import '../../../core/utils/locale_provider.dart';
 
 class CategoryList extends StatefulWidget {
@@ -17,7 +16,6 @@ class CategoryList extends StatefulWidget {
 class _CategoryListState extends State<CategoryList> {
   int selectedIndex = 0;
 
-  // Added the specific colors for each category based on your requirements
   final List<Map<String, dynamic>> categories = [
     {
       'name': 'Tech',
@@ -92,80 +90,98 @@ class _CategoryListState extends State<CategoryList> {
     }
   }
 
+  Future<void> _onCategoryTap(int index) async {
+    // Don't do anything if user re-taps the same category
+    if (selectedIndex == index) return;
+
+    setState(() => selectedIndex = index);
+
+    // Small delay so the color animation can play before navigation
+    await Future.delayed(const Duration(milliseconds: 150));
+    if (!mounted) return;
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CategoryFeedScreen(
+          categoryName: categories[index]['name'],
+          categoryColor: categories[index]['color'],
+        ),
+      ),
+    );
+
+    // Reset selection when user returns from the category screen
+    if (mounted) setState(() => selectedIndex = 0);
+  }
+
   @override
   Widget build(BuildContext context) {
     Provider.of<LocaleProvider>(context);
+    final theme = Theme.of(context);
 
     return SizedBox(
       height: 95,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        itemCount: categories.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 20),
-        itemBuilder: (context, index) {
-          bool isSelected = index == selectedIndex;
+      child: ScrollConfiguration(
+        // 👇 Hide scrollbars on the horizontal list
+        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          itemCount: categories.length,
+          separatorBuilder: (context, index) => const SizedBox(width: 20),
+          itemBuilder: (context, index) {
+            final bool isSelected = index == selectedIndex;
+            final category = categories[index];
 
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-              });
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CategoryFeedScreen(
-                    categoryName: categories[index]['name'],
-                    categoryColor: categories[index]['color'],
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => _onCategoryTap(index),
+              child: Column(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOut,
+                    height: 60,
+                    width: 60,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? theme.colorScheme.primary.withOpacity(0.15)
+                          : theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      // Always include a border (transparent when not selected)
+                      // so the box doesn't "jump" by 1.5px when selected
+                      border: Border.all(
+                        color: isSelected
+                            ? theme.colorScheme.primary
+                            : Colors.transparent,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Image.asset(
+                      category['iconPath'],
+                      width: 32,
+                      height: 32,
+                      gaplessPlayback: true, // prevents reload flicker
+                    ),
                   ),
-                ),
-              );
-            },
-            child: Column(
-              children: [
-                Container(
-                  height: 60,
-                  width: 60,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary.withOpacity(
-                            0.15,
-                          ) // CHANGED
-                        : Theme.of(context).colorScheme.surface, // CHANGED
-                    borderRadius: BorderRadius.circular(16),
-                    border: isSelected
-                        ? Border.all(
-                            color: Theme.of(context).colorScheme.primary,
-                          ) // CHANGED
-                        : null,
+                  const SizedBox(height: 8),
+                  AnimatedDefaultTextStyle(
+                    duration: const Duration(milliseconds: 200),
+                    style: theme.textTheme.titleSmall!.copyWith(
+                      color: isSelected
+                          ? theme.colorScheme.primary
+                          : theme.textTheme.bodySmall?.color,
+                    ),
+                    child: Text(
+                      _translateCategory(context, category['name']!),
+                    ),
                   ),
-                  child: Image.asset(
-                    categories[index]['iconPath'],
-
-                    width: 32,
-                    height: 32,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _translateCategory(context, categories[index]['name']!),
-
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: isSelected
-                        ? Theme.of(context)
-                              .colorScheme
-                              .primary // CHANGED
-                        : Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.color, // CHANGED
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

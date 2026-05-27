@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../utils/responsive.dart';
 
 class MetricCard extends StatelessWidget {
   final String title;
@@ -19,38 +20,39 @@ class MetricCard extends StatelessWidget {
 
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(Responsive.scale(context, 20)),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(Responsive.scale(context, 16)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title.toUpperCase(),
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.secondary.withOpacity(0.8),
+                fontSize: Responsive.scaleText(context, 12),
               ),
             ),
-            const SizedBox(height: 12),
-            // Number value and optional Unit row
+            SizedBox(height: Responsive.scale(context, 12)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                // Big Numbers (displayMedium)
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.displayMedium,
+                  style: theme.textTheme.displayMedium?.copyWith(
+                    fontSize: Responsive.scaleText(context, 32),
+                  ),
                 ),
                 if (unit != null) ...[
-                  const SizedBox(width: 6),
-                  // Unit text like 'm' (bodyMedium)
+                  SizedBox(width: Responsive.scale(context, 6)),
                   Text(
                     unit!,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: AppColors.mutedText,
+                      fontSize: Responsive.scaleText(context, 14),
                     ),
                   ),
                 ],
