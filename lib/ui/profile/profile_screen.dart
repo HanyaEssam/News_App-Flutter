@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _userName = 'Loading...';
   String _avatarUrl = '';
   String _articlesRead = '0';
-  String _minutesSaved = '0';
+  String _topTopic = '...';
   bool _isLoading = true;
 
   @override
@@ -46,7 +46,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // Use snapshots() so the profile updates instantly when edited!
         FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -58,7 +57,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _userName = data['fullName'] ?? 'User';
               _avatarUrl = data['avatarUrl'] ?? '';
               _articlesRead = (data['articlesRead'] ?? 0).toString();
-              _minutesSaved = (data['minutesSaved'] ?? 0).toString();
+
+              // 🔥 THE DYNAMIC LOGIC
+              Map<String, dynamic> categoryCounts = data['categoryCounts'] ?? {};
+
+              if (categoryCounts.isNotEmpty) {
+                // 1. Find the category with the highest score
+                var topCategoryEntry = categoryCounts.entries.reduce((a, b) => (a.value as num) > (b.value as num) ? a : b);
+                String rawTopic = topCategoryEntry.key;
+
+                // 2. Format it elegantly
+                _topTopic = "${rawTopic[0].toUpperCase()}${rawTopic.substring(1).toLowerCase()}";
+
+              } else {
+                // 3. FALLBACK: Use their onboarding choice if they haven't read anything
+                List<dynamic> topics = data['selectedTopics'] ?? [];
+                if (topics.isNotEmpty && topics.first.toString().isNotEmpty) {
+                  String rawTopic = topics.first.toString();
+                  _topTopic = "${rawTopic[0].toUpperCase()}${rawTopic.substring(1).toLowerCase()}";
+                } else {
+                  _topTopic = 'General';
+                }
+              }
+
               _isLoading = false;
             });
           }
@@ -92,22 +113,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 🇬🇧 ENGLISH
                 ListTile(
                   title: Text('English (UK)', style: Theme.of(context).textTheme.titleMedium),
                   trailing: selectedLanguage == 'English (UK)' ?  Icon(Icons.check_circle,
                       color: Theme.of(context).colorScheme.primary) : null,
                   onTap: () {
                     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
-
-                    // 1. Close the bottom sheet FIRST to prevent Red Screen of Death
                     Navigator.pop(context);
-
-                    // 2. Change language
                     setState(() => selectedLanguage = 'English (UK)');
                     localeProvider.setLocale(const Locale('en'));
-
-                    // 3. Save to Cloud
                     final user = FirebaseAuth.instance.currentUser;
                     if (user != null) {
                       FirebaseFirestore.instance.collection('users').doc(user.uid).set({
@@ -117,7 +131,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 ),
 
-                // 🇸🇦 ARABIC
                 ListTile(
                   title: Text(
                     'العربية (Arabic)',
@@ -128,12 +141,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : null,
                   onTap: () {
                     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
-
-                    Navigator.pop(context); // Close FIRST
-
+                    Navigator.pop(context);
                     setState(() => selectedLanguage = 'العربية');
                     localeProvider.setLocale(const Locale('ar'));
-
                     final user = FirebaseAuth.instance.currentUser;
                     if (user != null) {
                       FirebaseFirestore.instance.collection('users').doc(user.uid).set({
@@ -143,7 +153,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 ),
 
-                // 🇪🇸 SPANISH
                 ListTile(
                   title: Text(
                     'Español (Spanish)',
@@ -154,12 +163,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : null,
                   onTap: () {
                     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
-
-                    Navigator.pop(context); // Close FIRST
-
+                    Navigator.pop(context);
                     setState(() => selectedLanguage = 'Español');
                     localeProvider.setLocale(const Locale('es'));
-
                     final user = FirebaseAuth.instance.currentUser;
                     if (user != null) {
                       FirebaseFirestore.instance.collection('users').doc(user.uid).set({
@@ -169,7 +175,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 ),
 
-                // 🇫🇷 FRENCH
                 ListTile(
                   title: Text(
                     'Français (French)',
@@ -180,12 +185,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : null,
                   onTap: () {
                     final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
-
-                    Navigator.pop(context); // Close FIRST
-
+                    Navigator.pop(context);
                     setState(() => selectedLanguage = 'Français');
                     localeProvider.setLocale(const Locale('fr'));
-
                     final user = FirebaseAuth.instance.currentUser;
                     if (user != null) {
                       FirebaseFirestore.instance.collection('users').doc(user.uid).set({
@@ -206,7 +208,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // In profile screen build method:
     final currentCode = Provider.of<LocaleProvider>(context).locale?.languageCode ?? 'en';
     final selectedLanguage = switch (currentCode) {
       'ar' => 'العربية',
@@ -219,7 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          centerTitle: true, // ✅ Centered title
+          centerTitle: true,
           backgroundColor: Colors.transparent,
           title: Text(AppLocalizations.of(context)!.appTitle.toUpperCase()),
         ),
@@ -234,13 +235,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
 
-    // 👇 Constrain content width on tablets/desktops
     final double maxContentWidth = Responsive.isMobile(context) ? double.infinity : 600;
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        centerTitle: true, // ✅ Centered title
+        centerTitle: true,
         backgroundColor: Colors.transparent,
         title: Text(AppLocalizations.of(context)!.appTitle.toUpperCase()),
         actions: [
@@ -291,9 +291,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         SizedBox(width: Responsive.scale(context, 16)),
                         MetricCard(
-                          title: AppLocalizations.of(context)!.minutesSaved,
-                          value: _minutesSaved,
-                          unit: 'm',
+                          title: 'TOP TOPIC',
+                          value: _topTopic,
+                          isWord: true,
                         ),
                       ],
                     ),
@@ -350,17 +350,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: Responsive.scale(context, 48)),
                     OutlinedButton(
                       onPressed: () async {
-                        // 1. Sign out of Firebase
                         await FirebaseAuth.instance.signOut();
 
                         if (context.mounted) {
-                          // 2. Wipe the Saved Articles RAM clean
                           SavedArticlesManager.clearSession();
-
-                          // 3. Reset language to English (or device default)
                           Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('en'));
 
-                          // 4. Kick them back to Login
                           Navigator.pushNamedAndRemoveUntil(
                             context,
                             LoginScreen.routeName,

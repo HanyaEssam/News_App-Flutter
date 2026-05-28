@@ -45,65 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // 🔥 NEW: Language Picker for Guests (No Firebase saving here!)
-  void _showLanguagePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.cardDark,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'CHOOSE LANGUAGE',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AppColors.mutedText,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                ListTile(
-                  title: Text('English (UK)', style: Theme.of(context).textTheme.titleMedium),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('en'));
-                  },
-                ),
-                ListTile(
-                  title: Text('العربية (Arabic)', style: Theme.of(context).textTheme.titleMedium),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('ar'));
-                  },
-                ),
-                ListTile(
-                  title: Text('Español (Spanish)', style: Theme.of(context).textTheme.titleMedium),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('es'));
-                  },
-                ),
-                ListTile(
-                  title: Text('Français (French)', style: Theme.of(context).textTheme.titleMedium),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('fr'));
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   Future<void> _handleSignIn() async {
     final loc = AppLocalizations.of(context)!;
     final email = _emailController.text.trim();
@@ -135,7 +76,6 @@ class _LoginScreenState extends State<LoginScreen> {
             .doc(user.uid)
             .get();
 
-
         if (doc.exists && doc.data() != null) {
           if (doc.data()!.containsKey('isDarkMode')) {
             ThemeController.toggleTheme(doc.data()!['isDarkMode']);
@@ -156,7 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
         if (context.mounted) {
           Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         }
-
       }
     } catch (e) {
       setState(() => _errorMessage = e.toString());
@@ -212,7 +151,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
           if (context.mounted) {
             Navigator.pushReplacementNamed(context, InterestScreen.routeName);
-
           }
         }
       }
@@ -236,31 +174,16 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
               const SizedBox(height: 10),
 
-              // 🔥 NEW: Top Right Globe Icon
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.language, color: AppColors.mutedText),
-                    onPressed: () => _showLanguagePicker(context),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 10),
-              Text('INSIGHTLY', style: Theme.of(context).textTheme.titleLarge),
-
-              const SizedBox(height: 12),
-
+              // Custom Language Picker
               const Align(
                 alignment: Alignment.centerRight,
                 child: LanguagePicker(),
               ),
               const SizedBox(height: 20),
 
+              // Custom Header Widget
               AuthHeader(
                 title: loc.appTitle,
                 subtitle: loc.loginSubtitle,
@@ -286,32 +209,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       onToggleVisibility: () => setState(
                               () => _obscurePassword = !_obscurePassword),
                     ),
+
+                    // Display error if one exists
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 16),
-
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.red.withOpacity(0.5)),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.error_outline, color: AppColors.error, size: 18),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                _errorMessage!,
-                                style: const TextStyle(color: AppColors.error, fontSize: 13),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
                       AuthErrorBox(message: _errorMessage!),
                     ],
+
                     const SizedBox(height: 32),
 
                     SizedBox(
@@ -355,11 +259,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: FilledButton(
                         onPressed: () async {
                           await _authService.signOut();
-            SavedArticlesManager.clearSession();
+                          SavedArticlesManager.clearSession();
                           if (context.mounted) {
                             // Leave the language as whatever they just selected via the Globe icon!
                             Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-
                           }
                         },
                         child: Text(loc.continueAsGuest),

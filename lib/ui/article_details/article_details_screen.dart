@@ -19,25 +19,48 @@ class ArticleDetailsScreen extends StatefulWidget {
 }
 
 class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
+
+  // 🔥 DYNAMIC UPGRADE: Tracks the categories they actually read!
   Future<void> _markArticleAsCompleted() async {
     final user = FirebaseAuth.instance.currentUser;
-
     if (user == null) return;
 
-    final userRef =
-    FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final articleTitle = widget.article.title;
+    // Get the category of the current article
+    final articleCategory = widget.article.category.toLowerCase();
 
     try {
-      await userRef.update({
-        'articlesRead': FieldValue.increment(1),
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final snapshot = await transaction.get(userRef);
+        if (!snapshot.exists) return;
 
-        // optional (remove if you don't want it)
-        'minutesSaved': FieldValue.increment(5),
+        List<dynamic> readArticlesList = snapshot.data()?['readArticlesList'] ?? [];
+        // Pull the current scorecard from Firebase (or create an empty one)
+        Map<String, dynamic> categoryCounts = snapshot.data()?['categoryCounts'] ?? {};
+
+        if (!readArticlesList.contains(articleTitle)) {
+          readArticlesList.add(articleTitle);
+
+          // 🔥 Add +1 point to whatever category this article belongs to!
+          categoryCounts[articleCategory] = (categoryCounts[articleCategory] ?? 0) + 1;
+
+          transaction.update(userRef, {
+            'readArticlesList': readArticlesList,
+            'articlesRead': readArticlesList.length,
+            'categoryCounts': categoryCounts, // Save the updated scorecard
+          });
+
+          debugPrint("Article marked as read & category score updated!");
+        } else {
+          debugPrint("User already read this article. Skipping count.");
+        }
       });
     } catch (e) {
       debugPrint("Error updating read count: $e");
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +72,7 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
             padding: const EdgeInsets.only(right: 12.0),
             child: BookmarkButton(
               article: widget.article,
-              unselectedColor: AppColors.mutedText, // White when unselected for the appBar
+              unselectedColor: AppColors.mutedText,
             ),
           ),
         ],
@@ -74,7 +97,7 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
                 ),
               ),
 
-              //  Button at the bottom
+              // Button at the bottom
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: FilledButton(
@@ -88,8 +111,12 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
                     minimumSize: const Size(double.infinity, 56),
                     backgroundColor: Theme.of(context).colorScheme.surface,
                   ),
-                  child: Text("COMPLETED", style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface)),
+                  child: Text(
+                    "COMPLETED",
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
                 ),
               ),
             ],

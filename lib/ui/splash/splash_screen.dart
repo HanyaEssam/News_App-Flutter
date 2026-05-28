@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart'; // 🔥 1. Added this import
 import '../../core/widgets/background_color/app_background.dart';
 import 'package:news/ui/auth/login/login_screen.dart';
 
@@ -15,8 +16,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+    // 🔥 2. Wait for the very first frame of this custom screen to be drawn,
+    // and THEN instantly remove the native Android splash screen.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FlutterNativeSplash.remove();
+    });
+
+    // 3. Continue with your normal 3-second delay
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+      }
     });
   }
 

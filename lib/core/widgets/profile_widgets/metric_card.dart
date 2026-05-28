@@ -6,12 +6,14 @@ class MetricCard extends StatelessWidget {
   final String title;
   final String value;
   final String? unit;
+  final bool isWord;
 
   const MetricCard({
     super.key,
     required this.title,
     required this.value,
     this.unit,
+    this.isWord = false,
   });
 
   @override
@@ -40,10 +42,16 @@ class MetricCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                Text(
-                  value,
-                  style: theme.textTheme.displayMedium?.copyWith(
-                    fontSize: Responsive.scaleText(context, 32),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      value,
+                      style: theme.textTheme.displayMedium?.copyWith(
+                        fontSize: Responsive.scaleText(context, isWord ? 24 : 32),
+                      ),
+                    ),
                   ),
                 ),
                 if (unit != null) ...[

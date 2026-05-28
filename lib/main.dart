@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:news/core/theme/app_theme.dart';
 import 'package:news/core/theme/theme_controller.dart'; // ADD THIS
 
@@ -22,6 +23,11 @@ import 'package:news/core/utils/locale_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // 1. You must have this line first
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // 2. 🔥 Tell the native splash screen to stay on the screen!
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
