@@ -12,18 +12,23 @@ class Responsive {
       width(context) >= 600 && width(context) < 1024;
   static bool isDesktop(BuildContext context) => width(context) >= 1024;
 
-  /// Scales text, but clamps it so tablets/desktops don't get giant text
   static double scaleText(BuildContext context, double size) {
     const double baseWidth = 390;
-    final double screenWidth = width(context);
-    final double scaleFactor = (screenWidth / baseWidth).clamp(0.85, 1.3);
+    final double scaleFactor =
+    (width(context) / baseWidth).clamp(0.85, 1.8);
     return size * scaleFactor;
   }
 
-  /// Scales sizes (padding, icons, etc.) with a clamp
   static double scale(BuildContext context, double size) {
     const double baseWidth = 390;
-    final double scaleFactor = (width(context) / baseWidth).clamp(0.85, 1.5);
+    final double scaleFactor =
+    (width(context) / baseWidth).clamp(0.85, 2.2);
     return size * scaleFactor;
+  }
+
+  static double maxWidth(BuildContext context) {
+    if (isDesktop(context)) return width(context) * 0.75;
+    if (isTablet(context)) return width(context) * 0.85;
+    return double.infinity;
   }
 }

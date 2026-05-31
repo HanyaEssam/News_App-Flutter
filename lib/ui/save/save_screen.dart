@@ -41,59 +41,64 @@ class SaveScreen extends StatelessWidget {
       ),
       body: AppBackground(
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: Responsive.scale(context, 20.0)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: Responsive.scale(context, 20)),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: Responsive.scale(context, 20.0)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: Responsive.scale(context, 20)),
 
-                Text(
-                  AppLocalizations.of(context)!.savedPageTitle,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontSize: Responsive.scaleText(context, 32),
-                  ),
+                    Text(
+                      AppLocalizations.of(context)!.savedPageTitle,
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        fontSize: Responsive.scaleText(context, 32),
+                      ),
+                    ),
+                    SizedBox(height: Responsive.scale(context, 12)),
+
+                    ValueListenableBuilder<List<ArticleModel>>(
+                      valueListenable: SavedArticlesManager.savedArticles,
+                      builder: (context, savedList, child) {
+                        bool hasSavedArticles = savedList.isNotEmpty;
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .savedArticlesCount(savedList.length.toString())
+                                  .toUpperCase(),
+                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                color: AppColors.mutedText,
+                                fontSize: Responsive.scaleText(context, 12),
+                              ),
+                            ),
+                            SizedBox(height: Responsive.scale(context, 32)),
+
+                            if (!hasSavedArticles)
+                              const EmptySavedState()
+                            else
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: savedList.length,
+                                itemBuilder: (context, index) {
+                                  final article = savedList[index];
+                                  return SavedArticleCard(article: article);
+                                },
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+
+                    SizedBox(height: Responsive.scale(context, 40)),
+                  ],
                 ),
-                SizedBox(height: Responsive.scale(context, 12)),
-
-                ValueListenableBuilder<List<ArticleModel>>(
-                  valueListenable: SavedArticlesManager.savedArticles,
-                  builder: (context, savedList, child) {
-                    bool hasSavedArticles = savedList.isNotEmpty;
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!
-                              .savedArticlesCount(savedList.length.toString())
-                              .toUpperCase(),
-                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: AppColors.mutedText,
-                            fontSize: Responsive.scaleText(context, 12),
-                          ),
-                        ),
-                        SizedBox(height: Responsive.scale(context, 32)),
-
-                        if (!hasSavedArticles)
-                          const EmptySavedState()
-                        else
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: savedList.length,
-                            itemBuilder: (context, index) {
-                              final article = savedList[index];
-                              return SavedArticleCard(article: article);
-                            },
-                          ),
-                      ],
-                    );
-                  },
-                ),
-
-                SizedBox(height: Responsive.scale(context, 40)),
-              ],
+              ),
             ),
           ),
         ),

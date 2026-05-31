@@ -103,14 +103,13 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
   @override
   Widget build(BuildContext context) {
     final translatedCategory = _getTranslatedCategory(context, widget.categoryName);
-    final double maxContentWidth = Responsive.isMobile(context) ? double.infinity : 600;
 
     return Scaffold(
       body: AppBackground(
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: maxContentWidth),
+              constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

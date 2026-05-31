@@ -1,8 +1,8 @@
-import 'dart:async'; // 🔥 Required for StreamSubscription
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:news/l10n/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../core/widgets/background_color/app_background.dart';
@@ -24,19 +24,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
   final _nameController = TextEditingController();
 
-  // 🔥 NEW: We keep track of the live database connection so we can close it later
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
-
   bool _isUpdatingName = false;
   bool _isLoading = true;
-  bool _isFirstLoad = true; // 🔥 NEW: Prevents overwriting the text box while typing
+  bool _isFirstLoad = true;
 
   String _avatarUrl = '';
   List<String> _selectedTopics = [];
 
   static const List<String> _allTopics = [
-    'Technology', 'Sports', 'Politics', 'Business',
-    'Health', 'Science', 'General', 'Entertainment',
+    'Technology',
+    'Sports',
+    'Politics',
+    'Business',
+    'Health',
+    'Science',
+    'General',
+    'Entertainment',
   ];
 
   static const List<String> _availableAvatars = [
@@ -52,18 +56,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _listenToUserData(); // 🔥 Changed to our new live-listening function
+    _listenToUserData();
   }
 
   @override
   void dispose() {
-    // 🔥 ALWAYS cancel the database subscription when leaving the screen to save memory!
     _userDataSubscription?.cancel();
     _nameController.dispose();
     super.dispose();
   }
 
-  // 🔥 UPGRADED: Now listens to the database in real-time instead of fetching once
   void _listenToUserData() {
     if (currentUser == null) return;
 
@@ -75,15 +77,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (doc.exists && mounted) {
         setState(() {
           _avatarUrl = doc.data()!['avatarUrl'] ?? '';
-          _selectedTopics = List<String>.from(doc.data()!['selectedTopics'] ?? []);
-
-          // 🔥 Only set the text controller the VERY FIRST time the screen loads.
-          // This stops the database from erasing your text while you are typing!
+          _selectedTopics =
+          List<String>.from(doc.data()!['selectedTopics'] ?? []);
           if (_isFirstLoad) {
             _nameController.text = doc.data()!['fullName'] ?? '';
             _isFirstLoad = false;
           }
-
           _isLoading = false;
         });
       }
@@ -102,7 +101,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .doc(currentUser!.uid)
           .update({'fullName': newName});
       await currentUser!.updateDisplayName(newName);
-
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Name updated successfully!')),
@@ -110,8 +108,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
       }
     } finally {
       if (mounted) setState(() => _isUpdatingName = false);
@@ -120,12 +119,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final maxContentWidth =
-    Responsive.isMobile(context) ? double.infinity : 600.0;
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EDIT PROFILE'),
+        title: Text(loc.editProfile.toUpperCase()),
         backgroundColor: Colors.transparent,
       ),
       body: AppBackground(
@@ -133,7 +131,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ? const Center(child: CircularProgressIndicator())
             : Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: maxContentWidth),
+            constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
                 horizontal: Responsive.scale(context, 24),
@@ -142,16 +140,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: Responsive.scale(context, 32)),
-
-                  // 1. AVATAR
                   ProfileAvatarPicker(
                     avatarUrl: _avatarUrl,
                     onTap: () => AvatarPickerSheet.show(
                       context,
                       avatars: _availableAvatars,
                       onAvatarSelected: (path) {
-                        // The database listener will update the screen, but we can
-                        // also manually update the database here if needed.
                         FirebaseFirestore.instance
                             .collection('users')
                             .doc(currentUser!.uid)
@@ -160,23 +154,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   SizedBox(height: Responsive.scale(context, 48)),
-
-                  // 2. PERSONAL INFO
                   Text(
-                    'PERSONAL INFO',
+                    loc.personalInfo.toUpperCase(),
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                   SizedBox(height: Responsive.scale(context, 12)),
                   NameEditorSection(
                     controller: _nameController,
                     isLoading: _isUpdatingName,
-                    onUpdate: _updateName,
+                    onUpdate: _updateName, label: '', btnText: '',
                   ),
                   SizedBox(height: Responsive.scale(context, 40)),
-
-                  // 3. SECURITY
                   Text(
-                    'SECURITY',
+                    loc.security.toUpperCase(),
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                   SizedBox(height: Responsive.scale(context, 12)),
@@ -184,7 +174,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     onTap: () => ChangePasswordSheet.show(context),
                     child: SettingsRow(
                       leadingIcon: Icons.lock_outline,
-                      title: 'Change Password',
+                      title: loc.changePassword,
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: Responsive.scale(context, 16),
@@ -193,10 +183,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   SizedBox(height: Responsive.scale(context, 32)),
-
-                  // 4. PREFERENCES
                   Text(
-                    'PREFERENCES',
+                    loc.preferences.toUpperCase(),
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                   SizedBox(height: Responsive.scale(context, 12)),
@@ -205,25 +193,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       context,
                       allTopics: _allTopics,
                       selectedTopics: _selectedTopics,
-                      onTopicsChanged: (newTopics) {
-                        // We don't need setState here anymore because the live database
-                        // listener will handle updating the UI for us automatically!
-                      },
+                      onTopicsChanged: (newTopics) {},
                     ),
                     child: SettingsRow(
                       leadingIcon: Icons.interests_outlined,
-                      title: 'Your Topics',
+                      title: loc.yourTopics,
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             _selectedTopics.isEmpty
-                                ? 'None'
-                                : '${_selectedTopics.length} Selected',
+                                ? loc.none
+                                : '${_selectedTopics.length} ${loc.selected}',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
-                                ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                                ?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primary,
+                            ),
                           ),
                           SizedBox(width: Responsive.scale(context, 8)),
                           Icon(

@@ -81,8 +81,7 @@ class _InterestScreenState extends State<InterestScreen> {
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: SingleChildScrollView(
+              constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),              child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
                   horizontal: Responsive.scale(context, 20),
                 ),
@@ -118,8 +117,7 @@ class _InterestScreenState extends State<InterestScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _categories.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: Responsive.isMobile(context) ? 2 : 3,
-                        crossAxisSpacing: Responsive.scale(context, 14),
+                        crossAxisCount: Responsive.isDesktop(context) ? 4 : Responsive.isTablet(context) ? 3 : 2,                        crossAxisSpacing: Responsive.scale(context, 14),
                         mainAxisSpacing: Responsive.scale(context, 14),
                         childAspectRatio: 0.85,
                       ),

@@ -58,8 +58,7 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double maxContentWidth =
-    Responsive.isMobile(context) ? double.infinity : 700;
+    BoxConstraints(maxWidth: Responsive.maxWidth(context));
 
     return Scaffold(
       appBar: AppBar(
@@ -82,7 +81,7 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: maxContentWidth),
+              constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(Responsive.scale(context, 20)),
                 child: Column(

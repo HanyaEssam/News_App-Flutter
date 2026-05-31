@@ -79,8 +79,6 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double maxContentWidth =
-    Responsive.isMobile(context) ? double.infinity : 600;
 
     return Scaffold(
       appBar: AppBar(
@@ -94,7 +92,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: maxContentWidth),
+              constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
                   horizontal: Responsive.scale(context, 20),

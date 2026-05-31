@@ -132,15 +132,12 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final double maxContentWidth =
-    Responsive.isMobile(context) ? double.infinity : 500;
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: maxContentWidth),
+            constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
                 horizontal: Responsive.scale(context, 24),

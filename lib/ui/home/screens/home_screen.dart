@@ -228,7 +228,6 @@ class _HomeTabContentState extends State<HomeTabContent> {
   @override
   Widget build(BuildContext context) {
     bool isGuest = GuestChecker.isGuest();
-    final double maxContentWidth = Responsive.isMobile(context) ? double.infinity : 800;
 
     return Scaffold(
       appBar: AppBar(
@@ -243,7 +242,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: maxContentWidth),
+              constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

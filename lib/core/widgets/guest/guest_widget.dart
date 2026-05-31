@@ -18,12 +18,9 @@ class GuestWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double maxContentWidth =
-    Responsive.isMobile(context) ? double.infinity : 500;
-
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxContentWidth),
+        constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             horizontal: Responsive.scale(context, 24),
