@@ -18,11 +18,11 @@ class LanguagePicker extends StatelessWidget {
         final localeProvider = Provider.of<LocaleProvider>(context);
         final currentLocale = localeProvider.locale?.languageCode ?? 'en';
 
-        return ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.6,
-          ),
-          child: SafeArea(
+        return SafeArea(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.6,
+            ),
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
                 vertical: Responsive.scale(context, 20),
@@ -58,6 +58,11 @@ class LanguagePicker extends StatelessWidget {
                     label: 'Français (French)',
                     code: 'fr',
                     isSelected: currentLocale == 'fr',
+                  ),
+                  _LanguageTile(
+                    label: '中文 (Chinese)',
+                    code: 'zh',
+                    isSelected: currentLocale == 'zh',
                   ),
                 ],
               ),

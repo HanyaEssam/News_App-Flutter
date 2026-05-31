@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
+
 import '../../core/utils/saved_articles_manager.dart';
 import '../../core/utils/responsive.dart';
 import '../edit_profile/edit_profile_screen.dart';
@@ -16,7 +18,6 @@ import '../../../core/widgets/guest/guest_widget.dart';
 import 'package:news/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../../core/utils/locale_provider.dart';
-import '../../../core/widgets/language_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = '/profile';
@@ -27,6 +28,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String selectedLanguage = 'English (UK)';
+
   String _userName = 'Loading...';
   String _avatarUrl = '';
   String _articlesRead = '0';
@@ -55,23 +58,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _avatarUrl = data['avatarUrl'] ?? '';
               _articlesRead = (data['articlesRead'] ?? 0).toString();
 
-              Map<String, dynamic> categoryCounts =
-                  data['categoryCounts'] ?? {};
+              // 🔥 THE DYNAMIC LOGIC
+              Map<String, dynamic> categoryCounts = data['categoryCounts'] ?? {};
 
               if (categoryCounts.isNotEmpty) {
-                var topCategoryEntry = categoryCounts.entries.reduce(
-                        (a, b) =>
-                    (a.value as num) > (b.value as num) ? a : b);
+                // 1. Find the category with the highest score
+                var topCategoryEntry = categoryCounts.entries.reduce((a, b) => (a.value as num) > (b.value as num) ? a : b);
                 String rawTopic = topCategoryEntry.key;
-                _topTopic =
-                "${rawTopic[0].toUpperCase()}${rawTopic.substring(1).toLowerCase()}";
+
+                // 2. Format it elegantly
+                _topTopic = "${rawTopic[0].toUpperCase()}${rawTopic.substring(1).toLowerCase()}";
+
               } else {
+                // 3. FALLBACK: Use their onboarding choice if they haven't read anything
                 List<dynamic> topics = data['selectedTopics'] ?? [];
-                if (topics.isNotEmpty &&
-                    topics.first.toString().isNotEmpty) {
+                if (topics.isNotEmpty && topics.first.toString().isNotEmpty) {
                   String rawTopic = topics.first.toString();
-                  _topTopic =
-                  "${rawTopic[0].toUpperCase()}${rawTopic.substring(1).toLowerCase()}";
+                  _topTopic = "${rawTopic[0].toUpperCase()}${rawTopic.substring(1).toLowerCase()}";
                 } else {
                   _topTopic = 'General';
                 }
@@ -88,13 +91,125 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  void _showLanguagePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'CHOOSE LANGUAGE',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color:  Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                ListTile(
+                  title: Text('English (UK)', style: Theme.of(context).textTheme.titleMedium),
+                  trailing: selectedLanguage == 'English (UK)' ?  Icon(Icons.check_circle,
+                      color: Theme.of(context).colorScheme.primary) : null,
+                  onTap: () {
+                    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+                    Navigator.pop(context);
+                    setState(() => selectedLanguage = 'English (UK)');
+                    localeProvider.setLocale(const Locale('en'));
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user != null) {
+                      FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+                        'language': 'en'
+                      }, SetOptions(merge: true));
+                    }
+                  },
+                ),
+
+                ListTile(
+                  title: Text(
+                    'العربية (Arabic)',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  trailing: selectedLanguage == 'العربية'
+                      ?  Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
+                      : null,
+                  onTap: () {
+                    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+                    Navigator.pop(context);
+                    setState(() => selectedLanguage = 'العربية');
+                    localeProvider.setLocale(const Locale('ar'));
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user != null) {
+                      FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+                        'language': 'ar'
+                      }, SetOptions(merge: true));
+                    }
+                  },
+                ),
+
+                ListTile(
+                  title: Text(
+                    'Español (Spanish)',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  trailing: selectedLanguage == 'Español'
+                      ?  Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
+                      : null,
+                  onTap: () {
+                    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+                    Navigator.pop(context);
+                    setState(() => selectedLanguage = 'Español');
+                    localeProvider.setLocale(const Locale('es'));
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user != null) {
+                      FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+                        'language': 'es'
+                      }, SetOptions(merge: true));
+                    }
+                  },
+                ),
+
+                ListTile(
+                  title: Text(
+                    'Français (French)',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  trailing: selectedLanguage == 'Français'
+                      ?  Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
+                      : null,
+                  onTap: () {
+                    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+                    Navigator.pop(context);
+                    setState(() => selectedLanguage = 'Français');
+                    localeProvider.setLocale(const Locale('fr'));
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user != null) {
+                      FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+                        'language': 'fr'
+                      }, SetOptions(merge: true));
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    final currentCode =
-        Provider.of<LocaleProvider>(context).locale?.languageCode ?? 'en';
-    final selectedLanguageString = switch (currentCode) {
+    final currentCode = Provider.of<LocaleProvider>(context).locale?.languageCode ?? 'en';
+    final selectedLanguage = switch (currentCode) {
       'ar' => 'العربية',
       'es' => 'Español',
       'fr' => 'Français',
@@ -120,8 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
 
-    final double maxContentWidth =
-    Responsive.isMobile(context) ? double.infinity : 600;
+    final double maxContentWidth = Responsive.isMobile(context) ? double.infinity : 600;
 
     return Scaffold(
       appBar: AppBar(
@@ -150,10 +264,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: AppBackground(
         child: SafeArea(
           child: _isLoading
-              ? Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+              ?  Center(
+            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
           )
               : Center(
             child: ConstrainedBox(
@@ -173,20 +285,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: Responsive.scale(context, 40)),
                     Row(
                       children: [
-                        Expanded(
-                          child: MetricCard(
-                            title: AppLocalizations.of(context)!
-                                .articlesRead,
-                            value: _articlesRead,
-                          ),
+                        MetricCard(
+                          title: AppLocalizations.of(context)!.articlesRead,
+                          value: _articlesRead,
                         ),
                         SizedBox(width: Responsive.scale(context, 16)),
-                        Expanded(
-                          child: MetricCard(
-                            title: 'TOP TOPIC',
-                            value: _topTopic,
-                            isWord: true,
-                          ),
+                        MetricCard(
+                          title: 'TOP TOPIC',
+                          value: _topTopic,
+                          isWord: true,
                         ),
                       ],
                     ),
@@ -195,10 +302,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       AppLocalizations.of(context)!
                           .appearance
                           .toUpperCase(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          ?.copyWith(
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         fontSize: Responsive.scaleText(context, 12),
                       ),
                     ),
@@ -212,33 +316,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : AppLocalizations.of(context)!.lightMode,
                       trailing: Switch(
                         value: isDarkMode,
-                        activeColor:
-                        Theme.of(context).colorScheme.primary,
+                        activeColor: Theme.of(context).colorScheme.primary,
                         activeTrackColor: AppColors.inputFill,
                         inactiveThumbColor: AppColors.mutedText,
-                        onChanged: (value) async {
-                          await ThemeController.toggleTheme(value);
-                          final user =
-                              FirebaseAuth.instance.currentUser;
-                          if (user != null) {
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(user.uid)
-                                .set(
-                              {'isDarkMode': value},
-                              SetOptions(merge: true),
-                            );
-                          }
+                        onChanged: (value) {
+                          ThemeController.toggleTheme(value);
                         },
                       ),
                     ),
                     SizedBox(height: Responsive.scale(context, 32)),
                     Text(
                       AppLocalizations.of(context)!.language.toUpperCase(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          ?.copyWith(
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         fontSize: Responsive.scaleText(context, 12),
                       ),
                     ),
@@ -247,40 +336,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       leadingIcon: Icons.language,
                       title: AppLocalizations.of(context)!.language,
                       trailing: TextButton(
-                        onPressed: () async {
-                          await LanguagePicker.show(context);
-                          if (context.mounted) {
-                            final newCode =
-                                Provider.of<LocaleProvider>(context,
-                                    listen: false)
-                                    .locale
-                                    ?.languageCode ?? 'en';
-                            final user =
-                                FirebaseAuth.instance.currentUser;
-                            if (user != null) {
-                              FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(user.uid)
-                                  .set(
-                                {'language': newCode},
-                                SetOptions(merge: true),
-                              );
-                            }
-                          }
-                        },
-                        style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero),
+                        onPressed: () => _showLanguagePicker(context),
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
                         child: Text(
-                          selectedLanguageString,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary,
-                            fontSize:
-                            Responsive.scaleText(context, 16),
+                          selectedLanguage,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: Responsive.scaleText(context, 16),
                           ),
                         ),
                       ),
@@ -289,11 +351,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     OutlinedButton(
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
+
                         if (context.mounted) {
                           SavedArticlesManager.clearSession();
-                          Provider.of<LocaleProvider>(context,
-                              listen: false)
-                              .setLocale(const Locale('en'));
+                          Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('en'));
+
                           Navigator.pushNamedAndRemoveUntil(
                             context,
                             LoginScreen.routeName,
@@ -320,14 +382,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         AppLocalizations.of(context)!
                             .logoutSession
                             .toUpperCase(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium
-                            ?.copyWith(
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
                           color: AppColors.error,
                           letterSpacing: 2,
-                          fontSize:
-                          Responsive.scaleText(context, 12),
+                          fontSize: Responsive.scaleText(context, 12),
                         ),
                       ),
                     ),

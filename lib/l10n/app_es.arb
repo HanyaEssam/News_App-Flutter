@@ -1,7 +1,7 @@
 {
   "appTitle": "Insightly",
   "dailyBriefing": "Tu resumen diario",
-  "trendingNow": "Tendencias ahora",
+  "trendingNow": "Tendencias",
   "forYou": "Para ti",
   "profile": "Perfil",
   "settings": "Ajustes",
@@ -28,55 +28,34 @@
   "recent": "Reciente",
   "minRead": "min de lectura",
   "mainSource": "Fuente principal",
-  "basedOnInterest": "BASADO EN TU INTERÉS EN {category}",
-  "@basedOnInterest": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
-  },
+  "basedOnInterest": "Basado en tu interés en {category}",
   "feedTitle": "Noticias de {category}",
-  "@feedTitle": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
-  },
   "intelligence": "Inteligencia",
   "searchPageTitle": "Buscar",
   "searchHint": "Buscar noticias, temas o autores",
   "recentSearches": "Búsquedas recientes",
-  "trendingTopics": "Temas del momento",
-  "savedPageTitle": "Guardados",
-  "savedArticlesCount": "ARTÍCULOS GUARDADOS {count}",
-  "@savedArticlesCount": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
+  "trendingTopics": "Temas en tendencia",
+  "savedPageTitle": "Artículos guardados",
+  "savedArticlesCount": "{count} Artículos guardados",
   "noSavedArticles": "Aún no hay artículos guardados.",
-  "curationSpaceEmpty": "Tu espacio de curación está vacío. Explora las últimas novedades y guarda artículos para crear tu feed personalizado.",
+  "curationSpaceEmpty": "Tu espacio está vacío.",
   "startExploring": "Empezar a explorar",
-  "loginSubtitle": "Inicia sesión para continuar tu narrativa curada.",
-  "emailAddress": "CORREO ELECTRÓNICO",
-  "password": "CONTRASEÑA",
-  "signIn": "Iniciar Sesión",
-  "orContinueWith": "O CONTINÚA CON",
+  "loginSubtitle": "Inicia sesión para continuar tu lectura.",
+  "emailAddress": "Correo electrónico",
+  "password": "Contraseña",
+  "signIn": "Iniciar sesión",
+  "orContinueWith": "O continuar con",
   "continueWithGoogle": "Continuar con Google",
-  "dontHaveAccount": "¿No tienes cuenta? ",
-  "createAccount": "Crear Cuenta",
+  "dontHaveAccount": "¿No tienes una cuenta? ",
+  "createAccount": "Crear cuenta",
   "continueAsGuest": "Continuar como invitado",
-  "footerCopyright": "© 2026 INSIGHTFUL PRIVACIDAD Y TÉRMINOS.",
-  "joinInsightly": "ÚNETE A INSIGHTLY",
-  "signupSubtitle": "Donde el mundo se encuentra con tu pantalla.",
-  "fullName": "NOMBRE COMPLETO",
-  "confirmPassword": "CONFIRMAR CONTRASEÑA",
+  "footerCopyright": "© 2026 Insightly - Privacidad y Términos.",
+  "joinInsightly": "Únete a Insightly",
+  "signupSubtitle": "Donde el mundo llega a tu pantalla.",
+  "fullName": "Nombre completo",
+  "confirmPassword": "Confirmar contraseña",
   "alreadyHaveAccount": "¿Ya tienes una cuenta? ",
-  "login": "Iniciar Sesión",
+  "login": "Iniciar sesión",
   "pleaseFillFields": "Por favor completa todos los campos",
   "invalidEmail": "Por favor ingresa un correo válido",
   "passwordsDoNotMatch": "¡Las contraseñas no coinciden!",
@@ -84,5 +63,20 @@
   "passwordUppercase": "La contraseña debe contener al menos una mayúscula.",
   "passwordLowercase": "La contraseña debe contener al menos una minúscula.",
   "passwordNumber": "La contraseña debe contener al menos un número.",
-  "passwordSpecialChar": "La contraseña debe contener al menos un carácter especial."
+  "passwordSpecialChar": "La contraseña debe contener al menos un carácter especial.",
+  "topTopic": "Tema Principal",
+  "designYourDaily": "DISEÑA TU RESUMEN DIARIO",
+  "pickTopicsSubtitle": "Elige algunos temas que te encanten para personalizar tu feed.",
+  "calibrated": "{count} DE 5 TEMAS CALIBRADOS",
+  "continueBriefing": "Continuar resumen",
+  "editProfile": "EDITAR PERFIL",
+  "personalInfo": "INFORMACIÓN PERSONAL",
+  "fullNameLabel": "NOMBRE COMPLETO",
+  "updateName": "ACTUALIZAR NOMBRE",
+  "security": "SEGURIDAD",
+  "changePassword": "Cambiar contraseña",
+  "preferences": "PREFERENCIAS",
+  "yourTopics": "Tus temas",
+  "selected": "Seleccionado",
+  "none": "Ninguno"
 }

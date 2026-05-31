@@ -15,7 +15,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dailyBriefing => 'Tu resumen diario';
 
   @override
-  String get trendingNow => 'Tendencias ahora';
+  String get trendingNow => 'Tendencias';
 
   @override
   String get forYou => 'Para ti';
@@ -96,12 +96,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mainSource => 'Fuente principal';
 
   @override
-  String basedOnInterest(String category) {
-    return 'BASADO EN TU INTERÉS EN $category';
+  String basedOnInterest(Object category) {
+    return 'Basado en tu interés en $category';
   }
 
   @override
-  String feedTitle(String category) {
+  String feedTitle(Object category) {
     return 'Noticias de $category';
   }
 
@@ -118,74 +118,72 @@ class AppLocalizationsEs extends AppLocalizations {
   String get recentSearches => 'Búsquedas recientes';
 
   @override
-  String get trendingTopics => 'Temas del momento';
+  String get trendingTopics => 'Temas en tendencia';
 
   @override
-  String get savedPageTitle => 'Guardados';
+  String get savedPageTitle => 'Artículos guardados';
 
   @override
-  String savedArticlesCount(String count) {
-    return 'ARTÍCULOS GUARDADOS $count';
+  String savedArticlesCount(Object count) {
+    return '$count Artículos guardados';
   }
 
   @override
   String get noSavedArticles => 'Aún no hay artículos guardados.';
 
   @override
-  String get curationSpaceEmpty =>
-      'Tu espacio de curación está vacío. Explora las últimas novedades y guarda artículos para crear tu feed personalizado.';
+  String get curationSpaceEmpty => 'Tu espacio está vacío.';
 
   @override
   String get startExploring => 'Empezar a explorar';
 
   @override
-  String get loginSubtitle =>
-      'Inicia sesión para continuar tu narrativa curada.';
+  String get loginSubtitle => 'Inicia sesión para continuar tu lectura.';
 
   @override
-  String get emailAddress => 'CORREO ELECTRÓNICO';
+  String get emailAddress => 'Correo electrónico';
 
   @override
-  String get password => 'CONTRASEÑA';
+  String get password => 'Contraseña';
 
   @override
-  String get signIn => 'Iniciar Sesión';
+  String get signIn => 'Iniciar sesión';
 
   @override
-  String get orContinueWith => 'O CONTINÚA CON';
+  String get orContinueWith => 'O continuar con';
 
   @override
   String get continueWithGoogle => 'Continuar con Google';
 
   @override
-  String get dontHaveAccount => '¿No tienes cuenta? ';
+  String get dontHaveAccount => '¿No tienes una cuenta? ';
 
   @override
-  String get createAccount => 'Crear Cuenta';
+  String get createAccount => 'Crear cuenta';
 
   @override
   String get continueAsGuest => 'Continuar como invitado';
 
   @override
-  String get footerCopyright => '© 2026 INSIGHTFUL PRIVACIDAD Y TÉRMINOS.';
+  String get footerCopyright => '© 2026 Insightly - Privacidad y Términos.';
 
   @override
-  String get joinInsightly => 'ÚNETE A INSIGHTLY';
+  String get joinInsightly => 'Únete a Insightly';
 
   @override
-  String get signupSubtitle => 'Donde el mundo se encuentra con tu pantalla.';
+  String get signupSubtitle => 'Donde el mundo llega a tu pantalla.';
 
   @override
-  String get fullName => 'NOMBRE COMPLETO';
+  String get fullName => 'Nombre completo';
 
   @override
-  String get confirmPassword => 'CONFIRMAR CONTRASEÑA';
+  String get confirmPassword => 'Confirmar contraseña';
 
   @override
   String get alreadyHaveAccount => '¿Ya tienes una cuenta? ';
 
   @override
-  String get login => 'Iniciar Sesión';
+  String get login => 'Iniciar sesión';
 
   @override
   String get pleaseFillFields => 'Por favor completa todos los campos';
@@ -215,4 +213,52 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get passwordSpecialChar =>
       'La contraseña debe contener al menos un carácter especial.';
+
+  @override
+  String get topTopic => 'Tema Principal';
+
+  @override
+  String get designYourDaily => 'DISEÑA TU RESUMEN DIARIO';
+
+  @override
+  String get pickTopicsSubtitle =>
+      'Elige algunos temas que te encanten para personalizar tu feed.';
+
+  @override
+  String calibrated(Object count) {
+    return '$count DE 5 TEMAS CALIBRADOS';
+  }
+
+  @override
+  String get continueBriefing => 'Continuar resumen';
+
+  @override
+  String get editProfile => 'EDITAR PERFIL';
+
+  @override
+  String get personalInfo => 'INFORMACIÓN PERSONAL';
+
+  @override
+  String get fullNameLabel => 'NOMBRE COMPLETO';
+
+  @override
+  String get updateName => 'ACTUALIZAR NOMBRE';
+
+  @override
+  String get security => 'SEGURIDAD';
+
+  @override
+  String get changePassword => 'Cambiar contraseña';
+
+  @override
+  String get preferences => 'PREFERENCIAS';
+
+  @override
+  String get yourTopics => 'Tus temas';
+
+  @override
+  String get selected => 'Seleccionado';
+
+  @override
+  String get none => 'Ninguno';
 }

@@ -1,7 +1,8 @@
-import 'dart:async';
+import 'dart:async'; // 🔥 Required for StreamSubscription
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../core/widgets/background_color/app_background.dart';
@@ -23,11 +24,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
   final _nameController = TextEditingController();
 
+  // 🔥 NEW: We keep track of the live database connection so we can close it later
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
 
   bool _isUpdatingName = false;
   bool _isLoading = true;
-  bool _isFirstLoad = true;
+  bool _isFirstLoad = true; // 🔥 NEW: Prevents overwriting the text box while typing
 
   String _avatarUrl = '';
   List<String> _selectedTopics = [];
@@ -50,16 +52,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _listenToUserData();
+    _listenToUserData(); // 🔥 Changed to our new live-listening function
   }
 
   @override
   void dispose() {
+    // 🔥 ALWAYS cancel the database subscription when leaving the screen to save memory!
     _userDataSubscription?.cancel();
     _nameController.dispose();
     super.dispose();
   }
 
+  // 🔥 UPGRADED: Now listens to the database in real-time instead of fetching once
   void _listenToUserData() {
     if (currentUser == null) return;
 
@@ -71,9 +75,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (doc.exists && mounted) {
         setState(() {
           _avatarUrl = doc.data()!['avatarUrl'] ?? '';
-          _selectedTopics =
-          List<String>.from(doc.data()!['selectedTopics'] ?? []);
+          _selectedTopics = List<String>.from(doc.data()!['selectedTopics'] ?? []);
 
+          // 🔥 Only set the text controller the VERY FIRST time the screen loads.
+          // This stops the database from erasing your text while you are typing!
           if (_isFirstLoad) {
             _nameController.text = doc.data()!['fullName'] ?? '';
             _isFirstLoad = false;
@@ -137,12 +142,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: Responsive.scale(context, 32)),
+
+                  // 1. AVATAR
                   ProfileAvatarPicker(
                     avatarUrl: _avatarUrl,
                     onTap: () => AvatarPickerSheet.show(
                       context,
                       avatars: _availableAvatars,
                       onAvatarSelected: (path) {
+                        // The database listener will update the screen, but we can
+                        // also manually update the database here if needed.
                         FirebaseFirestore.instance
                             .collection('users')
                             .doc(currentUser!.uid)
@@ -151,6 +160,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   SizedBox(height: Responsive.scale(context, 48)),
+
+                  // 2. PERSONAL INFO
                   Text(
                     'PERSONAL INFO',
                     style: Theme.of(context).textTheme.labelMedium,
@@ -162,6 +173,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     onUpdate: _updateName,
                   ),
                   SizedBox(height: Responsive.scale(context, 40)),
+
+                  // 3. SECURITY
                   Text(
                     'SECURITY',
                     style: Theme.of(context).textTheme.labelMedium,
@@ -180,6 +193,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   SizedBox(height: Responsive.scale(context, 32)),
+
+                  // 4. PREFERENCES
                   Text(
                     'PREFERENCES',
                     style: Theme.of(context).textTheme.labelMedium,
@@ -190,7 +205,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       context,
                       allTopics: _allTopics,
                       selectedTopics: _selectedTopics,
-                      onTopicsChanged: (newTopics) {},
+                      onTopicsChanged: (newTopics) {
+                        // We don't need setState here anymore because the live database
+                        // listener will handle updating the UI for us automatically!
+                      },
                     ),
                     child: SettingsRow(
                       leadingIcon: Icons.interests_outlined,
@@ -205,11 +223,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
-                                ?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary,
-                            ),
+                                ?.copyWith(color: Theme.of(context).colorScheme.primary),
                           ),
                           SizedBox(width: Responsive.scale(context, 8)),
                           Icon(

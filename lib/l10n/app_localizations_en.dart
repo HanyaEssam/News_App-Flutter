@@ -96,12 +96,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mainSource => 'Main Source';
 
   @override
-  String basedOnInterest(String category) {
-    return 'BASED ON YOUR INTEREST IN $category';
+  String basedOnInterest(Object category) {
+    return 'Based on your interest in $category';
   }
 
   @override
-  String feedTitle(String category) {
+  String feedTitle(Object category) {
     return '$category Feed';
   }
 
@@ -121,19 +121,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trendingTopics => 'Trending Topics';
 
   @override
-  String get savedPageTitle => 'Saved';
+  String get savedPageTitle => 'Saved Articles';
 
   @override
-  String savedArticlesCount(String count) {
-    return 'SAVED ARTICLES $count';
+  String savedArticlesCount(Object count) {
+    return '$count Saved Articles';
   }
 
   @override
   String get noSavedArticles => 'No saved articles yet.';
 
   @override
-  String get curationSpaceEmpty =>
-      'Your curation space is empty. Explore the latest insights and bookmark articles to build your personalized intelligence feed.';
+  String get curationSpaceEmpty => 'Your curation space is empty.';
 
   @override
   String get startExploring => 'Start Exploring';
@@ -142,16 +141,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginSubtitle => 'Sign in to continue your curated narrative.';
 
   @override
-  String get emailAddress => 'EMAIL ADDRESS';
+  String get emailAddress => 'Email Address';
 
   @override
-  String get password => 'PASSWORD';
+  String get password => 'Password';
 
   @override
   String get signIn => 'Sign In';
 
   @override
-  String get orContinueWith => 'OR CONTINUE WITH';
+  String get orContinueWith => 'Or continue with';
 
   @override
   String get continueWithGoogle => 'Continue with Google';
@@ -163,22 +162,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create Account';
 
   @override
-  String get continueAsGuest => 'Continue as a guest';
+  String get continueAsGuest => 'Continue as Guest';
 
   @override
-  String get footerCopyright => '© 2026 INSIGHTFUL PRIVACY & TERMS.';
+  String get footerCopyright => '© 2026 Insightly - Privacy & Terms.';
 
   @override
-  String get joinInsightly => 'JOIN INSIGHTLY';
+  String get joinInsightly => 'Join Insightly';
 
   @override
   String get signupSubtitle => 'Where the world meets your screen.';
 
   @override
-  String get fullName => 'FULL NAME';
+  String get fullName => 'Full Name';
 
   @override
-  String get confirmPassword => 'CONFIRM PASSWORD';
+  String get confirmPassword => 'Confirm Password';
 
   @override
   String get alreadyHaveAccount => 'Already have an account? ';
@@ -187,7 +186,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login => 'Login';
 
   @override
-  String get pleaseFillFields => 'Please fill in all fields';
+  String get pleaseFillFields => 'Please fill all fields';
 
   @override
   String get invalidEmail => 'Please enter a valid email';
@@ -213,4 +212,52 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get passwordSpecialChar =>
       'Password must contain at least one special character.';
+
+  @override
+  String get topTopic => 'Top Topic';
+
+  @override
+  String get designYourDaily => 'DESIGN YOUR DAILY';
+
+  @override
+  String get pickTopicsSubtitle =>
+      'Pick a few topics you love so we can tailor your feed just for you.';
+
+  @override
+  String calibrated(Object count) {
+    return '$count OF 5 TOPICS CALIBRATED';
+  }
+
+  @override
+  String get continueBriefing => 'Continue Briefing';
+
+  @override
+  String get editProfile => 'EDIT PROFILE';
+
+  @override
+  String get personalInfo => 'PERSONAL INFO';
+
+  @override
+  String get fullNameLabel => 'FULL NAME';
+
+  @override
+  String get updateName => 'UPDATE NAME';
+
+  @override
+  String get security => 'SECURITY';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get preferences => 'PREFERENCES';
+
+  @override
+  String get yourTopics => 'Your Topics';
+
+  @override
+  String get selected => 'Selected';
+
+  @override
+  String get none => 'None';
 }
