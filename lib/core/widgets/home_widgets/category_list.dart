@@ -14,7 +14,7 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
-  int selectedIndex = 0;
+  int selectedIndex = -1;
 
   final List<Map<String, dynamic>> categories = [
     {
@@ -111,7 +111,7 @@ class _CategoryListState extends State<CategoryList> {
     );
 
     // Reset selection when user returns from the category screen
-    if (mounted) setState(() => selectedIndex = 0);
+    if (mounted) setState(() => selectedIndex = -1);
   }
 
   @override

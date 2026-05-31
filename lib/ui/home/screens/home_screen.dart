@@ -1,3 +1,4 @@
+import 'dart:async'; // 🔥 REQUIRED for StreamSubscription
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,6 +63,10 @@ class HomeTabContent extends StatefulWidget {
 class _HomeTabContentState extends State<HomeTabContent> {
   final NewsService _newsService = NewsService();
 
+  // 🔥 NEW: Variables for the Smart Listener
+  StreamSubscription<DocumentSnapshot>? _userSubscription;
+  String _lastKnownTopics = "";
+
   List<ArticleModel> _trendingArticles = [];
   bool _isTrendingLoading = true;
   String? _trendingError;
@@ -76,7 +81,16 @@ class _HomeTabContentState extends State<HomeTabContent> {
     super.initState();
     SavedArticlesManager.loadUserSavedArticles();
     _loadTrendingNews();
-    _loadForYouNews();
+
+    // 🔥 Start listening to topic changes immediately
+    _listenToTopicChanges();
+  }
+
+  @override
+  void dispose() {
+    // 🔥 ALWAYS cancel the subscription when the widget is destroyed to save memory
+    _userSubscription?.cancel();
+    super.dispose();
   }
 
   Color _getColorForCategory(String category) {
@@ -99,29 +113,54 @@ class _HomeTabContentState extends State<HomeTabContent> {
     }
   }
 
-  // ✅ NEW: Helper function to convert raw API date into "May 20, 2026" format
   String _formatDate(String? rawDate) {
     if (rawDate == null || rawDate.isEmpty) return 'Recent';
     try {
       final DateTime dt = DateTime.parse(rawDate);
       final List<String> months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
       ];
       return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
     } catch (e) {
       return rawDate.substring(0, 10);
     }
+  }
+
+  // 🔥 THE SMART LISTENER
+  void _listenToTopicChanges() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      _userTopics = ['Technology', 'Business', 'Science'];
+      _loadForYouNews(); // Fallback for guests
+      return;
+    }
+
+    _userSubscription = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .snapshots()
+        .listen((doc) {
+      if (doc.exists && mounted) {
+        final data = doc.data()!;
+        final topics = data['selectedTopics'] as List<dynamic>? ?? [];
+
+        // Convert the list to a single string (e.g., "Tech,Sports") so we can easily compare it
+        String newTopicsString = topics.join(',');
+
+        // ONLY fetch new articles if the topics actually changed!
+        if (newTopicsString != _lastKnownTopics) {
+          _lastKnownTopics = newTopicsString;
+          _userTopics = topics.cast<String>();
+
+          setState(() {
+            _isForYouLoading = true;
+          });
+
+          _loadForYouNews(); // Fetch the new custom feed!
+        }
+      }
+    });
   }
 
   Future<void> _loadTrendingNews() async {
@@ -135,7 +174,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
           category: 'Trending',
           categoryColor: AppColors.primary,
           source: data['source']?['name'] ?? 'Unknown',
-          date: _formatDate(data['publishedAt']), // ✅ Applied nice formatting
+          date: _formatDate(data['publishedAt']),
           time: 'Recent',
           imageUrl: data['urlToImage'] ?? '',
           readtime: '5 min read',
@@ -159,27 +198,12 @@ class _HomeTabContentState extends State<HomeTabContent> {
     }
   }
 
+  // 🔥 SIMPLIFIED: No longer needs to fetch from Firestore manually
   Future<void> _loadForYouNews() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
+      // Fallback if they somehow have no topics
+      if (_userTopics.isEmpty) {
         _userTopics = ['Technology', 'Business', 'Science'];
-      } else {
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .get();
-        if (userDoc.exists && userDoc.data() != null) {
-          final data = userDoc.data()!;
-          final topics = data['selectedTopics'] as List<dynamic>?;
-          if (topics != null && topics.isNotEmpty) {
-            _userTopics = topics.cast<String>();
-          } else {
-            _userTopics = ['Technology', 'Business', 'Science'];
-          }
-        } else {
-          _userTopics = ['Technology', 'Business', 'Science'];
-        }
       }
 
       final articlesData = await _newsService.getArticlesForTopics(_userTopics);
@@ -193,7 +217,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
           category: topic,
           categoryColor: _getColorForCategory(topic),
           source: data['source']?['name'] ?? 'Unknown',
-          date: _formatDate(data['publishedAt']), // ✅ Applied nice formatting
+          date: _formatDate(data['publishedAt']),
           time: 'Recent',
           imageUrl: data['urlToImage'] ?? '',
           readtime: '5 min read',
@@ -278,9 +302,10 @@ class _HomeTabContentState extends State<HomeTabContent> {
   }
 
   Widget _buildTrendingSection() {
-    if (_isTrendingLoading)
+    if (_isTrendingLoading) {
       return const Center(child: CircularProgressIndicator());
-    if (_trendingError != null)
+    }
+    if (_trendingError != null) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -291,13 +316,15 @@ class _HomeTabContentState extends State<HomeTabContent> {
           ),
         ),
       );
-    if (_trendingArticles.isEmpty)
+    }
+    if (_trendingArticles.isEmpty) {
       return Center(
         child: Text(
           'No articles available',
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
+    }
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -310,12 +337,13 @@ class _HomeTabContentState extends State<HomeTabContent> {
   }
 
   Widget _buildForYouSection() {
-    if (_isForYouLoading)
+    if (_isForYouLoading) {
       return const Padding(
         padding: EdgeInsets.all(40.0),
         child: Center(child: CircularProgressIndicator()),
       );
-    if (_forYouError != null)
+    }
+    if (_forYouError != null) {
       return Padding(
         padding: const EdgeInsets.all(20.0),
         child: Text(
@@ -324,7 +352,8 @@ class _HomeTabContentState extends State<HomeTabContent> {
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
-    if (_forYouArticles.isEmpty)
+    }
+    if (_forYouArticles.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(20.0),
         child: Text(
@@ -332,15 +361,13 @@ class _HomeTabContentState extends State<HomeTabContent> {
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
+    }
 
     return Column(
       children: _forYouArticles.map((article) {
         return ForYouCard(
-          label: AppLocalizations.of(
-            context,
-          )!.basedOnInterest(article.category.toUpperCase()),
-          article:
-              article, // ✅ No more breaking the article apart! Passing the whole object.
+          label: AppLocalizations.of(context)!.basedOnInterest(article.category.toUpperCase()),
+          article: article,
         );
       }).toList(),
     );

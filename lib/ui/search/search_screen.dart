@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/background_color/app_background.dart';
 import '../category_feed/screens/category_feed_screen.dart';
 import '../author/author_screen.dart';
 import '../topic/topic_screen.dart';
-import '../../../core/theme/app_colors.dart';
 import 'package:news/l10n/app_localizations.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -20,15 +22,11 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
 
-  // 🕘 Mock Local Storage for Recent Searches (Max 15 items logic handled)
-  final List<String> _recentSearches = [
-    'Artificial Intelligence',
-    'Championship Finals',
-    'Global Warming Solutions',
-    'Tech Stocks Crash',
-  ];
+  // 🔥 Now empty by default! Will fill up based on the logged-in user.
+  List<String> _recentSearches = [];
+  bool _isLoadingSearches = true;
 
-  // 🔥 Mock Static Trending Topics Data
+  // Static Trending Topics Data
   final List<String> _trendingTopics = [
     'Tech',
     'Sports',
@@ -40,10 +38,53 @@ class _SearchScreenState extends State<SearchScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadUserRecentSearches();
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  // ☁️ FETCH: Get the user's personal search history from Firestore
+  Future<void> _loadUserRecentSearches() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        if (doc.exists && doc.data() != null) {
+          final data = doc.data()!;
+          if (data.containsKey('recentSearches')) {
+            setState(() {
+              _recentSearches = List<String>.from(data['recentSearches']);
+            });
+          }
+        }
+      } catch (e) {
+        debugPrint("Error loading recent searches: $e");
+      }
+    }
+    if (mounted) {
+      setState(() => _isLoadingSearches = false);
+    }
+  }
+
+  // ☁️ SAVE: Add new searches to the list and update Firestore
+  Future<void> _saveSearchToFirebase(List<String> updatedList) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'recentSearches': updatedList,
+        }, SetOptions(merge: true));
+      } catch (e) {
+        debugPrint("Error saving search: $e");
+      }
+    }
   }
 
   // 🧠 Search Submission Handler
@@ -52,25 +93,97 @@ class _SearchScreenState extends State<SearchScreen> {
     if (cleanQuery.isEmpty) return;
 
     setState(() {
+      // Remove it if it already exists so we can move it to the top
       if (_recentSearches.contains(cleanQuery)) {
         _recentSearches.remove(cleanQuery);
       }
+
+      // Add to the top of the list
       _recentSearches.insert(0, cleanQuery);
 
+      // Keep only the last 15 searches
       if (_recentSearches.length > 15) {
         _recentSearches.removeLast();
       }
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Navigating to results for: "$cleanQuery"')),
-    );
+    // Save the new list to Firebase!
+    _saveSearchToFirebase(_recentSearches);
+
+    final lower = cleanQuery.toLowerCase();
+
+    // CATEGORY
+    final categories = [
+      'tech',
+      'business',
+      'sports',
+      'politics',
+      'science',
+      'health',
+      'travel',
+      'entertainment',
+      'general',
+    ];
+
+    if (categories.contains(lower)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CategoryFeedScreen(
+            categoryName: cleanQuery,
+            categoryColor: AppColors.primary,
+          ),
+        ),
+      );
+    }
+    // AUTHOR (if starts with @)
+    else if (cleanQuery.startsWith('@')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AuthorScreen(
+            authorName: cleanQuery.substring(1),
+          ),
+        ),
+      );
+    }
+    // TOPIC (if starts with #)
+    else if (cleanQuery.startsWith('#')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TopicScreen(
+            topicName: cleanQuery.substring(1),
+          ),
+        ),
+      );
+    }
+    // DEFAULT → treat as category search
+    else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CategoryFeedScreen(
+            categoryName: cleanQuery,
+            categoryColor: AppColors.primary,
+          ),
+        ),
+      );
+    }
   }
 
+  // ☁️ DELETE: Remove a specific search item from Firestore
   void _deleteHistoryItem(String query) {
     setState(() {
       _recentSearches.remove(query);
     });
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        'recentSearches': FieldValue.arrayRemove([query]),
+      }).catchError((e) => debugPrint("Error deleting search: $e"));
+    }
   }
 
   @override
@@ -93,7 +206,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 48.0), // Perfect text center balancing offset
+                        padding: const EdgeInsets.only(right: 48.0),
                         child: Text(
                           AppLocalizations.of(context)!.searchPageTitle,
                           textAlign: TextAlign.center,
@@ -114,11 +227,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   focusNode: _searchFocusNode,
                   onSubmitted: _onSearchSubmitted,
                   textInputAction: TextInputAction.search,
-                  // Dynamically changes text typed into the field to contrast correctly
                   style: TextStyle(color: theme.colorScheme.onSurface),
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context)!.searchHint,
-                    // Pulls decoration styles natively from your AppTheme inputDecorationTheme!
                     prefixIcon: const Icon(Icons.search),
                   ),
                 ),
@@ -133,7 +244,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
 
                       // 🕘 3. RECENT SEARCHES SECTION
-                      if (_recentSearches.isNotEmpty) ...[
+                      // Only show this section if it's done loading AND there are actually items!
+                      if (!_isLoadingSearches && _recentSearches.isNotEmpty) ...[
                         Text(
                           AppLocalizations.of(context)!.recentSearches,
                           style: theme.textTheme.titleMedium?.copyWith(
@@ -179,7 +291,6 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Flex layout chips wrapper using theme architectural color variables
                       Wrap(
                         spacing: 10,
                         runSpacing: 12,
@@ -195,7 +306,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                 vertical: 10,
                               ),
                               decoration: BoxDecoration(
-                                // ✅ Using your cohesive design card palette colors!
                                 color: theme.colorScheme.surface,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
@@ -206,7 +316,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: Text(
                                 '#$topic',
                                 style: theme.textTheme.titleSmall?.copyWith(
-                                  color: theme.colorScheme.primary, // Clear readability pop accent
+                                  color: theme.colorScheme.primary,
                                 ),
                               ),
                             ),
@@ -222,7 +332,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-
     );
   }
 }

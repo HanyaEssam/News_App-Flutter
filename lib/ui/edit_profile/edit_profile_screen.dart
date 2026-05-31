@@ -1,3 +1,4 @@
+import 'dart:async'; // 🔥 Required for StreamSubscription
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,8 +24,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
   final _nameController = TextEditingController();
 
+  // 🔥 NEW: We keep track of the live database connection so we can close it later
+  StreamSubscription<DocumentSnapshot>? _userDataSubscription;
+
   bool _isUpdatingName = false;
   bool _isLoading = true;
+  bool _isFirstLoad = true; // 🔥 NEW: Prevents overwriting the text box while typing
+
   String _avatarUrl = '';
   List<String> _selectedTopics = [];
 
@@ -46,31 +52,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchUserData();
+    _listenToUserData(); // 🔥 Changed to our new live-listening function
   }
 
   @override
   void dispose() {
+    // 🔥 ALWAYS cancel the database subscription when leaving the screen to save memory!
+    _userDataSubscription?.cancel();
     _nameController.dispose();
     super.dispose();
   }
 
-  Future<void> _fetchUserData() async {
+  // 🔥 UPGRADED: Now listens to the database in real-time instead of fetching once
+  void _listenToUserData() {
     if (currentUser == null) return;
-    final doc = await FirebaseFirestore.instance
+
+    _userDataSubscription = FirebaseFirestore.instance
         .collection('users')
         .doc(currentUser!.uid)
-        .get();
+        .snapshots()
+        .listen((doc) {
+      if (doc.exists && mounted) {
+        setState(() {
+          _avatarUrl = doc.data()!['avatarUrl'] ?? '';
+          _selectedTopics = List<String>.from(doc.data()!['selectedTopics'] ?? []);
 
-    if (doc.exists && mounted) {
-      setState(() {
-        _avatarUrl = doc.data()!['avatarUrl'] ?? '';
-        _nameController.text = doc.data()!['fullName'] ?? '';
-        _selectedTopics =
-        List<String>.from(doc.data()!['selectedTopics'] ?? []);
-        _isLoading = false;
-      });
-    }
+          // 🔥 Only set the text controller the VERY FIRST time the screen loads.
+          // This stops the database from erasing your text while you are typing!
+          if (_isFirstLoad) {
+            _nameController.text = doc.data()!['fullName'] ?? '';
+            _isFirstLoad = false;
+          }
+
+          _isLoading = false;
+        });
+      }
+    });
   }
 
   Future<void> _updateName() async {
@@ -133,7 +150,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       context,
                       avatars: _availableAvatars,
                       onAvatarSelected: (path) {
-                        setState(() => _avatarUrl = path);
+                        // The database listener will update the screen, but we can
+                        // also manually update the database here if needed.
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(currentUser!.uid)
+                            .update({'avatarUrl': path});
                       },
                     ),
                   ),
@@ -184,7 +206,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       allTopics: _allTopics,
                       selectedTopics: _selectedTopics,
                       onTopicsChanged: (newTopics) {
-                        setState(() => _selectedTopics = newTopics);
+                        // We don't need setState here anymore because the live database
+                        // listener will handle updating the UI for us automatically!
                       },
                     ),
                     child: SettingsRow(
