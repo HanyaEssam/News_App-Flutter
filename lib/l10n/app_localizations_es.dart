@@ -96,12 +96,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mainSource => 'Fuente principal';
 
   @override
-  String basedOnInterest(String category) {
+  String basedOnInterest(Object category) {
     return 'Basado en tu interés en $category';
   }
 
   @override
-  String feedTitle(String category) {
+  String feedTitle(Object category) {
     return 'Noticias de $category';
   }
 
@@ -124,7 +124,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get savedPageTitle => 'Artículos guardados';
 
   @override
-  String savedArticlesCount(String count) {
+  String savedArticlesCount(Object count) {
     return '$count Artículos guardados';
   }
 
@@ -132,8 +132,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noSavedArticles => 'Aún no hay artículos guardados.';
 
   @override
-  String get curationSpaceEmpty =>
-      'Tu espacio está vacío. Explora las últimas perspectivas y guarda artículos para crear tu propio feed.';
+  String get curationSpaceEmpty => 'Tu espacio está vacío.';
 
   @override
   String get startExploring => 'Empezar a explorar';
@@ -226,10 +225,40 @@ class AppLocalizationsEs extends AppLocalizations {
       'Elige algunos temas que te encanten para personalizar tu feed.';
 
   @override
-  String calibrated(String count) {
+  String calibrated(Object count) {
     return '$count DE 5 TEMAS CALIBRADOS';
   }
 
   @override
   String get continueBriefing => 'Continuar resumen';
+
+  @override
+  String get editProfile => 'EDITAR PERFIL';
+
+  @override
+  String get personalInfo => 'INFORMACIÓN PERSONAL';
+
+  @override
+  String get fullNameLabel => 'NOMBRE COMPLETO';
+
+  @override
+  String get updateName => 'ACTUALIZAR NOMBRE';
+
+  @override
+  String get security => 'SEGURIDAD';
+
+  @override
+  String get changePassword => 'Cambiar contraseña';
+
+  @override
+  String get preferences => 'PREFERENCIAS';
+
+  @override
+  String get yourTopics => 'Tus temas';
+
+  @override
+  String get selected => 'Seleccionado';
+
+  @override
+  String get none => 'Ninguno';
 }

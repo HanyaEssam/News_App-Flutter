@@ -29,13 +29,7 @@
   "minRead": "min de lecture",
   "mainSource": "Source principale",
   "basedOnInterest": "Basé sur votre intérêt pour {category}",
-  "@basedOnInterest": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "feedTitle": "Actualités {category}",
-  "@feedTitle": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "intelligence": "Intelligence",
   "searchPageTitle": "Recherche",
   "searchHint": "Rechercher des actualités, sujets ou auteurs",
@@ -43,11 +37,8 @@
   "trendingTopics": "Sujets tendances",
   "savedPageTitle": "Articles enregistrés",
   "savedArticlesCount": "{count} Articles enregistrés",
-  "@savedArticlesCount": {
-    "placeholders": { "count": { "type": "String" } }
-  },
   "noSavedArticles": "Aucun article enregistré pour le moment.",
-  "curationSpaceEmpty": "Votre espace est vide. Explorez et sauvegardez des articles pour personnaliser votre flux.",
+  "curationSpaceEmpty": "Votre espace est vide.",
   "startExploring": "Commencer à explorer",
   "loginSubtitle": "Connectez-vous pour continuer votre lecture.",
   "emailAddress": "Adresse e-mail",
@@ -77,8 +68,15 @@
   "designYourDaily": "PERSONNALISEZ VOTRE QUOTIDIEN",
   "pickTopicsSubtitle": "Choisissez quelques sujets que vous aimez afin que nous puissions adapter votre flux.",
   "calibrated": "{count} SUR 5 SUJETS CALIBRÉS",
-  "@calibrated": {
-    "placeholders": { "count": { "type": "String" } }
-  },
-  "continueBriefing": "Continuer le briefing"
+  "continueBriefing": "Continuer le briefing",
+  "editProfile": "MODIFIER LE PROFIL",
+  "personalInfo": "INFORMATIONS PERSONNELLES",
+  "fullNameLabel": "NOM COMPLET",
+  "updateName": "METTRE À JOUR LE NOM",
+  "security": "SÉCURITÉ",
+  "changePassword": "Changer le mot de passe",
+  "preferences": "PRÉFÉRENCES",
+  "yourTopics": "Vos sujets",
+  "selected": "Sélectionné",
+  "none": "Aucun"
 }

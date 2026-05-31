@@ -6,12 +6,16 @@ class NameEditorSection extends StatelessWidget {
   final TextEditingController controller;
   final bool isLoading;
   final VoidCallback onUpdate;
+  final String label;
+  final String btnText;
 
   const NameEditorSection({
     super.key,
     required this.controller,
     required this.isLoading,
     required this.onUpdate,
+    required this.label,
+    required this.btnText,
   });
 
   @override
@@ -20,8 +24,8 @@ class NameEditorSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AuthTextField(
-          label: 'FULL NAME',
-          hintText: 'Your name',
+          label: label, // Now uses localized string
+          hintText: 'Your name', // You can also localize this if needed
           controller: controller,
         ),
         SizedBox(height: Responsive.scale(context, 12)),
@@ -37,19 +41,19 @@ class NameEditorSection extends StatelessWidget {
             ),
             child: isLoading
                 ? SizedBox(
-              height: Responsive.scale(context, 16),
-              width: Responsive.scale(context, 16),
-              child: const CircularProgressIndicator(
-                color: Colors.black,
-                strokeWidth: 2,
-              ),
-            )
+                    height: Responsive.scale(context, 16),
+                    width: Responsive.scale(context, 16),
+                    child: const CircularProgressIndicator(
+                      color: Colors.black,
+                      strokeWidth: 2,
+                    ),
+                  )
                 : Text(
-              'UPDATE NAME',
-              style: TextStyle(
-                fontSize: Responsive.scaleText(context, 14),
-              ),
-            ),
+                    btnText, // Now uses localized string
+                    style: TextStyle(
+                      fontSize: Responsive.scaleText(context, 14),
+                    ),
+                  ),
           ),
         ),
       ],

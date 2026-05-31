@@ -282,13 +282,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Based on your interest in {category}'**
-  String basedOnInterest(String category);
+  String basedOnInterest(Object category);
 
   /// No description provided for @feedTitle.
   ///
   /// In en, this message translates to:
   /// **'{category} Feed'**
-  String feedTitle(String category);
+  String feedTitle(Object category);
 
   /// No description provided for @intelligence.
   ///
@@ -330,7 +330,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{count} Saved Articles'**
-  String savedArticlesCount(String count);
+  String savedArticlesCount(Object count);
 
   /// No description provided for @noSavedArticles.
   ///
@@ -341,7 +341,7 @@ abstract class AppLocalizations {
   /// No description provided for @curationSpaceEmpty.
   ///
   /// In en, this message translates to:
-  /// **'Your curation space is empty. Explore the latest insights and save articles to build your personalized feed.'**
+  /// **'Your curation space is empty.'**
   String get curationSpaceEmpty;
 
   /// No description provided for @startExploring.
@@ -516,13 +516,73 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{count} OF 5 TOPICS CALIBRATED'**
-  String calibrated(String count);
+  String calibrated(Object count);
 
   /// No description provided for @continueBriefing.
   ///
   /// In en, this message translates to:
   /// **'Continue Briefing'**
   String get continueBriefing;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'EDIT PROFILE'**
+  String get editProfile;
+
+  /// No description provided for @personalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'PERSONAL INFO'**
+  String get personalInfo;
+
+  /// No description provided for @fullNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'FULL NAME'**
+  String get fullNameLabel;
+
+  /// No description provided for @updateName.
+  ///
+  /// In en, this message translates to:
+  /// **'UPDATE NAME'**
+  String get updateName;
+
+  /// No description provided for @security.
+  ///
+  /// In en, this message translates to:
+  /// **'SECURITY'**
+  String get security;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'PREFERENCES'**
+  String get preferences;
+
+  /// No description provided for @yourTopics.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Topics'**
+  String get yourTopics;
+
+  /// No description provided for @selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selected;
+
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
 }
 
 class _AppLocalizationsDelegate

@@ -29,13 +29,7 @@
   "minRead": "分钟阅读",
   "mainSource": "主要来源",
   "basedOnInterest": "基于您对 {category} 的兴趣",
-  "@basedOnInterest": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "feedTitle": "{category} 新闻",
-  "@feedTitle": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "intelligence": "智能",
   "searchPageTitle": "搜索",
   "searchHint": "搜索新闻、主题或作者",
@@ -43,11 +37,8 @@
   "trendingTopics": "热门话题",
   "savedPageTitle": "已保存的文章",
   "savedArticlesCount": "已保存 {count} 篇文章",
-  "@savedArticlesCount": {
-    "placeholders": { "count": { "type": "String" } }
-  },
   "noSavedArticles": "暂无已保存的文章。",
-  "curationSpaceEmpty": "您的保存空间为空。探索最新见解并保存文章以构建您的个性化新闻流。",
+  "curationSpaceEmpty": "您的保存空间为空。",
   "startExploring": "开始探索",
   "loginSubtitle": "登录以继续您的知识之旅。",
   "emailAddress": "电子邮件地址",
@@ -77,8 +68,15 @@
   "designYourDaily": "定制您的日报",
   "pickTopicsSubtitle": "选择您喜爱的几个主题，以便我们为您量身定制内容。",
   "calibrated": "已完成 {count} / 5 个主题设置",
-  "@calibrated": {
-    "placeholders": { "count": { "type": "String" } }
-  },
-  "continueBriefing": "继续简报"
+  "continueBriefing": "继续简报",
+  "editProfile": "编辑个人资料",
+  "personalInfo": "个人信息",
+  "fullNameLabel": "全名",
+  "updateName": "更新姓名",
+  "security": "安全",
+  "changePassword": "更改密码",
+  "preferences": "偏好设置",
+  "yourTopics": "您关注的主题",
+  "selected": "已选择",
+  "none": "无"
 }

@@ -96,12 +96,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mainSource => 'المصدر الرئيسي';
 
   @override
-  String basedOnInterest(String category) {
+  String basedOnInterest(Object category) {
     return 'بناءً على اهتمامك في $category';
   }
 
   @override
-  String feedTitle(String category) {
+  String feedTitle(Object category) {
     return 'أخبار $category';
   }
 
@@ -124,7 +124,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get savedPageTitle => 'العناصر المحفوظة';
 
   @override
-  String savedArticlesCount(String count) {
+  String savedArticlesCount(Object count) {
     return 'المقالات المحفوظة $count';
   }
 
@@ -132,8 +132,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noSavedArticles => 'لا توجد مقالات محفوظة بعد.';
 
   @override
-  String get curationSpaceEmpty =>
-      'مساحة الحفظ الخاصة بك فارغة. استكشف أحدث الرؤى واحفظ المقالات لبناء موجز الأخبار المخصص لك.';
+  String get curationSpaceEmpty => 'مساحة الحفظ الخاصة بك فارغة.';
 
   @override
   String get startExploring => 'ابدأ الاستكشاف';
@@ -225,10 +224,40 @@ class AppLocalizationsAr extends AppLocalizations {
       'اختر بعض المواضيع التي تحبها لنتمكن من تخصيص موجزك.';
 
   @override
-  String calibrated(String count) {
+  String calibrated(Object count) {
     return '$count من 5 مواضيع تم ضبطها';
   }
 
   @override
   String get continueBriefing => 'متابعة الموجز';
+
+  @override
+  String get editProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get personalInfo => 'المعلومات الشخصية';
+
+  @override
+  String get fullNameLabel => 'الاسم الكامل';
+
+  @override
+  String get updateName => 'تحديث الاسم';
+
+  @override
+  String get security => 'الأمان';
+
+  @override
+  String get changePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get preferences => 'التفضيلات';
+
+  @override
+  String get yourTopics => 'مواضيعك';
+
+  @override
+  String get selected => 'مختار';
+
+  @override
+  String get none => 'لا يوجد';
 }

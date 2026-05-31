@@ -29,13 +29,7 @@
   "minRead": "min read",
   "mainSource": "Main Source",
   "basedOnInterest": "Based on your interest in {category}",
-  "@basedOnInterest": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "feedTitle": "{category} Feed",
-  "@feedTitle": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "intelligence": "Intelligence",
   "searchPageTitle": "Search",
   "searchHint": "Search news, topics, or authors",
@@ -43,11 +37,8 @@
   "trendingTopics": "Trending Topics",
   "savedPageTitle": "Saved Articles",
   "savedArticlesCount": "{count} Saved Articles",
-  "@savedArticlesCount": {
-    "placeholders": { "count": { "type": "String" } }
-  },
   "noSavedArticles": "No saved articles yet.",
-  "curationSpaceEmpty": "Your curation space is empty. Explore the latest insights and save articles to build your personalized feed.",
+  "curationSpaceEmpty": "Your curation space is empty.",
   "startExploring": "Start Exploring",
   "loginSubtitle": "Sign in to continue your curated narrative.",
   "emailAddress": "Email Address",
@@ -77,8 +68,15 @@
   "designYourDaily": "DESIGN YOUR DAILY",
   "pickTopicsSubtitle": "Pick a few topics you love so we can tailor your feed just for you.",
   "calibrated": "{count} OF 5 TOPICS CALIBRATED",
-  "@calibrated": {
-    "placeholders": { "count": { "type": "String" } }
-  },
-  "continueBriefing": "Continue Briefing"
+  "continueBriefing": "Continue Briefing",
+  "editProfile": "EDIT PROFILE",
+  "personalInfo": "PERSONAL INFO",
+  "fullNameLabel": "FULL NAME",
+  "updateName": "UPDATE NAME",
+  "security": "SECURITY",
+  "changePassword": "Change Password",
+  "preferences": "PREFERENCES",
+  "yourTopics": "Your Topics",
+  "selected": "Selected",
+  "none": "None"
 }

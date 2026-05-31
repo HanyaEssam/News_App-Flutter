@@ -96,12 +96,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get mainSource => 'Source principale';
 
   @override
-  String basedOnInterest(String category) {
+  String basedOnInterest(Object category) {
     return 'Basé sur votre intérêt pour $category';
   }
 
   @override
-  String feedTitle(String category) {
+  String feedTitle(Object category) {
     return 'Actualités $category';
   }
 
@@ -124,7 +124,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get savedPageTitle => 'Articles enregistrés';
 
   @override
-  String savedArticlesCount(String count) {
+  String savedArticlesCount(Object count) {
     return '$count Articles enregistrés';
   }
 
@@ -132,8 +132,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noSavedArticles => 'Aucun article enregistré pour le moment.';
 
   @override
-  String get curationSpaceEmpty =>
-      'Votre espace est vide. Explorez et sauvegardez des articles pour personnaliser votre flux.';
+  String get curationSpaceEmpty => 'Votre espace est vide.';
 
   @override
   String get startExploring => 'Commencer à explorer';
@@ -227,10 +226,40 @@ class AppLocalizationsFr extends AppLocalizations {
       'Choisissez quelques sujets que vous aimez afin que nous puissions adapter votre flux.';
 
   @override
-  String calibrated(String count) {
+  String calibrated(Object count) {
     return '$count SUR 5 SUJETS CALIBRÉS';
   }
 
   @override
   String get continueBriefing => 'Continuer le briefing';
+
+  @override
+  String get editProfile => 'MODIFIER LE PROFIL';
+
+  @override
+  String get personalInfo => 'INFORMATIONS PERSONNELLES';
+
+  @override
+  String get fullNameLabel => 'NOM COMPLET';
+
+  @override
+  String get updateName => 'METTRE À JOUR LE NOM';
+
+  @override
+  String get security => 'SÉCURITÉ';
+
+  @override
+  String get changePassword => 'Changer le mot de passe';
+
+  @override
+  String get preferences => 'PRÉFÉRENCES';
+
+  @override
+  String get yourTopics => 'Vos sujets';
+
+  @override
+  String get selected => 'Sélectionné';
+
+  @override
+  String get none => 'Aucun';
 }

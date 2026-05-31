@@ -96,12 +96,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mainSource => 'Main Source';
 
   @override
-  String basedOnInterest(String category) {
+  String basedOnInterest(Object category) {
     return 'Based on your interest in $category';
   }
 
   @override
-  String feedTitle(String category) {
+  String feedTitle(Object category) {
     return '$category Feed';
   }
 
@@ -124,7 +124,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get savedPageTitle => 'Saved Articles';
 
   @override
-  String savedArticlesCount(String count) {
+  String savedArticlesCount(Object count) {
     return '$count Saved Articles';
   }
 
@@ -132,8 +132,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noSavedArticles => 'No saved articles yet.';
 
   @override
-  String get curationSpaceEmpty =>
-      'Your curation space is empty. Explore the latest insights and save articles to build your personalized feed.';
+  String get curationSpaceEmpty => 'Your curation space is empty.';
 
   @override
   String get startExploring => 'Start Exploring';
@@ -225,10 +224,40 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pick a few topics you love so we can tailor your feed just for you.';
 
   @override
-  String calibrated(String count) {
+  String calibrated(Object count) {
     return '$count OF 5 TOPICS CALIBRATED';
   }
 
   @override
   String get continueBriefing => 'Continue Briefing';
+
+  @override
+  String get editProfile => 'EDIT PROFILE';
+
+  @override
+  String get personalInfo => 'PERSONAL INFO';
+
+  @override
+  String get fullNameLabel => 'FULL NAME';
+
+  @override
+  String get updateName => 'UPDATE NAME';
+
+  @override
+  String get security => 'SECURITY';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get preferences => 'PREFERENCES';
+
+  @override
+  String get yourTopics => 'Your Topics';
+
+  @override
+  String get selected => 'Selected';
+
+  @override
+  String get none => 'None';
 }

@@ -29,13 +29,7 @@
   "minRead": "min de lectura",
   "mainSource": "Fuente principal",
   "basedOnInterest": "Basado en tu interés en {category}",
-  "@basedOnInterest": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "feedTitle": "Noticias de {category}",
-  "@feedTitle": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "intelligence": "Inteligencia",
   "searchPageTitle": "Buscar",
   "searchHint": "Buscar noticias, temas o autores",
@@ -43,11 +37,8 @@
   "trendingTopics": "Temas en tendencia",
   "savedPageTitle": "Artículos guardados",
   "savedArticlesCount": "{count} Artículos guardados",
-  "@savedArticlesCount": {
-    "placeholders": { "count": { "type": "String" } }
-  },
   "noSavedArticles": "Aún no hay artículos guardados.",
-  "curationSpaceEmpty": "Tu espacio está vacío. Explora las últimas perspectivas y guarda artículos para crear tu propio feed.",
+  "curationSpaceEmpty": "Tu espacio está vacío.",
   "startExploring": "Empezar a explorar",
   "loginSubtitle": "Inicia sesión para continuar tu lectura.",
   "emailAddress": "Correo electrónico",
@@ -77,8 +68,15 @@
   "designYourDaily": "DISEÑA TU RESUMEN DIARIO",
   "pickTopicsSubtitle": "Elige algunos temas que te encanten para personalizar tu feed.",
   "calibrated": "{count} DE 5 TEMAS CALIBRADOS",
-  "@calibrated": {
-    "placeholders": { "count": { "type": "String" } }
-  },
-  "continueBriefing": "Continuar resumen"
+  "continueBriefing": "Continuar resumen",
+  "editProfile": "EDITAR PERFIL",
+  "personalInfo": "INFORMACIÓN PERSONAL",
+  "fullNameLabel": "NOMBRE COMPLETO",
+  "updateName": "ACTUALIZAR NOMBRE",
+  "security": "SEGURIDAD",
+  "changePassword": "Cambiar contraseña",
+  "preferences": "PREFERENCIAS",
+  "yourTopics": "Tus temas",
+  "selected": "Seleccionado",
+  "none": "Ninguno"
 }

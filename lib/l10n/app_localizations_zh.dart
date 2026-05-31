@@ -96,12 +96,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mainSource => '主要来源';
 
   @override
-  String basedOnInterest(String category) {
+  String basedOnInterest(Object category) {
     return '基于您对 $category 的兴趣';
   }
 
   @override
-  String feedTitle(String category) {
+  String feedTitle(Object category) {
     return '$category 新闻';
   }
 
@@ -124,7 +124,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get savedPageTitle => '已保存的文章';
 
   @override
-  String savedArticlesCount(String count) {
+  String savedArticlesCount(Object count) {
     return '已保存 $count 篇文章';
   }
 
@@ -132,7 +132,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noSavedArticles => '暂无已保存的文章。';
 
   @override
-  String get curationSpaceEmpty => '您的保存空间为空。探索最新见解并保存文章以构建您的个性化新闻流。';
+  String get curationSpaceEmpty => '您的保存空间为空。';
 
   @override
   String get startExploring => '开始探索';
@@ -219,10 +219,40 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pickTopicsSubtitle => '选择您喜爱的几个主题，以便我们为您量身定制内容。';
 
   @override
-  String calibrated(String count) {
+  String calibrated(Object count) {
     return '已完成 $count / 5 个主题设置';
   }
 
   @override
   String get continueBriefing => '继续简报';
+
+  @override
+  String get editProfile => '编辑个人资料';
+
+  @override
+  String get personalInfo => '个人信息';
+
+  @override
+  String get fullNameLabel => '全名';
+
+  @override
+  String get updateName => '更新姓名';
+
+  @override
+  String get security => '安全';
+
+  @override
+  String get changePassword => '更改密码';
+
+  @override
+  String get preferences => '偏好设置';
+
+  @override
+  String get yourTopics => '您关注的主题';
+
+  @override
+  String get selected => '已选择';
+
+  @override
+  String get none => '无';
 }

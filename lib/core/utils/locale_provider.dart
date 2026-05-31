@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 
 class LocaleProvider extends ChangeNotifier {
-  // Default the app to English when it opens
-  Locale _locale = const Locale('en');
+  Locale? _locale;
+  bool _isManuallySet = false; // Flag to track manual interaction
 
-  Locale get locale => _locale;
+  Locale? get locale => _locale;
 
+  // Called when user interacts with LanguagePicker
   void setLocale(Locale locale) {
-    if (locale == _locale) return;
     _locale = locale;
+    _isManuallySet = true; // User manually chose this
     notifyListeners();
+  }
+
+  // Called when fetching user data from Firestore
+  void updateFromDatabase(String languageCode) {
+    if (!_isManuallySet) {
+      _locale = Locale(languageCode);
+      notifyListeners();
+    }
   }
 }

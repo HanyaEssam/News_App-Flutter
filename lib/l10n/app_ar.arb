@@ -29,13 +29,7 @@
   "minRead": "دقيقة قراءة",
   "mainSource": "المصدر الرئيسي",
   "basedOnInterest": "بناءً على اهتمامك في {category}",
-  "@basedOnInterest": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "feedTitle": "أخبار {category}",
-  "@feedTitle": {
-    "placeholders": { "category": { "type": "String" } }
-  },
   "intelligence": "الذكاء",
   "searchPageTitle": "بحث",
   "searchHint": "ابحث عن الأخبار، المواضيع، أو المؤلفين",
@@ -43,11 +37,8 @@
   "trendingTopics": "المواضيع الشائعة",
   "savedPageTitle": "العناصر المحفوظة",
   "savedArticlesCount": "المقالات المحفوظة {count}",
-  "@savedArticlesCount": {
-    "placeholders": { "count": { "type": "String" } }
-  },
   "noSavedArticles": "لا توجد مقالات محفوظة بعد.",
-  "curationSpaceEmpty": "مساحة الحفظ الخاصة بك فارغة. استكشف أحدث الرؤى واحفظ المقالات لبناء موجز الأخبار المخصص لك.",
+  "curationSpaceEmpty": "مساحة الحفظ الخاصة بك فارغة.",
   "startExploring": "ابدأ الاستكشاف",
   "loginSubtitle": "سجل الدخول لمتابعة رحلتك المعرفية.",
   "emailAddress": "البريد الإلكتروني",
@@ -77,8 +68,15 @@
   "designYourDaily": "صمم موجزك اليومي",
   "pickTopicsSubtitle": "اختر بعض المواضيع التي تحبها لنتمكن من تخصيص موجزك.",
   "calibrated": "{count} من 5 مواضيع تم ضبطها",
-  "@calibrated": {
-    "placeholders": { "count": { "type": "String" } }
-  },
-  "continueBriefing": "متابعة الموجز"
+  "continueBriefing": "متابعة الموجز",
+  "editProfile": "تعديل الملف الشخصي",
+  "personalInfo": "المعلومات الشخصية",
+  "fullNameLabel": "الاسم الكامل",
+  "updateName": "تحديث الاسم",
+  "security": "الأمان",
+  "changePassword": "تغيير كلمة المرور",
+  "preferences": "التفضيلات",
+  "yourTopics": "مواضيعك",
+  "selected": "مختار",
+  "none": "لا يوجد"
 }

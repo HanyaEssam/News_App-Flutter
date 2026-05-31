@@ -1,11 +1,12 @@
-import 'dart:async'; // 🔥 Required for StreamSubscription
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:news/l10n/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../core/widgets/background_color/app_background.dart';
+import '../../../core/widgets/language_picker.dart';
 import '../../../core/widgets/profile_widgets/setting_row.dart';
 import '../../core/widgets/edit_profile/avatar_picker_sheet.dart';
 import '../../core/widgets/edit_profile/change_password_sheet.dart';
@@ -15,7 +16,6 @@ import '../../core/widgets/edit_profile/topics_picker_sheet.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
-
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
@@ -23,20 +23,22 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
   final _nameController = TextEditingController();
-
-  // 🔥 NEW: We keep track of the live database connection so we can close it later
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
-
   bool _isUpdatingName = false;
   bool _isLoading = true;
-  bool _isFirstLoad = true; // 🔥 NEW: Prevents overwriting the text box while typing
-
+  bool _isFirstLoad = true;
   String _avatarUrl = '';
   List<String> _selectedTopics = [];
 
   static const List<String> _allTopics = [
-    'Technology', 'Sports', 'Politics', 'Business',
-    'Health', 'Science', 'General', 'Entertainment',
+    'Technology',
+    'Sports',
+    'Politics',
+    'Business',
+    'Health',
+    'Science',
+    'General',
+    'Entertainment',
   ];
 
   static const List<String> _availableAvatars = [
@@ -52,67 +54,58 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _listenToUserData(); // 🔥 Changed to our new live-listening function
+    _listenToUserData();
   }
 
   @override
   void dispose() {
-    // 🔥 ALWAYS cancel the database subscription when leaving the screen to save memory!
     _userDataSubscription?.cancel();
     _nameController.dispose();
     super.dispose();
   }
 
-  // 🔥 UPGRADED: Now listens to the database in real-time instead of fetching once
   void _listenToUserData() {
     if (currentUser == null) return;
-
     _userDataSubscription = FirebaseFirestore.instance
         .collection('users')
         .doc(currentUser!.uid)
         .snapshots()
         .listen((doc) {
-      if (doc.exists && mounted) {
-        setState(() {
-          _avatarUrl = doc.data()!['avatarUrl'] ?? '';
-          _selectedTopics = List<String>.from(doc.data()!['selectedTopics'] ?? []);
-
-          // 🔥 Only set the text controller the VERY FIRST time the screen loads.
-          // This stops the database from erasing your text while you are typing!
-          if (_isFirstLoad) {
-            _nameController.text = doc.data()!['fullName'] ?? '';
-            _isFirstLoad = false;
+          if (doc.exists && mounted) {
+            setState(() {
+              _avatarUrl = doc.data()!['avatarUrl'] ?? '';
+              _selectedTopics = List<String>.from(
+                doc.data()!['selectedTopics'] ?? [],
+              );
+              if (_isFirstLoad) {
+                _nameController.text = doc.data()!['fullName'] ?? '';
+                _isFirstLoad = false;
+              }
+              _isLoading = false;
+            });
           }
-
-          _isLoading = false;
         });
-      }
-    });
   }
 
   Future<void> _updateName() async {
     final newName = _nameController.text.trim();
     if (newName.isEmpty) return;
-
     setState(() => _isUpdatingName = true);
-
     try {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
           .update({'fullName': newName});
       await currentUser!.updateDisplayName(newName);
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Name updated successfully!')),
-        );
-      }
+      if (mounted)
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Name updated!')));
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
-      }
+      if (mounted)
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isUpdatingName = false);
     }
@@ -120,127 +113,82 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final maxContentWidth =
-    Responsive.isMobile(context) ? double.infinity : 600.0;
-
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EDIT PROFILE'),
+        title: Text(loc.editProfile.toUpperCase()),
         backgroundColor: Colors.transparent,
+        actions: const [LanguagePicker()],
       ),
       body: AppBackground(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: maxContentWidth),
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: Responsive.scale(context, 24),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: Responsive.scale(context, 32)),
-
-                  // 1. AVATAR
-                  ProfileAvatarPicker(
-                    avatarUrl: _avatarUrl,
-                    onTap: () => AvatarPickerSheet.show(
-                      context,
-                      avatars: _availableAvatars,
-                      onAvatarSelected: (path) {
-                        // The database listener will update the screen, but we can
-                        // also manually update the database here if needed.
-                        FirebaseFirestore.instance
+            : SingleChildScrollView(
+                padding: EdgeInsets.all(Responsive.scale(context, 24)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ProfileAvatarPicker(
+                      avatarUrl: _avatarUrl,
+                      onTap: () => AvatarPickerSheet.show(
+                        context,
+                        avatars: _availableAvatars,
+                        onAvatarSelected: (p) => FirebaseFirestore.instance
                             .collection('users')
                             .doc(currentUser!.uid)
-                            .update({'avatarUrl': path});
-                      },
-                    ),
-                  ),
-                  SizedBox(height: Responsive.scale(context, 48)),
-
-                  // 2. PERSONAL INFO
-                  Text(
-                    'PERSONAL INFO',
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                  SizedBox(height: Responsive.scale(context, 12)),
-                  NameEditorSection(
-                    controller: _nameController,
-                    isLoading: _isUpdatingName,
-                    onUpdate: _updateName,
-                  ),
-                  SizedBox(height: Responsive.scale(context, 40)),
-
-                  // 3. SECURITY
-                  Text(
-                    'SECURITY',
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                  SizedBox(height: Responsive.scale(context, 12)),
-                  GestureDetector(
-                    onTap: () => ChangePasswordSheet.show(context),
-                    child: SettingsRow(
-                      leadingIcon: Icons.lock_outline,
-                      title: 'Change Password',
-                      trailing: Icon(
-                        Icons.arrow_forward_ios,
-                        size: Responsive.scale(context, 16),
-                        color: AppColors.mutedText,
+                            .update({'avatarUrl': p}),
                       ),
                     ),
-                  ),
-                  SizedBox(height: Responsive.scale(context, 32)),
-
-                  // 4. PREFERENCES
-                  Text(
-                    'PREFERENCES',
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                  SizedBox(height: Responsive.scale(context, 12)),
-                  GestureDetector(
-                    onTap: () => TopicsPickerSheet.show(
-                      context,
-                      allTopics: _allTopics,
-                      selectedTopics: _selectedTopics,
-                      onTopicsChanged: (newTopics) {
-                        // We don't need setState here anymore because the live database
-                        // listener will handle updating the UI for us automatically!
-                      },
+                    SizedBox(height: 40),
+                    Text(
+                      loc.personalInfo.toUpperCase(),
+                      style: Theme.of(context).textTheme.labelMedium,
                     ),
-                    child: SettingsRow(
-                      leadingIcon: Icons.interests_outlined,
-                      title: 'Your Topics',
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            _selectedTopics.isEmpty
-                                ? 'None'
-                                : '${_selectedTopics.length} Selected',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(color: Theme.of(context).colorScheme.primary),
-                          ),
-                          SizedBox(width: Responsive.scale(context, 8)),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: Responsive.scale(context, 16),
-                            color: AppColors.mutedText,
-                          ),
-                        ],
+                    NameEditorSection(
+                      controller: _nameController,
+                      isLoading: _isUpdatingName,
+                      onUpdate: _updateName,
+                      label: loc.fullNameLabel,
+                      btnText: loc.updateName,
+                    ),
+                    SizedBox(height: 40),
+                    Text(
+                      loc.security.toUpperCase(),
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                    GestureDetector(
+                      onTap: () => ChangePasswordSheet.show(context),
+                      child: SettingsRow(
+                        leadingIcon: Icons.lock_outline,
+                        title: loc.changePassword,
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
                       ),
                     ),
-                  ),
-                  SizedBox(height: Responsive.scale(context, 40)),
-                ],
+                    SizedBox(height: 32),
+                    Text(
+                      loc.preferences.toUpperCase(),
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                    GestureDetector(
+                      onTap: () => TopicsPickerSheet.show(
+                        context,
+                        allTopics: _allTopics,
+                        selectedTopics: _selectedTopics,
+                        onTopicsChanged: (_) {},
+                      ),
+                      child: SettingsRow(
+                        leadingIcon: Icons.interests_outlined,
+                        title: loc.yourTopics,
+                        trailing: Text(
+                          _selectedTopics.isEmpty
+                              ? loc.none
+                              : '${_selectedTopics.length} ${loc.selected}',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-        ),
       ),
     );
   }
