@@ -216,4 +216,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get topTopic => 'Top Topic';
+
+  @override
+  String get designYourDaily => 'DESIGN YOUR DAILY';
+
+  @override
+  String get pickTopicsSubtitle =>
+      'Pick a few topics you love so we can tailor your feed just for you.';
+
+  @override
+  String calibrated(String count) {
+    return '$count OF 5 TOPICS CALIBRATED';
+  }
+
+  @override
+  String get continueBriefing => 'Continue Briefing';
 }

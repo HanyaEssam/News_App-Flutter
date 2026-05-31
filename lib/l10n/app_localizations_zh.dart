@@ -211,4 +211,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get topTopic => '主要主题';
+
+  @override
+  String get designYourDaily => '定制您的日报';
+
+  @override
+  String get pickTopicsSubtitle => '选择您喜爱的几个主题，以便我们为您量身定制内容。';
+
+  @override
+  String calibrated(String count) {
+    return '已完成 $count / 5 个主题设置';
+  }
+
+  @override
+  String get continueBriefing => '继续简报';
 }

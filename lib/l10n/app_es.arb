@@ -30,19 +30,11 @@
   "mainSource": "Fuente principal",
   "basedOnInterest": "Basado en tu interés en {category}",
   "@basedOnInterest": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "category": { "type": "String" } }
   },
   "feedTitle": "Noticias de {category}",
   "@feedTitle": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "category": { "type": "String" } }
   },
   "intelligence": "Inteligencia",
   "searchPageTitle": "Buscar",
@@ -52,11 +44,7 @@
   "savedPageTitle": "Artículos guardados",
   "savedArticlesCount": "{count} Artículos guardados",
   "@savedArticlesCount": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "count": { "type": "String" } }
   },
   "noSavedArticles": "Aún no hay artículos guardados.",
   "curationSpaceEmpty": "Tu espacio está vacío. Explora las últimas perspectivas y guarda artículos para crear tu propio feed.",
@@ -85,5 +73,12 @@
   "passwordLowercase": "La contraseña debe contener al menos una minúscula.",
   "passwordNumber": "La contraseña debe contener al menos un número.",
   "passwordSpecialChar": "La contraseña debe contener al menos un carácter especial.",
-  "topTopic": "Tema Principal"
+  "topTopic": "Tema Principal",
+  "designYourDaily": "DISEÑA TU RESUMEN DIARIO",
+  "pickTopicsSubtitle": "Elige algunos temas que te encanten para personalizar tu feed.",
+  "calibrated": "{count} DE 5 TEMAS CALIBRADOS",
+  "@calibrated": {
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "continueBriefing": "Continuar resumen"
 }

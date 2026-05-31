@@ -30,19 +30,11 @@
   "mainSource": "主要来源",
   "basedOnInterest": "基于您对 {category} 的兴趣",
   "@basedOnInterest": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "category": { "type": "String" } }
   },
   "feedTitle": "{category} 新闻",
   "@feedTitle": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "category": { "type": "String" } }
   },
   "intelligence": "智能",
   "searchPageTitle": "搜索",
@@ -52,11 +44,7 @@
   "savedPageTitle": "已保存的文章",
   "savedArticlesCount": "已保存 {count} 篇文章",
   "@savedArticlesCount": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "count": { "type": "String" } }
   },
   "noSavedArticles": "暂无已保存的文章。",
   "curationSpaceEmpty": "您的保存空间为空。探索最新见解并保存文章以构建您的个性化新闻流。",
@@ -85,5 +73,12 @@
   "passwordLowercase": "密码必须包含至少一个小写字母。",
   "passwordNumber": "密码必须包含至少一个数字。",
   "passwordSpecialChar": "密码必须包含至少一个特殊字符。",
-  "topTopic": "主要主题"
+  "topTopic": "主要主题",
+  "designYourDaily": "定制您的日报",
+  "pickTopicsSubtitle": "选择您喜爱的几个主题，以便我们为您量身定制内容。",
+  "calibrated": "已完成 {count} / 5 个主题设置",
+  "@calibrated": {
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "continueBriefing": "继续简报"
 }

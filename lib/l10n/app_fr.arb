@@ -30,19 +30,11 @@
   "mainSource": "Source principale",
   "basedOnInterest": "Basé sur votre intérêt pour {category}",
   "@basedOnInterest": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "category": { "type": "String" } }
   },
   "feedTitle": "Actualités {category}",
   "@feedTitle": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "category": { "type": "String" } }
   },
   "intelligence": "Intelligence",
   "searchPageTitle": "Recherche",
@@ -52,11 +44,7 @@
   "savedPageTitle": "Articles enregistrés",
   "savedArticlesCount": "{count} Articles enregistrés",
   "@savedArticlesCount": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "count": { "type": "String" } }
   },
   "noSavedArticles": "Aucun article enregistré pour le moment.",
   "curationSpaceEmpty": "Votre espace est vide. Explorez et sauvegardez des articles pour personnaliser votre flux.",
@@ -85,5 +73,12 @@
   "passwordLowercase": "Le mot de passe doit contenir au moins une minuscule.",
   "passwordNumber": "Le mot de passe doit contenir au moins un chiffre.",
   "passwordSpecialChar": "Le mot de passe doit contenir au moins un caractère spécial.",
-  "topTopic": "Sujet Principal"
+  "topTopic": "Sujet Principal",
+  "designYourDaily": "PERSONNALISEZ VOTRE QUOTIDIEN",
+  "pickTopicsSubtitle": "Choisissez quelques sujets que vous aimez afin que nous puissions adapter votre flux.",
+  "calibrated": "{count} SUR 5 SUJETS CALIBRÉS",
+  "@calibrated": {
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "continueBriefing": "Continuer le briefing"
 }

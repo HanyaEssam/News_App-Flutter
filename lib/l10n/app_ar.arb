@@ -30,19 +30,11 @@
   "mainSource": "المصدر الرئيسي",
   "basedOnInterest": "بناءً على اهتمامك في {category}",
   "@basedOnInterest": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "category": { "type": "String" } }
   },
   "feedTitle": "أخبار {category}",
   "@feedTitle": {
-    "placeholders": {
-      "category": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "category": { "type": "String" } }
   },
   "intelligence": "الذكاء",
   "searchPageTitle": "بحث",
@@ -52,11 +44,7 @@
   "savedPageTitle": "العناصر المحفوظة",
   "savedArticlesCount": "المقالات المحفوظة {count}",
   "@savedArticlesCount": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "count": { "type": "String" } }
   },
   "noSavedArticles": "لا توجد مقالات محفوظة بعد.",
   "curationSpaceEmpty": "مساحة الحفظ الخاصة بك فارغة. استكشف أحدث الرؤى واحفظ المقالات لبناء موجز الأخبار المخصص لك.",
@@ -85,5 +73,12 @@
   "passwordLowercase": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل.",
   "passwordNumber": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.",
   "passwordSpecialChar": "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.",
-  "topTopic": "الموضوع المفضل"
+  "topTopic": "الموضوع المفضل",
+  "designYourDaily": "صمم موجزك اليومي",
+  "pickTopicsSubtitle": "اختر بعض المواضيع التي تحبها لنتمكن من تخصيص موجزك.",
+  "calibrated": "{count} من 5 مواضيع تم ضبطها",
+  "@calibrated": {
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "continueBriefing": "متابعة الموجز"
 }

@@ -217,4 +217,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get topTopic => 'Tema Principal';
+
+  @override
+  String get designYourDaily => 'DISEÑA TU RESUMEN DIARIO';
+
+  @override
+  String get pickTopicsSubtitle =>
+      'Elige algunos temas que te encanten para personalizar tu feed.';
+
+  @override
+  String calibrated(String count) {
+    return '$count DE 5 TEMAS CALIBRADOS';
+  }
+
+  @override
+  String get continueBriefing => 'Continuar resumen';
 }

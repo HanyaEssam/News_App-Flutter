@@ -218,4 +218,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get topTopic => 'Sujet Principal';
+
+  @override
+  String get designYourDaily => 'PERSONNALISEZ VOTRE QUOTIDIEN';
+
+  @override
+  String get pickTopicsSubtitle =>
+      'Choisissez quelques sujets que vous aimez afin que nous puissions adapter votre flux.';
+
+  @override
+  String calibrated(String count) {
+    return '$count SUR 5 SUJETS CALIBRÉS';
+  }
+
+  @override
+  String get continueBriefing => 'Continuer le briefing';
 }

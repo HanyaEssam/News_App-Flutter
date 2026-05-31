@@ -216,4 +216,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get topTopic => 'الموضوع المفضل';
+
+  @override
+  String get designYourDaily => 'صمم موجزك اليومي';
+
+  @override
+  String get pickTopicsSubtitle =>
+      'اختر بعض المواضيع التي تحبها لنتمكن من تخصيص موجزك.';
+
+  @override
+  String calibrated(String count) {
+    return '$count من 5 مواضيع تم ضبطها';
+  }
+
+  @override
+  String get continueBriefing => 'متابعة الموجز';
 }

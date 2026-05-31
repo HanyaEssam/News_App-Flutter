@@ -499,6 +499,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Top Topic'**
   String get topTopic;
+
+  /// No description provided for @designYourDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'DESIGN YOUR DAILY'**
+  String get designYourDaily;
+
+  /// No description provided for @pickTopicsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a few topics you love so we can tailor your feed just for you.'**
+  String get pickTopicsSubtitle;
+
+  /// No description provided for @calibrated.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} OF 5 TOPICS CALIBRATED'**
+  String calibrated(String count);
+
+  /// No description provided for @continueBriefing.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Briefing'**
+  String get continueBriefing;
 }
 
 class _AppLocalizationsDelegate
