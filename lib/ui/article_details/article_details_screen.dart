@@ -7,6 +7,7 @@ import 'package:news/core/widgets/article_content/comment_section.dart';
 import '../../core/widgets/bookmark/bookmark_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../core/utils/responsive.dart';
 
 class ArticleDetailsScreen extends StatefulWidget {
   static const String routeName = '/article-details';
@@ -19,15 +20,13 @@ class ArticleDetailsScreen extends StatefulWidget {
 }
 
 class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
-
-  // 🔥 DYNAMIC UPGRADE: Tracks the categories they actually read!
   Future<void> _markArticleAsCompleted() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final userRef =
+    FirebaseFirestore.instance.collection('users').doc(user.uid);
     final articleTitle = widget.article.title;
-    // Get the category of the current article
     final articleCategory = widget.article.category.toLowerCase();
 
     try {
@@ -35,25 +34,21 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
         final snapshot = await transaction.get(userRef);
         if (!snapshot.exists) return;
 
-        List<dynamic> readArticlesList = snapshot.data()?['readArticlesList'] ?? [];
-        // Pull the current scorecard from Firebase (or create an empty one)
-        Map<String, dynamic> categoryCounts = snapshot.data()?['categoryCounts'] ?? {};
+        List<dynamic> readArticlesList =
+            snapshot.data()?['readArticlesList'] ?? [];
+        Map<String, dynamic> categoryCounts =
+            snapshot.data()?['categoryCounts'] ?? {};
 
         if (!readArticlesList.contains(articleTitle)) {
           readArticlesList.add(articleTitle);
-
-          // 🔥 Add +1 point to whatever category this article belongs to!
-          categoryCounts[articleCategory] = (categoryCounts[articleCategory] ?? 0) + 1;
+          categoryCounts[articleCategory] =
+              (categoryCounts[articleCategory] ?? 0) + 1;
 
           transaction.update(userRef, {
             'readArticlesList': readArticlesList,
             'articlesRead': readArticlesList.length,
-            'categoryCounts': categoryCounts, // Save the updated scorecard
+            'categoryCounts': categoryCounts,
           });
-
-          debugPrint("Article marked as read & category score updated!");
-        } else {
-          debugPrint("User already read this article. Skipping count.");
         }
       });
     } catch (e) {
@@ -63,13 +58,19 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double maxContentWidth =
+    Responsive.isMobile(context) ? double.infinity : 700;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('INSIGHTLY'),
+        title: Text(
+          'INSIGHTLY',
+          style: TextStyle(fontSize: Responsive.scaleText(context, 18)),
+        ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 12.0),
+            padding: EdgeInsets.only(right: Responsive.scale(context, 12)),
             child: BookmarkButton(
               article: widget.article,
               unselectedColor: AppColors.mutedText,
@@ -79,47 +80,49 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
       ),
       body: AppBackground(
         child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      ArticleContent(article: widget.article),
-                      const SizedBox(height: 40),
-                      const Divider(color: AppColors.border),
-                      const SizedBox(height: 24),
-                      CommentsSection(article: widget.article),
-                      const SizedBox(height: 40),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Button at the bottom
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: FilledButton(
-                  onPressed: () async {
-                    await _markArticleAsCompleted();
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                  },
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 56),
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                  ),
-                  child: Text(
-                    "COMPLETED",
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxContentWidth),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(Responsive.scale(context, 20)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ArticleContent(article: widget.article),
+                    SizedBox(height: Responsive.scale(context, 40)),
+                    const Divider(color: AppColors.border),
+                    SizedBox(height: Responsive.scale(context, 24)),
+                    CommentsSection(article: widget.article),
+                    SizedBox(height: Responsive.scale(context, 40)),
+                    FilledButton(
+                      onPressed: () async {
+                        await _markArticleAsCompleted();
+                        if (context.mounted) Navigator.pop(context);
+                      },
+                      style: FilledButton.styleFrom(
+                        minimumSize: Size(
+                          double.infinity,
+                          Responsive.scale(context, 56),
+                        ),
+                        backgroundColor:
+                        Theme.of(context).colorScheme.surface,
+                      ),
+                      child: Text(
+                        "COMPLETED",
+                        style:
+                        Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface,
+                          fontSize: Responsive.scaleText(context, 12),
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(height: Responsive.scale(context, 20)),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

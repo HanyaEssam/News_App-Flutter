@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/locale_provider.dart';
+import '../utils/responsive.dart';
 
 class LanguagePicker extends StatelessWidget {
-  /// Shows the language picker bottom sheet
   static Future<void> show(BuildContext context) {
     final theme = Theme.of(context);
 
     return showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -17,40 +18,49 @@ class LanguagePicker extends StatelessWidget {
         final localeProvider = Provider.of<LocaleProvider>(context);
         final currentLocale = localeProvider.locale?.languageCode ?? 'en';
 
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'CHOOSE LANGUAGE',
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+        return ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.6,
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                vertical: Responsive.scale(context, 20),
+                horizontal: Responsive.scale(context, 8),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'CHOOSE LANGUAGE',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      fontSize: Responsive.scaleText(context, 11),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                _LanguageTile(
-                  label: 'English (UK)',
-                  code: 'en',
-                  isSelected: currentLocale == 'en',
-                ),
-                _LanguageTile(
-                  label: 'العربية (Arabic)',
-                  code: 'ar',
-                  isSelected: currentLocale == 'ar',
-                ),
-                _LanguageTile(
-                  label: 'Español (Spanish)',
-                  code: 'es',
-                  isSelected: currentLocale == 'es',
-                ),
-                _LanguageTile(
-                  label: 'Français (French)',
-                  code: 'fr',
-                  isSelected: currentLocale == 'fr',
-                ),
-              ],
+                  SizedBox(height: Responsive.scale(context, 16)),
+                  _LanguageTile(
+                    label: 'English (UK)',
+                    code: 'en',
+                    isSelected: currentLocale == 'en',
+                  ),
+                  _LanguageTile(
+                    label: 'العربية (Arabic)',
+                    code: 'ar',
+                    isSelected: currentLocale == 'ar',
+                  ),
+                  _LanguageTile(
+                    label: 'Español (Spanish)',
+                    code: 'es',
+                    isSelected: currentLocale == 'es',
+                  ),
+                  _LanguageTile(
+                    label: 'Français (French)',
+                    code: 'fr',
+                    isSelected: currentLocale == 'fr',
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -58,7 +68,6 @@ class LanguagePicker extends StatelessWidget {
     );
   }
 
-  /// The compact button to put in the AppBar / top-right
   final bool showLabel;
   const LanguagePicker({super.key, this.showLabel = false});
 
@@ -70,23 +79,27 @@ class LanguagePicker extends StatelessWidget {
 
     return InkWell(
       onTap: () => LanguagePicker.show(context),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(Responsive.scale(context, 20)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: EdgeInsets.symmetric(
+          horizontal: Responsive.scale(context, 12),
+          vertical: Responsive.scale(context, 8),
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.language,
-              size: 18,
+              size: Responsive.scale(context, 18),
               color: theme.colorScheme.onSurface,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: Responsive.scale(context, 6)),
             Text(
               code.toUpperCase(),
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.w600,
+                fontSize: Responsive.scaleText(context, 11),
               ),
             ),
           ],
@@ -112,9 +125,18 @@ class _LanguageTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
-      title: Text(label, style: theme.textTheme.titleMedium),
+      title: Text(
+        label,
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontSize: Responsive.scaleText(context, 16),
+        ),
+      ),
       trailing: isSelected
-          ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
+          ? Icon(
+        Icons.check_circle,
+        color: theme.colorScheme.primary,
+        size: Responsive.scale(context, 22),
+      )
           : null,
       onTap: () {
         Provider.of<LocaleProvider>(context, listen: false)

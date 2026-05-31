@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/utils/responsive.dart';
 
 class AuthCard extends StatelessWidget {
   final Widget child;
@@ -10,10 +11,10 @@ class AuthCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(Responsive.scale(context, 24)),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(Responsive.scale(context, 30)),
         boxShadow: isDark
             ? null
             : [

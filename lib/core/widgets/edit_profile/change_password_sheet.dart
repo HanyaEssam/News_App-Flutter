@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/responsive.dart';
+import '../../utils/password_validatior.dart';
 import '../auth_widgets/auth_widgets.dart';
+import 'package:news/l10n/app_localizations.dart';
+
+import '../loading_spinner.dart';
 
 class ChangePasswordSheet extends StatefulWidget {
   const ChangePasswordSheet({super.key});
@@ -45,12 +48,19 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
   }
 
   Future<void> _updatePassword() async {
-    if (_newPasswordController.text != _confirmPasswordController.text) {
-      setState(() => _errorMsg = "New passwords do not match.");
+    final loc = AppLocalizations.of(context)!;
+
+    final passwordError = PasswordValidator.validate(
+      _newPasswordController.text,
+      loc,
+    );
+    if (passwordError != null) {
+      setState(() => _errorMsg = passwordError);
       return;
     }
-    if (_newPasswordController.text.length < 8) {
-      setState(() => _errorMsg = "Password must be at least 8 characters.");
+
+    if (_newPasswordController.text != _confirmPasswordController.text) {
+      setState(() => _errorMsg = loc.passwordsDoNotMatch);
       return;
     }
 
@@ -102,7 +112,10 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
               child: Text(
                 'CHANGE PASSWORD',
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withOpacity(0.6),
                   fontSize: Responsive.scaleText(context, 12),
                 ),
               ),
@@ -143,8 +156,9 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
                 padding: EdgeInsets.all(Responsive.scale(context, 12)),
                 decoration: BoxDecoration(
                   color: Colors.red.withOpacity(0.15),
-                  borderRadius:
-                  BorderRadius.circular(Responsive.scale(context, 8)),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.scale(context, 8),
+                  ),
                   border: Border.all(color: Colors.red.withOpacity(0.5)),
                 ),
                 child: Row(
@@ -174,14 +188,7 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
               child: FilledButton(
                 onPressed: _isSaving ? null : _updatePassword,
                 child: _isSaving
-                    ? SizedBox(
-                  height: Responsive.scale(context, 20),
-                  width: Responsive.scale(context, 20),
-                  child: const CircularProgressIndicator(
-                    color: Colors.black,
-                    strokeWidth: 2,
-                  ),
-                )
+                    ? const LoadingSpinner(color: Colors.black)
                     : Text(
                   'UPDATE PASSWORD',
                   style: TextStyle(

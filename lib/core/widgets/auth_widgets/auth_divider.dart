@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/utils/responsive.dart';
 
 class AuthDivider extends StatelessWidget {
   final String text;
@@ -12,12 +13,15 @@ class AuthDivider extends StatelessWidget {
       children: [
         Expanded(child: Divider(color: theme.dividerColor)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.scale(context, 12),
+          ),
           child: Text(
             text,
             style: theme.textTheme.labelSmall?.copyWith(
               color: theme.colorScheme.onSurface.withOpacity(0.6),
               letterSpacing: 1.5,
+              fontSize: Responsive.scaleText(context, 10),
             ),
           ),
         ),

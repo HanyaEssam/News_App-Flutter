@@ -1,4 +1,4 @@
-import 'dart:async'; // 🔥 REQUIRED for StreamSubscription
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +15,7 @@ import 'package:news/core/widgets/home_widgets/for_you_card.dart';
 import 'package:news/core/models/article_model.dart';
 import 'package:news/services/news_service.dart';
 import '../../../core/utils/guest_checker.dart';
+import '../../../core/utils/responsive.dart';
 import 'package:news/l10n/app_localizations.dart';
 
 class HomeLayout extends StatefulWidget {
@@ -63,7 +64,6 @@ class HomeTabContent extends StatefulWidget {
 class _HomeTabContentState extends State<HomeTabContent> {
   final NewsService _newsService = NewsService();
 
-  // 🔥 NEW: Variables for the Smart Listener
   StreamSubscription<DocumentSnapshot>? _userSubscription;
   String _lastKnownTopics = "";
 
@@ -81,14 +81,11 @@ class _HomeTabContentState extends State<HomeTabContent> {
     super.initState();
     SavedArticlesManager.loadUserSavedArticles();
     _loadTrendingNews();
-
-    // 🔥 Start listening to topic changes immediately
     _listenToTopicChanges();
   }
 
   @override
   void dispose() {
-    // 🔥 ALWAYS cancel the subscription when the widget is destroyed to save memory
     _userSubscription?.cancel();
     super.dispose();
   }
@@ -127,12 +124,11 @@ class _HomeTabContentState extends State<HomeTabContent> {
     }
   }
 
-  // 🔥 THE SMART LISTENER
   void _listenToTopicChanges() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       _userTopics = ['Technology', 'Business', 'Science'];
-      _loadForYouNews(); // Fallback for guests
+      _loadForYouNews();
       return;
     }
 
@@ -144,20 +140,13 @@ class _HomeTabContentState extends State<HomeTabContent> {
       if (doc.exists && mounted) {
         final data = doc.data()!;
         final topics = data['selectedTopics'] as List<dynamic>? ?? [];
-
-        // Convert the list to a single string (e.g., "Tech,Sports") so we can easily compare it
         String newTopicsString = topics.join(',');
 
-        // ONLY fetch new articles if the topics actually changed!
         if (newTopicsString != _lastKnownTopics) {
           _lastKnownTopics = newTopicsString;
           _userTopics = topics.cast<String>();
-
-          setState(() {
-            _isForYouLoading = true;
-          });
-
-          _loadForYouNews(); // Fetch the new custom feed!
+          setState(() => _isForYouLoading = true);
+          _loadForYouNews();
         }
       }
     });
@@ -166,7 +155,6 @@ class _HomeTabContentState extends State<HomeTabContent> {
   Future<void> _loadTrendingNews() async {
     try {
       final articlesData = await _newsService.getTopHeadlines();
-
       final articles = articlesData.take(5).map((data) {
         return ArticleModel(
           title: data['title'] ?? 'No title',
@@ -198,19 +186,15 @@ class _HomeTabContentState extends State<HomeTabContent> {
     }
   }
 
-  // 🔥 SIMPLIFIED: No longer needs to fetch from Firestore manually
   Future<void> _loadForYouNews() async {
     try {
-      // Fallback if they somehow have no topics
       if (_userTopics.isEmpty) {
         _userTopics = ['Technology', 'Business', 'Science'];
       }
 
       final articlesData = await _newsService.getArticlesForTopics(_userTopics);
-
       final articles = articlesData.take(6).map((data) {
         final topic = data['matchedTopic'] ?? 'General';
-
         return ArticleModel(
           title: data['title'] ?? 'No title',
           content: data['content'] ?? data['description'] ?? 'No content',
@@ -244,56 +228,82 @@ class _HomeTabContentState extends State<HomeTabContent> {
   @override
   Widget build(BuildContext context) {
     bool isGuest = GuestChecker.isGuest();
+    final double maxContentWidth = Responsive.isMobile(context) ? double.infinity : 800;
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        title: Text(AppLocalizations.of(context)!.appTitle.toUpperCase()),
+        title: Text(
+          AppLocalizations.of(context)!.appTitle.toUpperCase(),
+          style: TextStyle(fontSize: Responsive.scaleText(context, 18)),
+        ),
       ),
       body: AppBackground(
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text(
-                    AppLocalizations.of(context)!.dailyBriefing,
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                const CategoryList(),
-                const SizedBox(height: 32),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text(
-                    AppLocalizations.of(context)!.trendingNow,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(height: 360, child: _buildTrendingSection()),
-                if (!isGuest) ...[
-                  const SizedBox(height: 32),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.forYou,
-                      style: Theme.of(context).textTheme.headlineMedium,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxContentWidth),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: Responsive.scale(context, 20)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Responsive.scale(context, 20),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.dailyBriefing,
+                        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          fontSize: Responsive.scaleText(context, 28),
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: _buildForYouSection(),
-                  ),
-                ],
-                const SizedBox(height: 40),
-              ],
+                    SizedBox(height: Responsive.scale(context, 24)),
+                    const CategoryList(),
+                    SizedBox(height: Responsive.scale(context, 32)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Responsive.scale(context, 20),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.trendingNow,
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontSize: Responsive.scaleText(context, 22),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: Responsive.scale(context, 16)),
+                    SizedBox(
+                      height: Responsive.scale(context, 320),
+                      child: _buildTrendingSection(),
+                    ),
+                    if (!isGuest) ...[
+                      SizedBox(height: Responsive.scale(context, 32)),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Responsive.scale(context, 20),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.forYou,
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontSize: Responsive.scaleText(context, 22),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: Responsive.scale(context, 16)),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Responsive.scale(context, 20),
+                        ),
+                        child: _buildForYouSection(),
+                      ),
+                    ],
+                    SizedBox(height: Responsive.scale(context, 40)),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -308,11 +318,13 @@ class _HomeTabContentState extends State<HomeTabContent> {
     if (_trendingError != null) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(Responsive.scale(context, 20)),
           child: Text(
             'Could not load news.',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontSize: Responsive.scaleText(context, 14),
+            ),
           ),
         ),
       );
@@ -321,14 +333,16 @@ class _HomeTabContentState extends State<HomeTabContent> {
       return Center(
         child: Text(
           'No articles available',
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontSize: Responsive.scaleText(context, 14),
+          ),
         ),
       );
     }
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: Responsive.scale(context, 20)),
       itemCount: _trendingArticles.length,
       itemBuilder: (context, index) {
         return TrendingCard(article: _trendingArticles[index]);
@@ -338,27 +352,31 @@ class _HomeTabContentState extends State<HomeTabContent> {
 
   Widget _buildForYouSection() {
     if (_isForYouLoading) {
-      return const Padding(
-        padding: EdgeInsets.all(40.0),
-        child: Center(child: CircularProgressIndicator()),
+      return Padding(
+        padding: EdgeInsets.all(Responsive.scale(context, 40)),
+        child: const Center(child: CircularProgressIndicator()),
       );
     }
     if (_forYouError != null) {
       return Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(Responsive.scale(context, 20)),
         child: Text(
           'Could not load personalized news.',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontSize: Responsive.scaleText(context, 14),
+          ),
         ),
       );
     }
     if (_forYouArticles.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(Responsive.scale(context, 20)),
         child: Text(
           'No personalized articles yet.',
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontSize: Responsive.scaleText(context, 14),
+          ),
         ),
       );
     }
@@ -366,7 +384,8 @@ class _HomeTabContentState extends State<HomeTabContent> {
     return Column(
       children: _forYouArticles.map((article) {
         return ForYouCard(
-          label: AppLocalizations.of(context)!.basedOnInterest(article.category.toUpperCase()),
+          label: AppLocalizations.of(context)!
+              .basedOnInterest(article.category.toUpperCase()),
           article: article,
         );
       }).toList(),

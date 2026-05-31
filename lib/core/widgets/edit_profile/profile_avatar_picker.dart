@@ -11,13 +11,6 @@ class ProfileAvatarPicker extends StatelessWidget {
     required this.onTap,
   });
 
-  ImageProvider get _imageProvider {
-    if (avatarUrl.startsWith('http')) return NetworkImage(avatarUrl);
-    return AssetImage(
-      avatarUrl.isEmpty ? 'assets/images/avatar.png' : avatarUrl,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -36,15 +29,29 @@ class ProfileAvatarPicker extends StatelessWidget {
               width: size,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
+                color: theme.colorScheme.surface, // Background for blank state
                 border: Border.all(
                   color: theme.colorScheme.primary,
                   width: 2,
                 ),
-                image: DecorationImage(
-                  image: _imageProvider,
+                // 🔥 Only show an image if they actually have one
+                image: avatarUrl.isNotEmpty
+                    ? DecorationImage(
+                  image: avatarUrl.startsWith('http')
+                      ? NetworkImage(avatarUrl) as ImageProvider
+                      : AssetImage(avatarUrl),
                   fit: BoxFit.cover,
-                ),
+                )
+                    : null,
               ),
+              // 🔥 Show the default person icon if it is empty
+              child: avatarUrl.isEmpty
+                  ? Icon(
+                Icons.person,
+                size: size * 0.5,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              )
+                  : null,
             ),
             Container(
               padding: EdgeInsets.all(Responsive.scale(context, 6)),

@@ -3,6 +3,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../ui/home/screens/home_screen.dart';
 import 'package:news/l10n/app_localizations.dart';
 
+import '../../utils/responsive.dart';
+
 class EmptySavedState extends StatelessWidget {
   const EmptySavedState({super.key});
 
@@ -11,30 +13,36 @@ class EmptySavedState extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 60),
+        SizedBox(height: Responsive.scale(context, 60)),
 
         // Large faded bookmark icon
-        Icon(Icons.bookmark_border, size: 80, color: AppColors.inputFill),
-        const SizedBox(height: 32),
+        Icon(Icons.bookmark_border, size: Responsive.scale(context, 60), color: AppColors.inputFill),
+        SizedBox(height: Responsive.scale(context, 32)),
 
         // Title (headlineSmall)
         Text(
           AppLocalizations.of(context)!.noSavedArticles,
-          style: Theme.of(context).textTheme.headlineSmall,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontSize: Responsive.scaleText(context, 20),
+          ),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: Responsive.scale(context, 16)),
 
         // Description (bodyMedium)
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.scale(context, 40),
+          ),
           child: Text(
             AppLocalizations.of(context)!.curationSpaceEmpty,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontSize: Responsive.scaleText(context, 14),
+            ),
             textAlign: TextAlign.center,
           ),
         ),
-        const SizedBox(height: 40),
+        SizedBox(height: Responsive.scale(context, 40)),
 
         // Custom Outlined Button (labelMedium text)
         FilledButton(
@@ -43,16 +51,19 @@ class EmptySavedState extends StatelessWidget {
           },
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.inputFill,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: EdgeInsets.symmetric(
+              horizontal: Responsive.scale(context, 24),
+              vertical: Responsive.scale(context, 16),),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(Responsive.scale(context, 14),),
             ),
           ),
           child: Text(
             AppLocalizations.of(context)!.startExploring.toUpperCase(),
-            style: Theme.of(
-              context,
-            ).textTheme.labelMedium?.copyWith(color: AppColors.primary),
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: AppColors.primary,
+              fontSize: Responsive.scaleText(context, 12),
+            ),
           ),
         ),
       ],

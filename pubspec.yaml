@@ -64,6 +64,9 @@ dependencies:
     sdk: flutter
   flutter_native_splash: ^2.4.7
 
+  shared_preferences: ^2.2.2
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

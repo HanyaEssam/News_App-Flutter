@@ -9,7 +9,10 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Wrap with Theme to override the splash and highlight colors locally
+    final double shortestSide = MediaQuery.of(context).size.shortestSide;
+    final double iconSize = (shortestSide * 0.06).clamp(20.0, 28.0);
+    final double fontSize = (shortestSide * 0.025).clamp(9.0, 12.0);
+
     return Theme(
       data: Theme.of(context).copyWith(
         splashColor: Colors.transparent,
@@ -19,32 +22,43 @@ class BottomNav extends StatelessWidget {
         currentIndex: currentIndex,
         onTap: onTap,
         showUnselectedLabels: true,
-        type: BottomNavigationBarType
-            .fixed, // Keeps items static and prevents shifting
+        selectedLabelStyle: TextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+        ),
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            icon: const ImageIcon(AssetImage('assets/images/home.png')),
-            label: AppLocalizations.of(
-              context,
-            )!.home.toUpperCase(), // ✅ Translated
+            icon: ImageIcon(
+              const AssetImage('assets/images/home.png'),
+              size: iconSize,
+            ),
+            label: AppLocalizations.of(context)!.home.toUpperCase(),
           ),
           BottomNavigationBarItem(
-            icon: const ImageIcon(AssetImage('assets/images/search.png')),
-            label: AppLocalizations.of(
-              context,
-            )!.search.toUpperCase(), // ✅ Translated
+            icon: ImageIcon(
+              const AssetImage('assets/images/search.png'),
+              size: iconSize,
+            ),
+            label: AppLocalizations.of(context)!.search.toUpperCase(),
           ),
           BottomNavigationBarItem(
-            icon: const ImageIcon(AssetImage('assets/images/save.png')),
-            label: AppLocalizations.of(
-              context,
-            )!.saved.toUpperCase(), // ✅ Translated
+            icon: ImageIcon(
+              const AssetImage('assets/images/save.png'),
+              size: iconSize,
+            ),
+            label: AppLocalizations.of(context)!.saved.toUpperCase(),
           ),
           BottomNavigationBarItem(
-            icon: const ImageIcon(AssetImage('assets/images/profile.png')),
-            label: AppLocalizations.of(
-              context,
-            )!.profile.toUpperCase(), // ✅ Translated
+            icon: ImageIcon(
+              const AssetImage('assets/images/profile.png'),
+              size: iconSize,
+            ),
+            label: AppLocalizations.of(context)!.profile.toUpperCase(),
           ),
         ],
       ),

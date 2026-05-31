@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/utils/responsive.dart';
 
 class AuthHeader extends StatelessWidget {
   final String title;
@@ -16,11 +17,18 @@ class AuthHeader extends StatelessWidget {
 
     return Column(
       children: [
-        Text(title, style: theme.textTheme.titleLarge),
-        const SizedBox(height: 12),
+        Text(
+          title,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontSize: Responsive.scaleText(context, 22),
+          ),
+        ),
+        SizedBox(height: Responsive.scale(context, 12)),
         Text(
           subtitle,
-          style: theme.textTheme.bodyMedium,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontSize: Responsive.scaleText(context, 14),
+          ),
           textAlign: TextAlign.center,
         ),
       ],

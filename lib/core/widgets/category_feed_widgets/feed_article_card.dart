@@ -4,9 +4,10 @@ import '../../models/article_model.dart';
 import '../../../ui/article_details/article_details_screen.dart';
 import '../bookmark/bookmark_button.dart';
 import 'package:news/l10n/app_localizations.dart';
+import '../../../../core/utils/responsive.dart';
 
 class FeedArticleCard extends StatelessWidget {
-  final ArticleModel article; // ✅ Only passing the full article now!
+  final ArticleModel article;
 
   const FeedArticleCard({super.key, required this.article});
 
@@ -15,24 +16,21 @@ class FeedArticleCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding: EdgeInsets.only(bottom: Responsive.scale(context, 24)),
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Responsive.scale(context, 20)),
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ArticleDetailsScreen(
-                article:
-                    article, // ✅ Passes the real article, with the real date!
-              ),
+              builder: (context) => ArticleDetailsScreen(article: article),
             ),
           );
         },
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(Responsive.scale(context, 20)),
             border: Border.all(
               color: theme.colorScheme.primary.withOpacity(0.25),
             ),
@@ -40,84 +38,90 @@ class FeedArticleCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 🔥 Smart Image Handler
               Container(
-                height: 200,
+                height: Responsive.scale(context, 200),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade900,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(20),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(Responsive.scale(context, 20)),
                   ),
                   image: article.imageUrl.isNotEmpty
                       ? DecorationImage(
-                          image: article.imageUrl.startsWith('http')
-                              ? NetworkImage(article.imageUrl) as ImageProvider
-                              : AssetImage(article.imageUrl),
-                          fit: BoxFit.cover,
-                        )
+                    image: article.imageUrl.startsWith('http')
+                        ? NetworkImage(article.imageUrl) as ImageProvider
+                        : AssetImage(article.imageUrl),
+                    fit: BoxFit.cover,
+                  )
                       : null,
                 ),
                 child: article.imageUrl.isEmpty
-                    ? const Center(
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: Colors.white24,
-                          size: 50,
-                        ),
-                      )
+                    ? Center(
+                  child: Icon(
+                    Icons.image_not_supported,
+                    color: Colors.white24,
+                    size: Responsive.scale(context, 50),
+                  ),
+                )
                     : null,
               ),
-
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(Responsive.scale(context, 16)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(6),
+                          padding: EdgeInsets.all(Responsive.scale(context, 6)),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primary.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(
+                              Responsive.scale(context, 8),
+                            ),
                           ),
                           child: Icon(
                             Icons.article,
-                            size: 16,
+                            size: Responsive.scale(context, 16),
                             color: article.categoryColor,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: Responsive.scale(context, 12)),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               article.source,
-                              style: theme.textTheme.bodySmall,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontSize: Responsive.scaleText(context, 12),
+                              ),
                             ),
                             Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.mainSource.toUpperCase(),
-                              style: theme.textTheme.labelSmall,
+                              AppLocalizations.of(context)!.mainSource.toUpperCase(),
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                fontSize: Responsive.scaleText(context, 10),
+                              ),
                             ),
                           ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-
-                    Text(article.title, style: theme.textTheme.headlineSmall),
-                    const SizedBox(height: 8),
-
+                    SizedBox(height: Responsive.scale(context, 12)),
+                    Text(
+                      article.title,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontSize: Responsive.scaleText(context, 18),
+                      ),
+                    ),
+                    SizedBox(height: Responsive.scale(context, 8)),
                     Text(
                       article.content,
-                      style: theme.textTheme.bodyMedium,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontSize: Responsive.scaleText(context, 14),
+                      ),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 16),
-
+                    SizedBox(height: Responsive.scale(context, 16)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -126,36 +130,38 @@ class FeedArticleCard extends StatelessWidget {
                             Text(
                               article.readtime
                                   .replaceAll(
-                                    'min read',
-                                    AppLocalizations.of(context)!.minRead,
-                                  )
+                                'min read',
+                                AppLocalizations.of(context)!.minRead,
+                              )
                                   .toUpperCase(),
-                              style: theme.textTheme.labelSmall,
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                fontSize: Responsive.scaleText(context, 10),
+                              ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: Responsive.scale(context, 8),
                               ),
                               child: Text(
                                 '•',
                                 style: TextStyle(
-                                  color: theme.colorScheme.primary.withOpacity(
-                                    0.5,
-                                  ),
+                                  fontSize: Responsive.scaleText(context, 12),
+                                  color: theme.colorScheme.primary
+                                      .withOpacity(0.5),
                                 ),
                               ),
                             ),
                             Text(
-                              article.date
-                                  .toUpperCase(), // ✅ Shows the real date here!
-                              style: theme.textTheme.labelSmall,
+                              article.date.toUpperCase(),
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                fontSize: Responsive.scaleText(context, 10),
+                              ),
                             ),
                           ],
                         ),
                         BookmarkButton(
                           article: article,
-                          unselectedColor:
-                              theme.textTheme.bodySmall?.color ??
+                          unselectedColor: theme.textTheme.bodySmall?.color ??
                               AppColors.lightMutedText,
                         ),
                       ],

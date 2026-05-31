@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/models/article_model.dart';
 import '../../../../core/utils/guest_checker.dart';
+import '../../../../core/utils/responsive.dart';
 
 class CommentsSection extends StatefulWidget {
   final ArticleModel article;
@@ -18,7 +19,6 @@ class _CommentsSectionState extends State<CommentsSection> {
   final TextEditingController _commentController = TextEditingController();
   bool _isPosting = false;
 
-  // Helper to get user initials for the avatar fallback
   String _getInitials(String name) {
     if (name.isEmpty) return "U";
     List<String> parts = name.trim().split(" ");
@@ -28,7 +28,6 @@ class _CommentsSectionState extends State<CommentsSection> {
     return name.substring(0, 1).toUpperCase();
   }
 
-  // Helper to format timestamps to "2H AGO"
   String _getTimeAgo(Timestamp? timestamp) {
     if (timestamp == null) return 'JUST NOW';
     final diff = DateTime.now().difference(timestamp.toDate());
@@ -49,14 +48,16 @@ class _CommentsSectionState extends State<CommentsSection> {
 
     try {
       String userName = "Reader";
-      String avatarUrl = ""; // ✅ Default to empty
+      String avatarUrl = "";
 
-      // Fetch user's data from Firestore (Matching your ProfileScreen logic)
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
       if (userDoc.exists && userDoc.data() != null) {
         final data = userDoc.data()!;
         userName = data['fullName'] ?? data['name'] ?? userName;
-        avatarUrl = data['avatarUrl'] ?? ''; // ✅ Grab the avatar URL
+        avatarUrl = data['avatarUrl'] ?? '';
       } else if (user.displayName != null && user.displayName!.isNotEmpty) {
         userName = user.displayName!;
       } else if (user.email != null) {
@@ -67,7 +68,7 @@ class _CommentsSectionState extends State<CommentsSection> {
         'articleTitle': widget.article.title,
         'userId': user.uid,
         'userName': userName,
-        'avatarUrl': avatarUrl, // ✅ Save the avatar URL with the comment
+        'avatarUrl': avatarUrl,
         'text': text,
         'timestamp': FieldValue.serverTimestamp(),
       });
@@ -91,33 +92,35 @@ class _CommentsSectionState extends State<CommentsSection> {
     super.dispose();
   }
 
-  // ✅ Helper widget to build the avatar smartly (Image or Initials)
   Widget _buildAvatar(String avatarUrl, String userName, Color fallbackColor) {
+    final double size = Responsive.scale(context, 44);
+    final double radius = Responsive.scale(context, 12);
+
     if (avatarUrl.isEmpty) {
-      // Fallback to initials
       return Container(
-        width: 44,
-        height: 44,
+        width: size,
+        height: size,
         decoration: BoxDecoration(
           color: fallbackColor.withOpacity(0.8),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(radius),
         ),
         alignment: Alignment.center,
         child: Text(
           _getInitials(userName),
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface),
+            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: Responsive.scaleText(context, 11),
+          ),
         ),
       );
     }
 
-    // Return the actual image
     return Container(
-      width: 44,
-      height: 44,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(radius),
         image: DecorationImage(
           image: avatarUrl.startsWith('http')
               ? NetworkImage(avatarUrl) as ImageProvider
@@ -139,41 +142,47 @@ class _CommentsSectionState extends State<CommentsSection> {
           .orderBy('timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
-
-        int commentCount = 0;
-        if (snapshot.hasData) {
-          commentCount = snapshot.data!.docs.length;
-        }
+        int commentCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // HEADER & COUNTER
             Row(
               children: [
-                Text("Comments", style: Theme.of(context).textTheme.headlineMedium),
-                const SizedBox(width: 12),
+                Text(
+                  "Comments",
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontSize: Responsive.scaleText(context, 22),
+                  ),
+                ),
+                SizedBox(width: Responsive.scale(context, 12)),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Responsive.scale(context, 12),
+                    vertical: Responsive.scale(context, 6),
+                  ),
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius:
+                    BorderRadius.circular(Responsive.scale(context, 12)),
                   ),
                   child: Text(
                     "$commentCount",
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(color: color),
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: color,
+                      fontSize: Responsive.scaleText(context, 10),
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
-
-            // INPUT FIELD
+            SizedBox(height: Responsive.scale(context, 24)),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(Responsive.scale(context, 16)),
               decoration: BoxDecoration(
-                color:Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(16),
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius:
+                BorderRadius.circular(Responsive.scale(context, 16)),
                 border: Border.all(color: AppColors.border.withOpacity(0.5)),
               ),
               child: Column(
@@ -183,11 +192,16 @@ class _CommentsSectionState extends State<CommentsSection> {
                     controller: _commentController,
                     maxLines: 3,
                     minLines: 2,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: Responsive.scaleText(context, 14),
+                    ),
                     decoration: InputDecoration(
                       hintText: "Add to the briefing...",
-                      hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
+                      hintStyle:
+                      Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: Responsive.scaleText(context, 14),
+                      ),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -197,8 +211,7 @@ class _CommentsSectionState extends State<CommentsSection> {
                       contentPadding: EdgeInsets.zero,
                     ),
                   ),
-                  const SizedBox(height: 12),
-
+                  SizedBox(height: Responsive.scale(context, 12)),
                   FilledButton(
                     onPressed: _isPosting
                         ? null
@@ -207,36 +220,57 @@ class _CommentsSectionState extends State<CommentsSection> {
                       _postComment();
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      backgroundColor:
+                      Theme.of(context).colorScheme.primary,
+                      foregroundColor:
+                      Theme.of(context).colorScheme.onPrimary,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Responsive.scale(context, 24),
+                        vertical: Responsive.scale(context, 14),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          Responsive.scale(context, 12),
+                        ),
+                      ),
                     ),
                     child: _isPosting
-                        ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(color: AppColors.darkText, strokeWidth: 2)
+                        ? SizedBox(
+                      width: Responsive.scale(context, 16),
+                      height: Responsive.scale(context, 16),
+                      child: const CircularProgressIndicator(
+                        color: AppColors.darkText,
+                        strokeWidth: 2,
+                      ),
                     )
                         : Text(
                       "POST COMMENT",
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.darkText),
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelSmall
+                          ?.copyWith(
+                        color: AppColors.darkText,
+                        fontSize: Responsive.scaleText(context, 10),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 32),
-
-            // COMMENTS LIST
+            SizedBox(height: Responsive.scale(context, 32)),
             if (!snapshot.hasData)
               const Center(child: CircularProgressIndicator())
             else if (snapshot.data!.docs.isEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: EdgeInsets.symmetric(
+                  vertical: Responsive.scale(context, 20),
+                ),
                 child: Text(
                   "No comments yet. Be the first to share your thoughts!",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.mutedText),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.mutedText,
+                    fontSize: Responsive.scaleText(context, 14),
+                  ),
                 ),
               )
             else
@@ -244,24 +278,22 @@ class _CommentsSectionState extends State<CommentsSection> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: snapshot.data!.docs.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 24),
+                separatorBuilder: (context, index) =>
+                    SizedBox(height: Responsive.scale(context, 24)),
                 itemBuilder: (context, index) {
-                  var doc = snapshot.data!.docs[index];
-                  var data = doc.data() as Map<String, dynamic>;
+                  var data = snapshot.data!.docs[index].data()
+                  as Map<String, dynamic>;
 
                   String userName = data['userName'] ?? 'Reader';
                   String text = data['text'] ?? '';
-                  String avatarUrl = data['avatarUrl'] ?? ''; // ✅ Extract avatarUrl
+                  String avatarUrl = data['avatarUrl'] ?? '';
                   Timestamp? timestamp = data['timestamp'] as Timestamp?;
 
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ✅ Smart Avatar Widget
                       _buildAvatar(avatarUrl, userName, color),
-
-                      const SizedBox(width: 16),
-
+                      SizedBox(width: Responsive.scale(context, 16)),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,19 +302,38 @@ class _CommentsSectionState extends State<CommentsSection> {
                               children: [
                                 Text(
                                   userName,
-                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.white),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(
+                                    color: AppColors.white,
+                                    fontSize:
+                                    Responsive.scaleText(context, 13),
+                                  ),
                                 ),
-                                const SizedBox(width: 12),
+                                SizedBox(width: Responsive.scale(context, 12)),
                                 Text(
-                                    _getTimeAgo(timestamp),
-                                    style: Theme.of(context).textTheme.labelSmall
+                                  _getTimeAgo(timestamp),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall
+                                      ?.copyWith(
+                                    fontSize:
+                                    Responsive.scaleText(context, 10),
+                                  ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: Responsive.scale(context, 8)),
                             Text(
                               text,
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                fontSize:
+                                Responsive.scaleText(context, 14),
+                              ),
                             ),
                           ],
                         ),

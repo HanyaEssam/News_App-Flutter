@@ -15,15 +15,6 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    ImageProvider imageProvider;
-    if (avatarPath.startsWith('http')) {
-      imageProvider = NetworkImage(avatarPath);
-    } else {
-      imageProvider = AssetImage(
-        avatarPath.isEmpty ? 'assets/images/avatar.png' : avatarPath,
-      );
-    }
-
     // 👇 Bigger avatar on tablet/desktop
     final double avatarSize = Responsive.isMobile(context)
         ? Responsive.scale(context, 80)
@@ -36,15 +27,29 @@ class ProfileHeader extends StatelessWidget {
           width: avatarSize,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Responsive.scale(context, 20)),
+            color: theme.colorScheme.surface, // Background for the blank state
             border: Border.all(
               color: theme.colorScheme.primary,
               width: 2,
             ),
-            image: DecorationImage(
-              image: imageProvider,
+            // 🔥 Only show an image if they actually have one
+            image: avatarPath.isNotEmpty
+                ? DecorationImage(
+              image: avatarPath.startsWith('http')
+                  ? NetworkImage(avatarPath) as ImageProvider
+                  : AssetImage(avatarPath),
               fit: BoxFit.cover,
-            ),
+            )
+                : null,
           ),
+          // 🔥 Show the default person icon if it is empty
+          child: avatarPath.isEmpty
+              ? Icon(
+            Icons.person,
+            size: avatarSize * 0.5,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+          )
+              : null,
         ),
         SizedBox(width: Responsive.scale(context, 24)),
         Expanded(

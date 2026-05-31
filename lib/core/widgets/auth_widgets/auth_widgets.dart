@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
+import '../../../core/utils/responsive.dart';
 
-// --- 1. Custom Text Field with Label ---
 class AuthTextField extends StatelessWidget {
   final String label;
   final String hintText;
   final bool isPassword;
   final bool obscureText;
   final VoidCallback? onToggleVisibility;
-
   final TextEditingController? controller;
   final TextInputType? keyboardType;
-
-
 
   const AuthTextField({
     super.key,
@@ -35,30 +32,31 @@ class AuthTextField extends StatelessWidget {
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
             color: Theme.of(context).colorScheme.onSurface,
             letterSpacing: 1.2,
+            fontSize: Responsive.scaleText(context, 11),
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: Responsive.scale(context, 8)),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(context).colorScheme.onSurface,
+            fontSize: Responsive.scaleText(context, 14),
           ),
           decoration: InputDecoration(
             hintText: hintText,
-            // If it's a password, show the eye icon
             suffixIcon: isPassword
                 ? IconButton(
-                    icon: Icon(
-                      obscureText
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      size: 20,
-                    ),
-                    onPressed: onToggleVisibility,
-                  )
+              icon: Icon(
+                obscureText
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+                color: Theme.of(context).colorScheme.onSurface,
+                size: Responsive.scale(context, 20),
+              ),
+              onPressed: onToggleVisibility,
+            )
                 : null,
           ),
         ),
@@ -67,7 +65,6 @@ class AuthTextField extends StatelessWidget {
   }
 }
 
-// --- 2. Social Login Button ---
 class SocialAuthButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -88,6 +85,7 @@ class SocialAuthButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
+      height: Responsive.scale(context, 52),
       child: FilledButton(
         onPressed: onPressed,
         child: Row(
@@ -96,18 +94,22 @@ class SocialAuthButton extends StatelessWidget {
             if (imagePath != null)
               Image.asset(
                 imagePath!,
-                height: 24,
-                width: 24,
+                height: Responsive.scale(context, 24),
+                width: Responsive.scale(context, 24),
               )
             else if (icon != null)
               Icon(
                 icon,
-                size: 24,
+                size: Responsive.scale(context, 24),
                 color: iconColor,
               ),
-
-            const SizedBox(width: 12),
-            Text(text),
+            SizedBox(width: Responsive.scale(context, 12)),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: Responsive.scaleText(context, 14),
+              ),
+            ),
           ],
         ),
       ),

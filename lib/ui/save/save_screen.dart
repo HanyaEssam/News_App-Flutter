@@ -5,8 +5,8 @@ import '../../../core/widgets/saved_widgets/empty_saved_state.dart';
 import '../../../core/widgets/saved_widgets/save_article_card.dart';
 import '../../../core/models/article_model.dart';
 import '../../../core/utils/saved_articles_manager.dart';
+import '../../../core/utils/responsive.dart';
 import 'package:news/l10n/app_localizations.dart';
-// 🔥 IMPORTS:
 import '../../../core/utils/guest_checker.dart';
 import '../../../core/widgets/guest/guest_widget.dart';
 
@@ -16,7 +16,6 @@ class SaveScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🔥 Intercept Guests
     if (GuestChecker.isGuest()) {
       return Scaffold(
         appBar: AppBar(
@@ -28,8 +27,7 @@ class SaveScreen extends StatelessWidget {
           child: const GuestWidget(
             icon: Icons.bookmark_outline,
             title: 'Your Private Library',
-            subtitle:
-                'Create an account to bookmark articles and build your curated intelligence feed.',
+            subtitle: 'Create an account to bookmark articles and build your curated intelligence feed.',
           ),
         ),
       );
@@ -44,18 +42,19 @@ class SaveScreen extends StatelessWidget {
       body: AppBackground(
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: EdgeInsets.symmetric(horizontal: Responsive.scale(context, 20.0)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                SizedBox(height: Responsive.scale(context, 20)),
 
-                // Page Title
                 Text(
                   AppLocalizations.of(context)!.savedPageTitle,
-                  style: Theme.of(context).textTheme.displaySmall,
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontSize: Responsive.scaleText(context, 32),
+                  ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: Responsive.scale(context, 12)),
 
                 ValueListenableBuilder<List<ArticleModel>>(
                   valueListenable: SavedArticlesManager.savedArticles,
@@ -69,10 +68,12 @@ class SaveScreen extends StatelessWidget {
                           AppLocalizations.of(context)!
                               .savedArticlesCount(savedList.length.toString())
                               .toUpperCase(),
-                          style: Theme.of(context).textTheme.labelMedium
-                              ?.copyWith(color: AppColors.mutedText),
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: AppColors.mutedText,
+                            fontSize: Responsive.scaleText(context, 12),
+                          ),
                         ),
-                        const SizedBox(height: 32),
+                        SizedBox(height: Responsive.scale(context, 32)),
 
                         if (!hasSavedArticles)
                           const EmptySavedState()
@@ -83,7 +84,6 @@ class SaveScreen extends StatelessWidget {
                             itemCount: savedList.length,
                             itemBuilder: (context, index) {
                               final article = savedList[index];
-
                               return SavedArticleCard(article: article);
                             },
                           ),
@@ -92,7 +92,7 @@ class SaveScreen extends StatelessWidget {
                   },
                 ),
 
-                const SizedBox(height: 40),
+                SizedBox(height: Responsive.scale(context, 40)),
               ],
             ),
           ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:news/l10n/app_localizations.dart';
-
 import 'package:news/core/widgets/auth_widgets/auth_widgets.dart';
 import 'package:news/core/widgets/auth_widgets/auth_card.dart';
 import 'package:news/core/widgets/auth_widgets/auth_header.dart';
@@ -11,9 +10,12 @@ import 'package:news/core/widgets/auth_widgets/auth_link_text.dart';
 import 'package:news/core/widgets/auth_widgets/auth_footer.dart';
 import 'package:news/core/widgets/language_picker.dart';
 import 'package:news/core/theme/theme_controller.dart';
-
+import '../../../core/utils/password_validatior.dart';
+import '../../../core/widgets/loading_spinner.dart';
 import '../../../services/auth_service.dart';
-import '../../../onboarding/screens/interest_screen.dart';
+import '../../onboarding/screens/interest_screen.dart';
+import '../../../core/utils/responsive.dart';
+
 
 class SignupScreen extends StatefulWidget {
   static const String routeName = '/signup';
@@ -46,17 +48,6 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  String? _validatePassword(String password, AppLocalizations loc) {
-    if (password.length < 8) return loc.passwordMinLength;
-    if (!password.contains(RegExp(r'[A-Z]'))) return loc.passwordUppercase;
-    if (!password.contains(RegExp(r'[a-z]'))) return loc.passwordLowercase;
-    if (!password.contains(RegExp(r'[0-9]'))) return loc.passwordNumber;
-    if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-      return loc.passwordSpecialChar;
-    }
-    return null;
-  }
-
   Future<void> _handleSignup() async {
     final loc = AppLocalizations.of(context)!;
     final name = _nameController.text.trim();
@@ -71,7 +62,7 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    final passwordError = _validatePassword(password, loc);
+    final passwordError = PasswordValidator.validate(password, loc);
     if (passwordError != null) {
       setState(() => _errorMessage = passwordError);
       return;
@@ -140,116 +131,117 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!; // 👈 Localizations instance
+    final loc = AppLocalizations.of(context)!;
+    final double maxContentWidth =
+    Responsive.isMobile(context) ? double.infinity : 500;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 12),
-
-              const Align(
-                alignment: Alignment.centerRight,
-                child: LanguagePicker(),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxContentWidth),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.scale(context, 24),
               ),
-              const SizedBox(height: 20),
-
-              AuthHeader(
-                title: loc.joinInsightly,
-                subtitle: loc.signupSubtitle,
-              ),
-              const SizedBox(height: 8),
-
-              AuthCard(
-                child: Column(
-                  children: [
-                    AuthTextField(
-                      controller: _nameController,
-                      label: loc.fullName,
-                      hintText: 'Caroll Froid',
-                    ),
-                    const SizedBox(height: 20),
-                    AuthTextField(
-                      controller: _emailController,
-                      label: loc.emailAddress,
-                      hintText: 'caroll@gmail.com',
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(height: 20),
-                    AuthTextField(
-                      controller: _passwordController,
-                      label: loc.password,
-                      hintText: '• • • • • • • •',
-                      isPassword: true,
-                      obscureText: _obscurePassword,
-                      onToggleVisibility: () => setState(
-                              () => _obscurePassword = !_obscurePassword),
-                    ),
-                    const SizedBox(height: 20),
-                    AuthTextField(
-                      controller: _confirmPasswordController,
-                      label: loc.confirmPassword,
-                      hintText: '• • • • • • • •',
-                      isPassword: true,
-                      obscureText: _obscureConfirm,
-                      onToggleVisibility: () => setState(
-                              () => _obscureConfirm = !_obscureConfirm),
-                    ),
-
-                    if (_errorMessage != null) ...[
-                      const SizedBox(height: 24),
-                      AuthErrorBox(message: _errorMessage!),
-                      const SizedBox(height: 24),
-                    ] else
-                      const SizedBox(height: 32),
-
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: _isLoading ? null : _handleSignup,
-                        child: _isLoading
-                            ? SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Theme.of(context).colorScheme.onPrimary,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: Responsive.scale(context, 12)),
+                  const Align(
+                    alignment: Alignment.centerRight,
+                    child: LanguagePicker(),
+                  ),
+                  SizedBox(height: Responsive.scale(context, 20)),
+                  AuthHeader(
+                    title: loc.joinInsightly,
+                    subtitle: loc.signupSubtitle,
+                  ),
+                  SizedBox(height: Responsive.scale(context, 8)),
+                  AuthCard(
+                    child: Column(
+                      children: [
+                        AuthTextField(
+                          controller: _nameController,
+                          label: loc.fullName,
+                          hintText: 'Full name',
+                        ),
+                        SizedBox(height: Responsive.scale(context, 20)),
+                        AuthTextField(
+                          controller: _emailController,
+                          label: loc.emailAddress,
+                          hintText: 'User@gmail.com',
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        SizedBox(height: Responsive.scale(context, 20)),
+                        AuthTextField(
+                          controller: _passwordController,
+                          label: loc.password,
+                          hintText: '• • • • • • • •',
+                          isPassword: true,
+                          obscureText: _obscurePassword,
+                          onToggleVisibility: () => setState(
+                                  () => _obscurePassword = !_obscurePassword),
+                        ),
+                        SizedBox(height: Responsive.scale(context, 20)),
+                        AuthTextField(
+                          controller: _confirmPasswordController,
+                          label: loc.confirmPassword,
+                          hintText: '• • • • • • • •',
+                          isPassword: true,
+                          obscureText: _obscureConfirm,
+                          onToggleVisibility: () => setState(
+                                  () => _obscureConfirm = !_obscureConfirm),
+                        ),
+                        if (_errorMessage != null) ...[
+                          SizedBox(height: Responsive.scale(context, 24)),
+                          AuthErrorBox(message: _errorMessage!),
+                          SizedBox(height: Responsive.scale(context, 24)),
+                        ] else
+                          SizedBox(height: Responsive.scale(context, 32)),
+                        SizedBox(
+                          width: double.infinity,
+                          height: Responsive.scale(context, 52),
+                          child: FilledButton(
+                            onPressed: _isLoading ? null : _handleSignup,
+                            child: _isLoading
+                                ? const LoadingSpinner()
+                                : Text(
+                              loc.createAccount,
+                              style: TextStyle(
+                                fontSize:
+                                Responsive.scaleText(context, 14),
+                              ),
+                            ),
                           ),
-                        )
-                            : Text(loc.createAccount),
-                      ),
+                        ),
+                        SizedBox(height: Responsive.scale(context, 20)),
+                        AuthDivider(text: loc.orContinueWith),
+                        SizedBox(height: Responsive.scale(context, 24)),
+                        SocialAuthButton(
+                          text: loc.continueWithGoogle,
+                          imagePath: 'assets/images/google.png',
+                          iconColor: Colors.blue,
+                          onPressed:
+                          _isLoading ? () {} : _handleGoogleSignIn,
+                        ),
+                        SizedBox(height: Responsive.scale(context, 15)),
+                        AuthLinkText(
+                          message: loc.alreadyHaveAccount,
+                          linkText: loc.login,
+                          onTap: () => Navigator.pushReplacementNamed(
+                              context, '/login'),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-
-                    AuthDivider(text: loc.orContinueWith),
-                    const SizedBox(height: 24),
-
-                    SocialAuthButton(
-                      text: loc.continueWithGoogle,
-                      imagePath: 'assets/images/google.png',
-                      iconColor: Colors.blue,
-                      onPressed: _isLoading ? () {} : _handleGoogleSignIn,
-                    ),
-                    const SizedBox(height: 15),
-
-                    AuthLinkText(
-                      message: loc.alreadyHaveAccount,
-                      linkText: loc.login,
-                      onTap: () =>
-                          Navigator.pushReplacementNamed(context, '/login'),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: Responsive.scale(context, 20)),
+                  AuthFooter(text: loc.footerCopyright),
+                  SizedBox(height: Responsive.scale(context, 24)),
+                ],
               ),
-
-              const SizedBox(height: 20),
-              AuthFooter(text: loc.footerCopyright),
-              const SizedBox(height: 24),
-            ],
+            ),
           ),
         ),
       ),

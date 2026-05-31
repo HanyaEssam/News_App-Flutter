@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/utils/responsive.dart';
 
 class AuthErrorBox extends StatelessWidget {
   final String message;
@@ -9,10 +10,10 @@ class AuthErrorBox extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(Responsive.scale(context, 12)),
       decoration: BoxDecoration(
         color: theme.colorScheme.error.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Responsive.scale(context, 8)),
         border: Border.all(
           color: theme.colorScheme.error.withOpacity(0.5),
         ),
@@ -22,15 +23,15 @@ class AuthErrorBox extends StatelessWidget {
           Icon(
             Icons.error_outline,
             color: theme.colorScheme.error,
-            size: 18,
+            size: Responsive.scale(context, 18),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: Responsive.scale(context, 8)),
           Expanded(
             child: Text(
               message,
               style: TextStyle(
                 color: theme.colorScheme.error,
-                fontSize: 13,
+                fontSize: Responsive.scaleText(context, 13),
               ),
             ),
           ),

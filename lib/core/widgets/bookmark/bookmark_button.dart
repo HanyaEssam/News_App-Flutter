@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../models/article_model.dart';
-import '../../theme/app_colors.dart';
 import '../../utils/saved_articles_manager.dart';
-
-// 🔥 NEW IMPORT:
 import '../../utils/guest_checker.dart';
+import '../../utils/responsive.dart';
 
 class BookmarkButton extends StatelessWidget {
   final ArticleModel article;
@@ -21,6 +19,7 @@ class BookmarkButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final double scaledSize = Responsive.scale(context, size);
 
     return ValueListenableBuilder<List<ArticleModel>>(
       valueListenable: SavedArticlesManager.savedArticles,
@@ -30,7 +29,7 @@ class BookmarkButton extends StatelessWidget {
         return IconButton(
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
-          iconSize: size,
+          iconSize: scaledSize,
           icon: Icon(
             isCurrentlySaved ? Icons.bookmark : Icons.bookmark_border,
           ),
@@ -38,11 +37,8 @@ class BookmarkButton extends StatelessWidget {
               ? theme.colorScheme.primary
               : unselectedColor ?? theme.textTheme.bodySmall?.color,
           onPressed: () {
-            // 🔥 INTERCEPT GUESTS HERE:
-            // If they are a guest, this returns true and stops the rest of the code from running
             if (GuestChecker.checkAndPrompt(context)) return;
 
-            // If they are logged in, proceed with saving normally:
             SavedArticlesManager.toggleSave(article);
 
             ScaffoldMessenger.of(context).clearSnackBars();
@@ -50,6 +46,9 @@ class BookmarkButton extends StatelessWidget {
               SnackBar(
                 content: Text(
                   isCurrentlySaved ? 'Removed from Saved' : 'Article Saved!',
+                  style: TextStyle(
+                    fontSize: Responsive.scaleText(context, 14),
+                  ),
                 ),
                 duration: const Duration(seconds: 1),
               ),

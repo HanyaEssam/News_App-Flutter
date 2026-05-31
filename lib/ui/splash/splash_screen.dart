@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart'; // 🔥 1. Added this import
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import '../../core/widgets/background_color/app_background.dart';
 import 'package:news/ui/auth/login/login_screen.dart';
+import '../../core/utils/responsive.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String routeName = '/splash';
@@ -17,13 +18,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // 🔥 2. Wait for the very first frame of this custom screen to be drawn,
-    // and THEN instantly remove the native Android splash screen.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterNativeSplash.remove();
     });
 
-    // 3. Continue with your normal 3-second delay
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacementNamed(context, LoginScreen.routeName);
@@ -33,7 +31,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Grab the current theme (Light or Dark)
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -42,37 +39,33 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              /// Logo
+              // Logo
               Image.asset(
                 'assets/images/logo.png',
-                width: 190,
-                height: 190,
+                width: Responsive.scale(context, 190),
+                height: Responsive.scale(context, 190),
                 fit: BoxFit.contain,
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: Responsive.scale(context, 10)),
 
-              /// App Name
+              // App Name
               Text(
                 'Insightly',
-                // Uses your titleLarge style (Times New Roman, italic, primary color)
-                // but scales it up perfectly for the Splash Screen
                 style: theme.textTheme.titleLarge?.copyWith(
-                  fontSize: 50,
+                  fontSize: Responsive.scaleText(context, 50),
                   fontWeight: FontWeight.w400,
-                  letterSpacing: 1.2,
+                  letterSpacing: Responsive.scale(context, 1.2),
                 ),
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: Responsive.scale(context, 8)),
 
-              /// Tagline
+              // Tagline
               Text(
                 'YOUR WORLD IN ONE PLACE',
-                // Uses your labelMedium style which automatically applies
-                // your specific muted text colors depending on the theme mode
                 style: theme.textTheme.labelMedium?.copyWith(
-                  letterSpacing: 3,
+                  letterSpacing: Responsive.scale(context, 3),
                 ),
               ),
             ],

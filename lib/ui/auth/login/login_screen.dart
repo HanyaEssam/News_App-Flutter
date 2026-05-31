@@ -12,13 +12,13 @@ import 'package:news/core/widgets/auth_widgets/auth_footer.dart';
 import 'package:news/core/widgets/language_picker.dart';
 import 'package:news/core/theme/theme_controller.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../../../services/auth_service.dart';
-import '../../../onboarding/screens/interest_screen.dart';
 
 import 'package:provider/provider.dart';
 import '../../../core/utils/locale_provider.dart';
 import '../../../core/utils/saved_articles_manager.dart';
+import '../../onboarding/screens/interest_screen.dart';
+import '../../../core/utils/responsive.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -86,7 +86,8 @@ class _LoginScreenState extends State<LoginScreen> {
           if (doc.data()!.containsKey('language')) {
             String userLang = doc.data()!['language'];
             if (context.mounted) {
-              Provider.of<LocaleProvider>(context, listen: false).setLocale(Locale(userLang));
+              Provider.of<LocaleProvider>(context, listen: false)
+                  .setLocale(Locale(userLang));
             }
           }
         }
@@ -94,7 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
         await SavedArticlesManager.loadUserSavedArticles();
 
         if (context.mounted) {
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/home', (route) => false);
         }
       }
     } catch (e) {
@@ -126,7 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
           if (doc.data()!.containsKey('language')) {
             String userLang = doc.data()!['language'];
             if (context.mounted) {
-              Provider.of<LocaleProvider>(context, listen: false).setLocale(Locale(userLang));
+              Provider.of<LocaleProvider>(context, listen: false)
+                  .setLocale(Locale(userLang));
             }
           }
 
@@ -135,22 +138,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
           if (context.mounted) {
             if (topics.isEmpty) {
-              Navigator.pushReplacementNamed(context, InterestScreen.routeName);
+              Navigator.pushReplacementNamed(
+                  context, InterestScreen.routeName);
             } else {
-              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/home', (route) => false);
             }
           }
         } else {
           await SavedArticlesManager.loadUserSavedArticles();
 
-          // 🔥 NEW: If it's a brand new Google user, save the language they selected on the Login Screen to Firebase!
-          final currentLocale = Provider.of<LocaleProvider>(context, listen: false).locale.languageCode;
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-            'language': currentLocale
-          }, SetOptions(merge: true));
+          final currentLocale =
+              Provider.of<LocaleProvider>(context, listen: false)
+                  .locale
+                  .languageCode;
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .set({'language': currentLocale}, SetOptions(merge: true));
 
           if (context.mounted) {
-            Navigator.pushReplacementNamed(context, InterestScreen.routeName);
+            Navigator.pushReplacementNamed(
+                context, InterestScreen.routeName);
           }
         }
       }
@@ -164,120 +173,129 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!; // 👈 Localizations instance
+    final loc = AppLocalizations.of(context)!;
+    final double maxContentWidth =
+    Responsive.isMobile(context) ? double.infinity : 500;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-
-              // Custom Language Picker
-              const Align(
-                alignment: Alignment.centerRight,
-                child: LanguagePicker(),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxContentWidth),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.scale(context, 24),
               ),
-              const SizedBox(height: 20),
-
-              // Custom Header Widget
-              AuthHeader(
-                title: loc.appTitle,
-                subtitle: loc.loginSubtitle,
-              ),
-              const SizedBox(height: 32),
-
-              AuthCard(
-                child: Column(
-                  children: [
-                    AuthTextField(
-                      label: loc.emailAddress,
-                      hintText: 'farida@gmail.com',
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(height: 20),
-                    AuthTextField(
-                      label: loc.password,
-                      hintText: '• • • • • • • •',
-                      isPassword: true,
-                      obscureText: _obscurePassword,
-                      controller: _passwordController,
-                      onToggleVisibility: () => setState(
-                              () => _obscurePassword = !_obscurePassword),
-                    ),
-
-                    // Display error if one exists
-                    if (_errorMessage != null) ...[
-                      const SizedBox(height: 16),
-                      AuthErrorBox(message: _errorMessage!),
-                    ],
-
-                    const SizedBox(height: 32),
-
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: _isLoading ? null : _handleSignIn,
-                        child: _isLoading
-                            ? SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Theme.of(context).colorScheme.onPrimary,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: Responsive.scale(context, 10)),
+                  const Align(
+                    alignment: Alignment.centerRight,
+                    child: LanguagePicker(),
+                  ),
+                  SizedBox(height: Responsive.scale(context, 20)),
+                  AuthHeader(
+                    title: loc.appTitle,
+                    subtitle: loc.loginSubtitle,
+                  ),
+                  SizedBox(height: Responsive.scale(context, 32)),
+                  AuthCard(
+                    child: Column(
+                      children: [
+                        AuthTextField(
+                          label: loc.emailAddress,
+                          hintText: 'User@gmail.com',
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        SizedBox(height: Responsive.scale(context, 20)),
+                        AuthTextField(
+                          label: loc.password,
+                          hintText: '• • • • • • • •',
+                          isPassword: true,
+                          obscureText: _obscurePassword,
+                          controller: _passwordController,
+                          onToggleVisibility: () => setState(
+                                  () => _obscurePassword = !_obscurePassword),
+                        ),
+                        if (_errorMessage != null) ...[
+                          SizedBox(height: Responsive.scale(context, 16)),
+                          AuthErrorBox(message: _errorMessage!),
+                        ],
+                        SizedBox(height: Responsive.scale(context, 32)),
+                        SizedBox(
+                          width: double.infinity,
+                          height: Responsive.scale(context, 52),
+                          child: FilledButton(
+                            onPressed: _isLoading ? null : _handleSignIn,
+                            child: _isLoading
+                                ? SizedBox(
+                              height: Responsive.scale(context, 20),
+                              width: Responsive.scale(context, 20),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimary,
+                              ),
+                            )
+                                : Text(
+                              loc.signIn,
+                              style: TextStyle(
+                                fontSize:
+                                Responsive.scaleText(context, 14),
+                              ),
+                            ),
                           ),
-                        )
-                            : Text(loc.signIn),
-                      ),
+                        ),
+                        SizedBox(height: Responsive.scale(context, 32)),
+                        AuthDivider(text: loc.orContinueWith),
+                        SizedBox(height: Responsive.scale(context, 24)),
+                        SocialAuthButton(
+                          text: loc.continueWithGoogle,
+                          imagePath: 'assets/images/google.png',
+                          onPressed:
+                          _isLoading ? () {} : _handleGoogleSignIn,
+                        ),
+                        SizedBox(height: Responsive.scale(context, 32)),
+                        AuthLinkText(
+                          message: loc.dontHaveAccount,
+                          linkText: loc.createAccount,
+                          onTap: () => Navigator.pushReplacementNamed(
+                              context, '/signup'),
+                        ),
+                        SizedBox(height: Responsive.scale(context, 24)),
+                        SizedBox(
+                          width: double.infinity,
+                          height: Responsive.scale(context, 52),
+                          child: FilledButton(
+                            onPressed: () async {
+                              await _authService.signOut();
+                              SavedArticlesManager.clearSession();
+                              if (context.mounted) {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, '/home', (route) => false);
+                              }
+                            },
+                            child: Text(
+                              loc.continueAsGuest,
+                              style: TextStyle(
+                                fontSize: Responsive.scaleText(context, 14),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 32),
-
-                    AuthDivider(text: loc.orContinueWith),
-                    const SizedBox(height: 24),
-
-                    SocialAuthButton(
-                      text: loc.continueWithGoogle,
-                      imagePath: 'assets/images/google.png',
-                      onPressed: _isLoading ? () {} : _handleGoogleSignIn,
-                    ),
-                    const SizedBox(height: 32),
-
-                    AuthLinkText(
-                      message: loc.dontHaveAccount,
-                      linkText: loc.createAccount,
-                      onTap: () =>
-                          Navigator.pushReplacementNamed(context, '/signup'),
-                    ),
-                    const SizedBox(height: 24),
-
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: () async {
-                          await _authService.signOut();
-                          SavedArticlesManager.clearSession();
-                          if (context.mounted) {
-                            // Leave the language as whatever they just selected via the Globe icon!
-                            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-                          }
-                        },
-                        child: Text(loc.continueAsGuest),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: Responsive.scale(context, 32)),
+                  AuthFooter(text: loc.footerCopyright),
+                  SizedBox(height: Responsive.scale(context, 24)),
+                ],
               ),
-
-              const SizedBox(height: 32),
-
-              AuthFooter(text: loc.footerCopyright),
-
-              const SizedBox(height: 24),
-            ],
+            ),
           ),
         ),
       ),
