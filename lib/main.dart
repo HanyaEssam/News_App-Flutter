@@ -22,7 +22,6 @@ import 'package:provider/provider.dart';
 import 'package:news/core/utils/locale_provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   // 1. You must have this line first
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 

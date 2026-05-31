@@ -45,7 +45,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get language => 'Langue';
 
   @override
-  String get logoutSession => 'Déconnexion';
+  String get logoutSession => 'Se déconnecter';
 
   @override
   String get home => 'Accueil';
@@ -60,7 +60,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tech => 'Technologie';
 
   @override
-  String get business => 'Affaires';
+  String get business => 'Économie';
 
   @override
   String get sports => 'Sports';
@@ -97,7 +97,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String basedOnInterest(String category) {
-    return 'BASÉ SUR VOTRE INTÉRÊT POUR $category';
+    return 'Basé sur votre intérêt pour $category';
   }
 
   @override
@@ -106,14 +106,13 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get intelligence => 'Informations';
+  String get intelligence => 'Intelligence';
 
   @override
   String get searchPageTitle => 'Recherche';
 
   @override
-  String get searchHint =>
-      'Rechercher des actualités, des sujets ou des auteurs';
+  String get searchHint => 'Rechercher des actualités, sujets ou auteurs';
 
   @override
   String get recentSearches => 'Recherches récentes';
@@ -122,11 +121,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get trendingTopics => 'Sujets tendances';
 
   @override
-  String get savedPageTitle => 'Enregistrés';
+  String get savedPageTitle => 'Articles enregistrés';
 
   @override
   String savedArticlesCount(String count) {
-    return 'ARTICLES ENREGISTRÉS $count';
+    return '$count Articles enregistrés';
   }
 
   @override
@@ -134,57 +133,56 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get curationSpaceEmpty =>
-      'Votre espace de curation est vide. Explorez les dernières actualités et ajoutez des articles à vos favoris pour créer votre flux personnalisé.';
+      'Votre espace est vide. Explorez et sauvegardez des articles pour personnaliser votre flux.';
 
   @override
   String get startExploring => 'Commencer à explorer';
 
   @override
-  String get loginSubtitle =>
-      'Connectez-vous pour continuer votre récit personnalisé.';
+  String get loginSubtitle => 'Connectez-vous pour continuer votre lecture.';
 
   @override
-  String get emailAddress => 'ADRESSE E-MAIL';
+  String get emailAddress => 'Adresse e-mail';
 
   @override
-  String get password => 'MOT DE PASSE';
+  String get password => 'Mot de passe';
 
   @override
-  String get signIn => 'Se Connecter';
+  String get signIn => 'Se connecter';
 
   @override
-  String get orContinueWith => 'OU CONTINUER AVEC';
+  String get orContinueWith => 'Ou continuer avec';
 
   @override
   String get continueWithGoogle => 'Continuer avec Google';
 
   @override
-  String get dontHaveAccount => 'Vous n\'avez pas de compte? ';
+  String get dontHaveAccount => 'Vous n\'avez pas de compte ? ';
 
   @override
-  String get createAccount => 'Créer un Compte';
+  String get createAccount => 'Créer un compte';
 
   @override
   String get continueAsGuest => 'Continuer en tant qu\'invité';
 
   @override
   String get footerCopyright =>
-      '© 2026 INSIGHTFUL CONFIDENTIALITÉ ET CONDITIONS.';
+      '© 2026 Insightly - Confidentialité et conditions.';
 
   @override
-  String get joinInsightly => 'REJOIGNEZ INSIGHTLY';
+  String get joinInsightly => 'Rejoindre Insightly';
 
   @override
   String get signupSubtitle => 'Où le monde rencontre votre écran.';
 
   @override
-  String get fullName => 'NOM COMPLET';
+  String get fullName => 'Nom complet';
 
   @override
-  String get confirmPassword => 'CONFIRMER LE MOT DE PASSE';
+  String get confirmPassword => 'Confirmer le mot de passe';
 
   @override
-  String get alreadyHaveAccount => 'Vous avez déjà un compte? ';
+  String get alreadyHaveAccount => 'Vous avez déjà un compte ? ';
 
   @override
   String get login => 'Connexion';
@@ -193,10 +191,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pleaseFillFields => 'Veuillez remplir tous les champs';
 
   @override
-  String get invalidEmail => 'Veuillez entrer un e-mail valide';
+  String get invalidEmail => 'Veuillez entrer un email valide';
 
   @override
-  String get passwordsDoNotMatch => 'Les mots de passe ne correspondent pas!';
+  String get passwordsDoNotMatch => 'Les mots de passe ne correspondent pas !';
 
   @override
   String get passwordMinLength =>
@@ -217,4 +215,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get passwordSpecialChar =>
       'Le mot de passe doit contenir au moins un caractère spécial.';
+
+  @override
+  String get topTopic => 'Sujet Principal';
 }

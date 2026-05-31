@@ -9,6 +9,7 @@ import 'app_localizations_ar.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -100,6 +101,7 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('es'),
     Locale('fr'),
+    Locale('zh'),
   ];
 
   /// No description provided for @appTitle.
@@ -279,7 +281,7 @@ abstract class AppLocalizations {
   /// No description provided for @basedOnInterest.
   ///
   /// In en, this message translates to:
-  /// **'BASED ON YOUR INTEREST IN {category}'**
+  /// **'Based on your interest in {category}'**
   String basedOnInterest(String category);
 
   /// No description provided for @feedTitle.
@@ -321,13 +323,13 @@ abstract class AppLocalizations {
   /// No description provided for @savedPageTitle.
   ///
   /// In en, this message translates to:
-  /// **'Saved'**
+  /// **'Saved Articles'**
   String get savedPageTitle;
 
   /// No description provided for @savedArticlesCount.
   ///
   /// In en, this message translates to:
-  /// **'SAVED ARTICLES {count}'**
+  /// **'{count} Saved Articles'**
   String savedArticlesCount(String count);
 
   /// No description provided for @noSavedArticles.
@@ -339,7 +341,7 @@ abstract class AppLocalizations {
   /// No description provided for @curationSpaceEmpty.
   ///
   /// In en, this message translates to:
-  /// **'Your curation space is empty. Explore the latest insights and bookmark articles to build your personalized intelligence feed.'**
+  /// **'Your curation space is empty. Explore the latest insights and save articles to build your personalized feed.'**
   String get curationSpaceEmpty;
 
   /// No description provided for @startExploring.
@@ -357,13 +359,13 @@ abstract class AppLocalizations {
   /// No description provided for @emailAddress.
   ///
   /// In en, this message translates to:
-  /// **'EMAIL ADDRESS'**
+  /// **'Email Address'**
   String get emailAddress;
 
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
-  /// **'PASSWORD'**
+  /// **'Password'**
   String get password;
 
   /// No description provided for @signIn.
@@ -375,7 +377,7 @@ abstract class AppLocalizations {
   /// No description provided for @orContinueWith.
   ///
   /// In en, this message translates to:
-  /// **'OR CONTINUE WITH'**
+  /// **'Or continue with'**
   String get orContinueWith;
 
   /// No description provided for @continueWithGoogle.
@@ -399,19 +401,19 @@ abstract class AppLocalizations {
   /// No description provided for @continueAsGuest.
   ///
   /// In en, this message translates to:
-  /// **'Continue as a guest'**
+  /// **'Continue as Guest'**
   String get continueAsGuest;
 
   /// No description provided for @footerCopyright.
   ///
   /// In en, this message translates to:
-  /// **'© 2026 INSIGHTFUL PRIVACY & TERMS.'**
+  /// **'© 2026 Insightly - Privacy & Terms.'**
   String get footerCopyright;
 
   /// No description provided for @joinInsightly.
   ///
   /// In en, this message translates to:
-  /// **'JOIN INSIGHTLY'**
+  /// **'Join Insightly'**
   String get joinInsightly;
 
   /// No description provided for @signupSubtitle.
@@ -423,13 +425,13 @@ abstract class AppLocalizations {
   /// No description provided for @fullName.
   ///
   /// In en, this message translates to:
-  /// **'FULL NAME'**
+  /// **'Full Name'**
   String get fullName;
 
   /// No description provided for @confirmPassword.
   ///
   /// In en, this message translates to:
-  /// **'CONFIRM PASSWORD'**
+  /// **'Confirm Password'**
   String get confirmPassword;
 
   /// No description provided for @alreadyHaveAccount.
@@ -447,7 +449,7 @@ abstract class AppLocalizations {
   /// No description provided for @pleaseFillFields.
   ///
   /// In en, this message translates to:
-  /// **'Please fill in all fields'**
+  /// **'Please fill all fields'**
   String get pleaseFillFields;
 
   /// No description provided for @invalidEmail.
@@ -491,6 +493,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password must contain at least one special character.'**
   String get passwordSpecialChar;
+
+  /// No description provided for @topTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Topic'**
+  String get topTopic;
 }
 
 class _AppLocalizationsDelegate
@@ -504,7 +512,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['ar', 'en', 'es', 'fr'].contains(locale.languageCode);
+      <String>['ar', 'en', 'es', 'fr', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -521,6 +529,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEs();
     case 'fr':
       return AppLocalizationsFr();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

@@ -1,20 +1,20 @@
 {
   "appTitle": "إنسايتلي",
   "dailyBriefing": "موجزك اليومي",
-  "trendingNow": "الشائع الآن",
+  "trendingNow": "الأكثر تداولاً",
   "forYou": "من أجلك",
   "profile": "الملف الشخصي",
   "settings": "الإعدادات",
   "articlesRead": "مقالات قرأتها",
   "minutesSaved": "دقائق وفرتها",
   "appearance": "المظهر",
-  "darkMode": "الوضع الداكن",
-  "lightMode": "الوضع الفاتح",
+  "darkMode": "الوضع الليلي",
+  "lightMode": "الوضع النهاري",
   "language": "اللغة",
   "logoutSession": "تسجيل الخروج",
   "home": "الرئيسية",
   "search": "بحث",
-  "saved": "المحفوظات",
+  "saved": "العناصر المحفوظة",
   "tech": "تكنولوجيا",
   "business": "أعمال",
   "sports": "رياضة",
@@ -44,12 +44,12 @@
       }
     }
   },
-  "intelligence": "رؤى",
+  "intelligence": "الذكاء",
   "searchPageTitle": "بحث",
   "searchHint": "ابحث عن الأخبار، المواضيع، أو المؤلفين",
   "recentSearches": "عمليات البحث الأخيرة",
   "trendingTopics": "المواضيع الشائعة",
-  "savedPageTitle": "المحفوظات",
+  "savedPageTitle": "العناصر المحفوظة",
   "savedArticlesCount": "المقالات المحفوظة {count}",
   "@savedArticlesCount": {
     "placeholders": {
@@ -84,5 +84,6 @@
   "passwordUppercase": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل.",
   "passwordLowercase": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل.",
   "passwordNumber": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.",
-  "passwordSpecialChar": "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل."
+  "passwordSpecialChar": "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.",
+  "topTopic": "الموضوع المفضل"
 }

@@ -19,7 +19,10 @@ class LanguagePicker extends StatelessWidget {
 
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(
+              vertical: 20.0,
+              horizontal: 8.0,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -50,6 +53,11 @@ class LanguagePicker extends StatelessWidget {
                   code: 'fr',
                   isSelected: currentLocale == 'fr',
                 ),
+                _LanguageTile(
+                  label: 'Chinese (French)',
+                  code: 'zh',
+                  isSelected: currentLocale == 'zh',
+                ),
               ],
             ),
           ),
@@ -76,11 +84,7 @@ class LanguagePicker extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.language,
-              size: 18,
-              color: theme.colorScheme.onSurface,
-            ),
+            Icon(Icons.language, size: 18, color: theme.colorScheme.onSurface),
             const SizedBox(width: 6),
             Text(
               code.toUpperCase(),
@@ -117,8 +121,10 @@ class _LanguageTile extends StatelessWidget {
           ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
           : null,
       onTap: () {
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setLocale(Locale(code));
+        Provider.of<LocaleProvider>(
+          context,
+          listen: false,
+        ).setLocale(Locale(code));
         Navigator.pop(context);
       },
     );

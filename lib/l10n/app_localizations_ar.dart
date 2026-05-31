@@ -15,7 +15,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dailyBriefing => 'موجزك اليومي';
 
   @override
-  String get trendingNow => 'الشائع الآن';
+  String get trendingNow => 'الأكثر تداولاً';
 
   @override
   String get forYou => 'من أجلك';
@@ -36,10 +36,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appearance => 'المظهر';
 
   @override
-  String get darkMode => 'الوضع الداكن';
+  String get darkMode => 'الوضع الليلي';
 
   @override
-  String get lightMode => 'الوضع الفاتح';
+  String get lightMode => 'الوضع النهاري';
 
   @override
   String get language => 'اللغة';
@@ -54,7 +54,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get search => 'بحث';
 
   @override
-  String get saved => 'المحفوظات';
+  String get saved => 'العناصر المحفوظة';
 
   @override
   String get tech => 'تكنولوجيا';
@@ -106,7 +106,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get intelligence => 'رؤى';
+  String get intelligence => 'الذكاء';
 
   @override
   String get searchPageTitle => 'بحث';
@@ -121,7 +121,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get trendingTopics => 'المواضيع الشائعة';
 
   @override
-  String get savedPageTitle => 'المحفوظات';
+  String get savedPageTitle => 'العناصر المحفوظة';
 
   @override
   String savedArticlesCount(String count) {
@@ -213,4 +213,7 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get passwordSpecialChar =>
       'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.';
+
+  @override
+  String get topTopic => 'الموضوع المفضل';
 }

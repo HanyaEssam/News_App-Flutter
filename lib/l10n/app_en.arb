@@ -28,7 +28,7 @@
   "recent": "Recent",
   "minRead": "min read",
   "mainSource": "Main Source",
-  "basedOnInterest": "BASED ON YOUR INTEREST IN {category}",
+  "basedOnInterest": "Based on your interest in {category}",
   "@basedOnInterest": {
     "placeholders": {
       "category": {
@@ -49,8 +49,8 @@
   "searchHint": "Search news, topics, or authors",
   "recentSearches": "Recent Searches",
   "trendingTopics": "Trending Topics",
-  "savedPageTitle": "Saved",
-  "savedArticlesCount": "SAVED ARTICLES {count}",
+  "savedPageTitle": "Saved Articles",
+  "savedArticlesCount": "{count} Saved Articles",
   "@savedArticlesCount": {
     "placeholders": {
       "count": {
@@ -59,30 +59,31 @@
     }
   },
   "noSavedArticles": "No saved articles yet.",
-  "curationSpaceEmpty": "Your curation space is empty. Explore the latest insights and bookmark articles to build your personalized intelligence feed.",
+  "curationSpaceEmpty": "Your curation space is empty. Explore the latest insights and save articles to build your personalized feed.",
   "startExploring": "Start Exploring",
   "loginSubtitle": "Sign in to continue your curated narrative.",
-  "emailAddress": "EMAIL ADDRESS",
-  "password": "PASSWORD",
+  "emailAddress": "Email Address",
+  "password": "Password",
   "signIn": "Sign In",
-  "orContinueWith": "OR CONTINUE WITH",
+  "orContinueWith": "Or continue with",
   "continueWithGoogle": "Continue with Google",
   "dontHaveAccount": "Don't have an account? ",
   "createAccount": "Create Account",
-  "continueAsGuest": "Continue as a guest",
-  "footerCopyright": "© 2026 INSIGHTFUL PRIVACY & TERMS.",
-  "joinInsightly": "JOIN INSIGHTLY",
+  "continueAsGuest": "Continue as Guest",
+  "footerCopyright": "© 2026 Insightly - Privacy & Terms.",
+  "joinInsightly": "Join Insightly",
   "signupSubtitle": "Where the world meets your screen.",
-  "fullName": "FULL NAME",
-  "confirmPassword": "CONFIRM PASSWORD",
+  "fullName": "Full Name",
+  "confirmPassword": "Confirm Password",
   "alreadyHaveAccount": "Already have an account? ",
   "login": "Login",
-  "pleaseFillFields": "Please fill in all fields",
+  "pleaseFillFields": "Please fill all fields",
   "invalidEmail": "Please enter a valid email",
   "passwordsDoNotMatch": "Passwords do not match!",
   "passwordMinLength": "Password must be at least 8 characters long.",
   "passwordUppercase": "Password must contain at least one uppercase letter.",
   "passwordLowercase": "Password must contain at least one lowercase letter.",
   "passwordNumber": "Password must contain at least one number.",
-  "passwordSpecialChar": "Password must contain at least one special character."
+  "passwordSpecialChar": "Password must contain at least one special character.",
+  "topTopic": "Top Topic"
 }
