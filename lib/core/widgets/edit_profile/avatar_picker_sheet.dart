@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:news/l10n/app_localizations.dart'; // 🔥 Import localization
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/responsive.dart';
 
@@ -15,10 +16,10 @@ class AvatarPickerSheet extends StatelessWidget {
   });
 
   static Future<void> show(
-      BuildContext context, {
-        required List<String> avatars,
-        required ValueChanged<String> onAvatarSelected,
-      }) {
+    BuildContext context, {
+    required List<String> avatars,
+    required ValueChanged<String> onAvatarSelected,
+  }) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -37,6 +38,8 @@ class AvatarPickerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!; // 🔥 Access translations
+
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
@@ -45,7 +48,7 @@ class AvatarPickerSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'CHOOSE AVATAR',
+                loc.chooseAvatar, // 🔥 Translated label
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                   color: AppColors.mutedText,
                   fontSize: Responsive.scaleText(context, 12),
@@ -67,6 +70,7 @@ class AvatarPickerSheet extends StatelessWidget {
                     onTap: () async {
                       Navigator.pop(context);
                       onAvatarSelected(path);
+
                       // Update Firestore
                       final user = FirebaseAuth.instance.currentUser;
                       if (user != null) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:news/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/responsive.dart';
 
@@ -17,11 +18,11 @@ class TopicsPickerSheet extends StatefulWidget {
   });
 
   static Future<void> show(
-      BuildContext context, {
-        required List<String> allTopics,
-        required List<String> selectedTopics,
-        required ValueChanged<List<String>> onTopicsChanged,
-      }) {
+    BuildContext context, {
+    required List<String> allTopics,
+    required List<String> selectedTopics,
+    required ValueChanged<List<String>> onTopicsChanged,
+  }) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -52,37 +53,58 @@ class _TopicsPickerSheetState extends State<TopicsPickerSheet> {
     _selected = List.from(widget.selectedTopics);
   }
 
+  // Translation helper for topic titles
+  String _getTranslatedTopic(BuildContext context, String topic) {
+    final loc = AppLocalizations.of(context)!;
+    switch (topic.toLowerCase()) {
+      case 'technology':
+        return loc.tech;
+      case 'sports':
+        return loc.sports;
+      case 'politics':
+        return loc.politics;
+      case 'business':
+        return loc.business;
+      case 'health':
+        return loc.health;
+      case 'science':
+        return loc.science;
+      case 'travel':
+        return loc.travel;
+      case 'entertainment':
+        return loc.entertainment;
+      case 'general':
+        return loc.general;
+      default:
+        return topic;
+    }
+  }
+
   Future<void> _toggle(String topic) async {
     final isSelected = _selected.contains(topic);
-
     if (isSelected) {
       _selected.remove(topic);
+    } else if (_selected.length < 5) {
+      _selected.add(topic);
     } else {
-      if (_selected.length < 5) {
-        _selected.add(topic);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Max 5 topics allowed')),
-        );
-        return;
-      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Max 5 topics allowed')));
+      return;
     }
-
     setState(() {});
     widget.onTopicsChanged(_selected);
-
-    // Update Firestore
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .update({'selectedTopics': _selected});
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+        {'selectedTopics': _selected},
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!; // 🔥 Access translations
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -93,12 +115,9 @@ class _TopicsPickerSheetState extends State<TopicsPickerSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'YOUR TOPICS',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                fontSize: Responsive.scaleText(context, 12),
-              ),
-            ),
+              loc.yourTopicsTitle,
+              style: Theme.of(context).textTheme.labelMedium,
+            ), // 🔥 Translated
             SizedBox(height: Responsive.scale(context, 16)),
             Flexible(
               child: ListView.builder(
@@ -106,21 +125,15 @@ class _TopicsPickerSheetState extends State<TopicsPickerSheet> {
                 itemCount: widget.allTopics.length,
                 itemBuilder: (context, index) {
                   final topic = widget.allTopics[index];
-                  final isSelected = _selected.contains(topic);
-
                   return ListTile(
                     title: Text(
-                      topic,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: Responsive.scaleText(context, 16),
-                      ),
-                    ),
-                    trailing: isSelected
+                      _getTranslatedTopic(context, topic),
+                    ), // 🔥 Translated
+                    trailing: _selected.contains(topic)
                         ? Icon(
-                      Icons.check_circle,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: Responsive.scale(context, 24),
-                    )
+                            Icons.check_circle,
+                            color: Theme.of(context).colorScheme.primary,
+                          )
                         : null,
                     onTap: () => _toggle(topic),
                   );

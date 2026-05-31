@@ -78,5 +78,13 @@
   "preferences": "PREFERENCIAS",
   "yourTopics": "Tus temas",
   "selected": "Seleccionado",
-  "none": "Ninguno"
+  "none": "Ninguno",
+  "yourTopicsTitle": "TUS TEMAS",
+  "changePasswordTitle": "CAMBIAR CONTRASEÑA",
+  "currentPassword": "CONTRASEÑA ACTUAL",
+  "newPassword": "NUEVA CONTRASEÑA",
+  "confirmPasswordTitle": "CONFIRMAR CONTRASEÑA",
+  "updatePassword": "ACTUALIZAR CONTRASEÑA",
+  "chooseAvatar": "ELEGIR AVATAR",
+  "update": "Actualizar"
 }

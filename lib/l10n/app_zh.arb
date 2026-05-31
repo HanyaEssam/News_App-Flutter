@@ -78,5 +78,13 @@
   "preferences": "偏好设置",
   "yourTopics": "您关注的主题",
   "selected": "已选择",
-  "none": "无"
+  "none": "无",
+  "yourTopicsTitle": "您关注的主题",
+  "changePasswordTitle": "更改密码",
+  "currentPassword": "当前密码",
+  "newPassword": "新密码",
+  "confirmPasswordTitle": "确认密码",
+  "updatePassword": "更新密码",
+  "chooseAvatar": "选择头像",
+  "update": "更新"
 }

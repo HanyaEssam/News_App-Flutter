@@ -261,4 +261,28 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get none => 'Ninguno';
+
+  @override
+  String get yourTopicsTitle => 'TUS TEMAS';
+
+  @override
+  String get changePasswordTitle => 'CAMBIAR CONTRASEÑA';
+
+  @override
+  String get currentPassword => 'CONTRASEÑA ACTUAL';
+
+  @override
+  String get newPassword => 'NUEVA CONTRASEÑA';
+
+  @override
+  String get confirmPasswordTitle => 'CONFIRMAR CONTRASEÑA';
+
+  @override
+  String get updatePassword => 'ACTUALIZAR CONTRASEÑA';
+
+  @override
+  String get chooseAvatar => 'ELEGIR AVATAR';
+
+  @override
+  String get update => 'Actualizar';
 }

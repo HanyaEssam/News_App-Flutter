@@ -78,5 +78,13 @@
   "preferences": "PRÉFÉRENCES",
   "yourTopics": "Vos sujets",
   "selected": "Sélectionné",
-  "none": "Aucun"
+  "none": "Aucun",
+  "yourTopicsTitle": "VOS SUJETS",
+  "changePasswordTitle": "CHANGER LE MOT DE PASSE",
+  "currentPassword": "MOT DE PASSE ACTUEL",
+  "newPassword": "NOUVEAU MOT DE PASSE",
+  "confirmPasswordTitle": "CONFIRMER LE MOT DE PASSE",
+  "updatePassword": "METTRE À JOUR LE MOT DE PASSE",
+  "chooseAvatar": "CHOISIR UN AVATAR",
+  "update": "Mettre à jour"
 }

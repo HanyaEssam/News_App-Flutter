@@ -260,4 +260,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get none => 'لا يوجد';
+
+  @override
+  String get yourTopicsTitle => 'مواضيعك';
+
+  @override
+  String get changePasswordTitle => 'تغيير كلمة المرور';
+
+  @override
+  String get currentPassword => 'كلمة المرور الحالية';
+
+  @override
+  String get newPassword => 'كلمة المرور الجديدة';
+
+  @override
+  String get confirmPasswordTitle => 'تأكيد كلمة المرور';
+
+  @override
+  String get updatePassword => 'تحديث كلمة المرور';
+
+  @override
+  String get chooseAvatar => 'اختر الصورة الرمزية';
+
+  @override
+  String get update => 'تحديث';
 }

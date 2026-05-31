@@ -78,5 +78,13 @@
   "preferences": "التفضيلات",
   "yourTopics": "مواضيعك",
   "selected": "مختار",
-  "none": "لا يوجد"
+  "none": "لا يوجد",
+  "yourTopicsTitle": "مواضيعك",
+  "changePasswordTitle": "تغيير كلمة المرور",
+  "currentPassword": "كلمة المرور الحالية",
+  "newPassword": "كلمة المرور الجديدة",
+  "confirmPasswordTitle": "تأكيد كلمة المرور",
+  "updatePassword": "تحديث كلمة المرور",
+  "chooseAvatar": "اختر الصورة الرمزية",
+  "update": "تحديث"
 }

@@ -255,4 +255,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get none => '无';
+
+  @override
+  String get yourTopicsTitle => '您关注的主题';
+
+  @override
+  String get changePasswordTitle => '更改密码';
+
+  @override
+  String get currentPassword => '当前密码';
+
+  @override
+  String get newPassword => '新密码';
+
+  @override
+  String get confirmPasswordTitle => '确认密码';
+
+  @override
+  String get updatePassword => '更新密码';
+
+  @override
+  String get chooseAvatar => '选择头像';
+
+  @override
+  String get update => '更新';
 }

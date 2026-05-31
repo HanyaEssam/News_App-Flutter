@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../../core/utils/responsive.dart';
-import '../../utils/password_validatior.dart';
-import '../auth_widgets/auth_widgets.dart';
 import 'package:news/l10n/app_localizations.dart';
-
+import '../../../../core/utils/responsive.dart';
+import '../auth_widgets/auth_widgets.dart';
 import '../loading_spinner.dart';
+import '../../utils/password_validatior.dart';
 
 class ChangePasswordSheet extends StatefulWidget {
   const ChangePasswordSheet({super.key});
@@ -86,7 +85,7 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
-        _errorMsg = e.message ?? "Authentication failed. Check your current password.";
+        _errorMsg = e.message ?? "Authentication failed.";
       });
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -95,34 +94,35 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom +
-              Responsive.scale(context, 24),
-          left: Responsive.scale(context, 24),
-          right: Responsive.scale(context, 24),
-          top: Responsive.scale(context, 24),
-        ),
+    final loc = AppLocalizations.of(context)!;
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom:
+            MediaQuery.of(context).viewInsets.bottom +
+            Responsive.scale(context, 24),
+        left: Responsive.scale(context, 24),
+        right: Responsive.scale(context, 24),
+        top: Responsive.scale(context, 24),
+      ),
+      child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
               child: Text(
-                'CHANGE PASSWORD',
+                loc.changePasswordTitle,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withOpacity(0.6),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.6),
                   fontSize: Responsive.scaleText(context, 12),
                 ),
               ),
             ),
             SizedBox(height: Responsive.scale(context, 24)),
             AuthTextField(
-              label: 'CURRENT PASSWORD',
+              label: loc.currentPassword,
               hintText: '• • • • • • • •',
               isPassword: true,
               obscureText: _obscureOld,
@@ -132,7 +132,7 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
             ),
             SizedBox(height: Responsive.scale(context, 20)),
             AuthTextField(
-              label: 'NEW PASSWORD',
+              label: loc.newPassword,
               hintText: '• • • • • • • •',
               isPassword: true,
               obscureText: _obscureNew,
@@ -142,7 +142,7 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
             ),
             SizedBox(height: Responsive.scale(context, 20)),
             AuthTextField(
-              label: 'CONFIRM PASSWORD',
+              label: loc.confirmPasswordTitle,
               hintText: '• • • • • • • •',
               isPassword: true,
               obscureText: _obscureConfirm,
@@ -161,24 +161,9 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
                   ),
                   border: Border.all(color: Colors.red.withOpacity(0.5)),
                 ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: Colors.redAccent,
-                      size: Responsive.scale(context, 18),
-                    ),
-                    SizedBox(width: Responsive.scale(context, 8)),
-                    Expanded(
-                      child: Text(
-                        _errorMsg!,
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                          fontSize: Responsive.scaleText(context, 13),
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  _errorMsg!,
+                  style: const TextStyle(color: Colors.redAccent),
                 ),
               ),
             ],
@@ -190,14 +175,13 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
                 child: _isSaving
                     ? const LoadingSpinner(color: Colors.black)
                     : Text(
-                  'UPDATE PASSWORD',
-                  style: TextStyle(
-                    fontSize: Responsive.scaleText(context, 14),
-                  ),
-                ),
+                        loc.updatePassword,
+                        style: TextStyle(
+                          fontSize: Responsive.scaleText(context, 14),
+                        ),
+                      ),
               ),
             ),
-            SizedBox(height: Responsive.scale(context, 24)),
           ],
         ),
       ),

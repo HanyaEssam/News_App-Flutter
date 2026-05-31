@@ -262,4 +262,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get none => 'Aucun';
+
+  @override
+  String get yourTopicsTitle => 'VOS SUJETS';
+
+  @override
+  String get changePasswordTitle => 'CHANGER LE MOT DE PASSE';
+
+  @override
+  String get currentPassword => 'MOT DE PASSE ACTUEL';
+
+  @override
+  String get newPassword => 'NOUVEAU MOT DE PASSE';
+
+  @override
+  String get confirmPasswordTitle => 'CONFIRMER LE MOT DE PASSE';
+
+  @override
+  String get updatePassword => 'METTRE À JOUR LE MOT DE PASSE';
+
+  @override
+  String get chooseAvatar => 'CHOISIR UN AVATAR';
+
+  @override
+  String get update => 'Mettre à jour';
 }

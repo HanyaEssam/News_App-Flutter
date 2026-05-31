@@ -78,5 +78,13 @@
   "preferences": "PREFERENCES",
   "yourTopics": "Your Topics",
   "selected": "Selected",
-  "none": "None"
+  "none": "None",
+  "yourTopicsTitle": "YOUR TOPICS",
+  "changePasswordTitle": "CHANGE PASSWORD",
+  "currentPassword": "CURRENT PASSWORD",
+  "newPassword": "NEW PASSWORD",
+  "confirmPasswordTitle": "CONFIRM PASSWORD",
+  "updatePassword": "UPDATE PASSWORD",
+  "chooseAvatar": "CHOOSE AVATAR",
+  "update": "Update"
 }
