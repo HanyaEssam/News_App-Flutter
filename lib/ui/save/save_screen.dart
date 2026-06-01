@@ -41,12 +41,16 @@ class SaveScreen extends StatelessWidget {
       ),
       body: AppBackground(
         child: SafeArea(
+          bottom: true,
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: Responsive.scale(context, 20.0)),
-                child: Column(
+                padding: EdgeInsets.only(
+                  left: Responsive.scale(context, 24),
+                  right: Responsive.scale(context, 24),
+                  bottom: Responsive.scale(context, 20),
+                ),                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: Responsive.scale(context, 20)),

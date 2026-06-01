@@ -40,19 +40,6 @@ class BookmarkButton extends StatelessWidget {
             if (GuestChecker.checkAndPrompt(context)) return;
 
             SavedArticlesManager.toggleSave(article);
-
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  isCurrentlySaved ? 'Removed from Saved' : 'Article Saved!',
-                  style: TextStyle(
-                    fontSize: Responsive.scaleText(context, 14),
-                  ),
-                ),
-                duration: const Duration(seconds: 1),
-              ),
-            );
           },
         );
       },

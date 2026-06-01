@@ -37,9 +37,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   ];
 
   void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    setState(() => _currentIndex = index);
   }
 
   @override
@@ -192,7 +190,8 @@ class _HomeTabContentState extends State<HomeTabContent> {
         _userTopics = ['Technology', 'Business', 'Science'];
       }
 
-      final articlesData = await _newsService.getArticlesForTopics(_userTopics);
+      final articlesData =
+      await _newsService.getArticlesForTopics(_userTopics);
       final articles = articlesData.take(6).map((data) {
         final topic = data['matchedTopic'] ?? 'General';
         return ArticleModel(
@@ -242,8 +241,13 @@ class _HomeTabContentState extends State<HomeTabContent> {
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
+              constraints:
+              BoxConstraints(maxWidth: Responsive.maxWidth(context)),
               child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewPadding.bottom +
+                      Responsive.scale(context, 20),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -254,7 +258,10 @@ class _HomeTabContentState extends State<HomeTabContent> {
                       ),
                       child: Text(
                         AppLocalizations.of(context)!.dailyBriefing,
-                        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall
+                            ?.copyWith(
                           fontSize: Responsive.scaleText(context, 28),
                         ),
                       ),
@@ -268,14 +275,17 @@ class _HomeTabContentState extends State<HomeTabContent> {
                       ),
                       child: Text(
                         AppLocalizations.of(context)!.trendingNow,
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
                           fontSize: Responsive.scaleText(context, 22),
                         ),
                       ),
                     ),
                     SizedBox(height: Responsive.scale(context, 16)),
                     SizedBox(
-                      height: Responsive.scale(context, 320),
+                      height: Responsive.scale(context, 330),
                       child: _buildTrendingSection(),
                     ),
                     if (!isGuest) ...[
@@ -286,7 +296,10 @@ class _HomeTabContentState extends State<HomeTabContent> {
                         ),
                         child: Text(
                           AppLocalizations.of(context)!.forYou,
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
                             fontSize: Responsive.scaleText(context, 22),
                           ),
                         ),
@@ -341,7 +354,8 @@ class _HomeTabContentState extends State<HomeTabContent> {
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.symmetric(horizontal: Responsive.scale(context, 20)),
+      padding:
+      EdgeInsets.symmetric(horizontal: Responsive.scale(context, 20)),
       itemCount: _trendingArticles.length,
       itemBuilder: (context, index) {
         return TrendingCard(article: _trendingArticles[index]);

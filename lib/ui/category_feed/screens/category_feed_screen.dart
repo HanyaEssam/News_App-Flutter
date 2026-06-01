@@ -107,6 +107,7 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
     return Scaffold(
       body: AppBackground(
         child: SafeArea(
+          bottom: true,
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
@@ -114,9 +115,10 @@ class _CategoryFeedScreenState extends State<CategoryFeedScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Responsive.scale(context, 8),
-                      vertical: Responsive.scale(context, 12),
+                    padding: EdgeInsets.only(
+                      left: Responsive.scale(context, 24),
+                      right: Responsive.scale(context, 24),
+                      bottom: Responsive.scale(context, 20),
                     ),
                     child: Row(
                       children: [

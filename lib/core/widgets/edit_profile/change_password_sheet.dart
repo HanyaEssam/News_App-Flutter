@@ -79,9 +79,6 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
 
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Password updated successfully!')),
-        );
       }
     } on FirebaseAuthException catch (e) {
       setState(() {

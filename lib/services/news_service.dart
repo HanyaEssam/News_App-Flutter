@@ -4,9 +4,6 @@ import '../core/constants/api_constants.dart';
 
 class NewsService {
 
-  // ==========================================
-  // 1. NEWS API FETCHER
-  // ==========================================
   Future<List<Map<String, dynamic>>> _fetchFromNewsApi(String urlString, {String? topic}) async {
     try {
       final response = await http.get(Uri.parse(urlString));
@@ -18,9 +15,9 @@ class NewsService {
           if (topic != null) a['matchedTopic'] = topic;
           return {
             ...a as Map<String, dynamic>,
-            'urlToImage': a['urlToImage'] ?? '', // ✅ Default to empty string instead of null
+            'urlToImage': a['urlToImage'] ?? '',
           };
-        }).where((a) => a['title'] != null).toList(); // ✅ Only filter out missing titles
+        }).where((a) => a['title'] != null).toList();
       }
     } catch (e) {
       print('NewsAPI Error: $e');
@@ -28,9 +25,6 @@ class NewsService {
     return [];
   }
 
-  // ==========================================
-  // 2. GNEWS API FETCHER
-  // ==========================================
   Future<List<Map<String, dynamic>>> _fetchFromGNews(String urlString, {String? topic}) async {
     try {
       final response = await http.get(Uri.parse(urlString));
@@ -42,7 +36,7 @@ class NewsService {
           'title': a['title'],
           'description': a['description'],
           'content': a['content'],
-          'urlToImage': a['image'] ?? '', // ✅ Default to empty string
+          'urlToImage': a['image'] ?? '',
           'url': a['url'],
           'source': {'name': a['source']['name']},
           'publishedAt': a['publishedAt'],
@@ -55,9 +49,6 @@ class NewsService {
     return [];
   }
 
-  // ==========================================
-  // 3. NEWSDATA.IO FETCHER (Egyptian News)
-  // ==========================================
   Future<List<Map<String, dynamic>>> _fetchFromNewsData(String urlString, {String? topic}) async {
     try {
       final response = await http.get(Uri.parse(urlString));
@@ -66,10 +57,8 @@ class NewsService {
         final List articles = data['results'] ?? [];
 
         return articles.map((a) {
-          // 🔥 FIX: Intercept the paywall message
           String rawContent = a['content'] ?? '';
 
-          // If it mentions paid plans or is empty, fall back to the description
           if (rawContent.toLowerCase().contains('paid plan') || rawContent.isEmpty) {
             rawContent = a['description'] ?? 'Click "Read Full Article" below to view the full story.';
           }
@@ -77,7 +66,7 @@ class NewsService {
           return {
             'title': a['title'],
             'description': a['description'],
-            'content': rawContent, // ✅ Uses the clean summary we just generated
+            'content': rawContent,
             'urlToImage': a['image_url'] ?? '',
             'url': a['link'] ?? '',
             'source': {'name': a['source_id'] ?? 'Local News'},
@@ -92,28 +81,20 @@ class NewsService {
     return [];
   }
 
-  // ==========================================
-  // 3. PUBLIC METHODS (Used by your UI)
-  // ==========================================
-
-  // 🔥 Fetch Top Headlines (Used for Trending)
   Future<List<Map<String, dynamic>>> getTopHeadlines() async {
     final newsApiUrl = '${ApiConstants.newsApiBaseUrl}/top-headlines?country=us&apiKey=${ApiConstants.newsApiKey}';
     final gNewsUrl = '${ApiConstants.gNewsBaseUrl}/top-headlines?lang=en&apikey=${ApiConstants.gNewsApiKey}';
     final newsDataUrl = '${ApiConstants.newsDataBaseUrl}/news?country=eg&apikey=${ApiConstants.newsDataApiKey}';
 
-    // Fetch from all simultaneously
     final results1 = await _fetchFromNewsApi(newsApiUrl);
     final results2 = await _fetchFromGNews(gNewsUrl);
     final results3 = await _fetchFromNewsData(newsDataUrl);
 
-    // Combine them
     final combined = [...results1, ...results2, ...results3];
     combined.shuffle();
     return combined;
   }
 
-  // 🔥 Fetch based on Topics (Used for 'For You' and 'Category Feeds')
   Future<List<Map<String, dynamic>>> getArticlesForTopics(List<String> topics) async {
     if (topics.isEmpty) return getTopHeadlines();
 
@@ -136,29 +117,24 @@ class NewsService {
 
       String newsApiUrl;
       String gNewsUrl;
-      String newsDataUrl; // ✅ ADDED NEWSDATA VARIABLE
-
+      String newsDataUrl;
       if (category != null) {
         newsApiUrl = '${ApiConstants.newsApiBaseUrl}/top-headlines?country=us&category=$category&apiKey=${ApiConstants.newsApiKey}';
         gNewsUrl = '${ApiConstants.gNewsBaseUrl}/top-headlines?category=$category&lang=en&apikey=${ApiConstants.gNewsApiKey}';
-        // ✅ ADDED NEWSDATA CATEGORY URL
         newsDataUrl = '${ApiConstants.newsDataBaseUrl}/news?country=eg&category=$category&apikey=${ApiConstants.newsDataApiKey}';
       } else {
         newsApiUrl = '${ApiConstants.newsApiBaseUrl}/everything?q=$topic&sortBy=publishedAt&language=en&apiKey=${ApiConstants.newsApiKey}';
         gNewsUrl = '${ApiConstants.gNewsBaseUrl}/search?q=$topic&lang=en&apikey=${ApiConstants.gNewsApiKey}';
-        // ✅ ADDED NEWSDATA SEARCH URL
         newsDataUrl = '${ApiConstants.newsDataBaseUrl}/news?country=eg&q=$topic&apikey=${ApiConstants.newsDataApiKey}';
       }
 
-      // Fetch from all three
       final newsApiResults = await _fetchFromNewsApi(newsApiUrl, topic: topic);
       final gNewsResults = await _fetchFromGNews(gNewsUrl, topic: topic);
-      final newsDataResults = await _fetchFromNewsData(newsDataUrl, topic: topic); // ✅ FETCH NEWSDATA
+      final newsDataResults = await _fetchFromNewsData(newsDataUrl, topic: topic);
 
-      // Take articles from each API per topic
       allArticles.addAll(newsApiResults.take(3));
       allArticles.addAll(gNewsResults.take(3));
-      allArticles.addAll(newsDataResults.take(3)); // ✅ ADD NEWSDATA TO THE LIST
+      allArticles.addAll(newsDataResults.take(3));
     }
 
     allArticles.shuffle();

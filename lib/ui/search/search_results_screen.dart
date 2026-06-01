@@ -90,12 +90,15 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       ),
       body: AppBackground(
         child: SafeArea(
+          bottom: true,
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Responsive.scale(context, 20),
+                padding: EdgeInsets.only(
+                  left: Responsive.scale(context, 24),
+                  right: Responsive.scale(context, 24),
+                  bottom: Responsive.scale(context, 20),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

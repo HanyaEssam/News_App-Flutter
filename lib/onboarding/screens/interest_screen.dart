@@ -21,19 +21,20 @@ class _InterestScreenState extends State<InterestScreen> {
   bool _isLoading = false;
 
   final List<CategoryModel> _categories = const [
-    CategoryModel(title: 'Technology', imagePath: 'assets/images/TECH.jpeg', accentColor: AppColors.purple),
+    CategoryModel(title: 'Technology', imagePath: 'assets/images/TECH.jpeg', accentColor: AppColors.primary),
     CategoryModel(title: 'Sports', imagePath: 'assets/images/SPORTS.jpeg', accentColor: AppColors.green),
     CategoryModel(title: 'Politics', imagePath: 'assets/images/POLITICS.jpeg', accentColor: AppColors.orange),
     CategoryModel(title: 'Business', imagePath: 'assets/images/BUSINESS.jpeg', accentColor: AppColors.blue),
-    CategoryModel(title: 'Health', imagePath: 'assets/images/HEALTH.jpeg', accentColor: AppColors.green),
-    CategoryModel(title: 'Science', imagePath: 'assets/images/SCIENCE.jpeg', accentColor: AppColors.blue),
-    CategoryModel(title: 'Travel', imagePath: 'assets/images/TRAVEL.jpeg', accentColor: AppColors.blue),
+    CategoryModel(title: 'Health', imagePath: 'assets/images/HEALTH.jpeg', accentColor: AppColors.error),
+    CategoryModel(title: 'Science', imagePath: 'assets/images/SCIENCE.jpeg', accentColor: AppColors.purple),
+    CategoryModel(title: 'Travel', imagePath: 'assets/images/TRAVEL.jpeg', accentColor: AppColors.yellow),
     CategoryModel(title: 'General', imagePath: 'assets/images/GENERAL.jpeg', accentColor: AppColors.grey),
-    CategoryModel(title: 'Entertainment', imagePath: 'assets/images/ENTERTAINMENT.jpeg', accentColor: AppColors.grey),
+    CategoryModel(title: 'Entertainment', imagePath: 'assets/images/ENTERTAINMENT.jpeg', accentColor: AppColors.pink),
   ];
 
   String _getTranslatedCategory(BuildContext context, String title) {
-    final loc = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context);
+    if (loc == null) return title;
     switch (title.toLowerCase()) {
       case 'technology': return loc.tech;
       case 'sports': return loc.sports;
@@ -72,7 +73,9 @@ class _InterestScreenState extends State<InterestScreen> {
             .doc(user.uid)
             .update({'selectedTopics': _selectedCategories.toList()});
       }
-      if (mounted) Navigator.pushReplacementNamed(context, HomeLayout.routeName);
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, HomeLayout.routeName);
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
@@ -86,17 +89,25 @@ class _InterestScreenState extends State<InterestScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final loc = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context);
+
+    if (loc == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
       body: AppBackground(
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
+              constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Responsive.scale(context, 20),
+                padding: EdgeInsets.only(
+                  left: Responsive.scale(context, 20),
+                  right: Responsive.scale(context, 20),
+                  bottom: Responsive.scale(context, 20),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +141,11 @@ class _InterestScreenState extends State<InterestScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _categories.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: Responsive.isMobile(context) ? 2 : 3,
+                        crossAxisCount: Responsive.isDesktop(context)
+                            ? 4
+                            : Responsive.isTablet(context)
+                            ? 3
+                            : 2,
                         crossAxisSpacing: Responsive.scale(context, 14),
                         mainAxisSpacing: Responsive.scale(context, 14),
                         childAspectRatio: 0.85,
@@ -223,7 +238,8 @@ class _InterestScreenState extends State<InterestScreen> {
                     SizedBox(height: Responsive.scale(context, 12)),
                     Center(
                       child: Text(
-                        loc.calibrated(_selectedCategories.length.toString()),
+                        loc.calibrated(
+                            _selectedCategories.length.toString()),
                         style: theme.textTheme.labelMedium?.copyWith(
                           fontSize: Responsive.scaleText(context, 12),
                         ),
@@ -234,7 +250,8 @@ class _InterestScreenState extends State<InterestScreen> {
                       width: double.infinity,
                       height: Responsive.scale(context, 56),
                       child: FilledButton(
-                        onPressed: _selectedCategories.isNotEmpty && !_isLoading
+                        onPressed:
+                        _selectedCategories.isNotEmpty && !_isLoading
                             ? _saveInterestsAndContinue
                             : null,
                         child: _isLoading

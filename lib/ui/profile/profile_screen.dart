@@ -246,6 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: AppBackground(
         child: SafeArea(
+          bottom: true,
           child: _isLoading
               ? Center(
               child: CircularProgressIndicator(
@@ -255,8 +256,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               constraints:BoxConstraints(maxWidth: Responsive.maxWidth(context)),
 
           child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                    horizontal: Responsive.scale(context, 20)),
+            padding: EdgeInsets.only(
+              left: Responsive.scale(context, 24),
+              right: Responsive.scale(context, 24),
+              bottom: Responsive.scale(context, 20),
+            ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -362,9 +366,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         await FirebaseAuth.instance.signOut();
                         if (context.mounted) {
                           SavedArticlesManager.clearSession();
-                          Provider.of<LocaleProvider>(context,
-                              listen: false)
-                              .setLocale(const Locale('en'));
                           Navigator.pushNamedAndRemoveUntil(
                             context,
                             LoginScreen.routeName,

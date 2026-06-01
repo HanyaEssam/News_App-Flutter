@@ -79,12 +79,16 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
       ),
       body: AppBackground(
         child: SafeArea(
+          bottom: true,
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(Responsive.scale(context, 20)),
-                child: Column(
+                padding: EdgeInsets.only(
+                  left: Responsive.scale(context, 24),
+                  right: Responsive.scale(context, 24),
+                  bottom: Responsive.scale(context, 20),
+                ),                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ArticleContent(article: widget.article),
