@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news/ui/auth/login/login_screen.dart';
 import 'package:news/ui/auth/signup_screen/signup_screen.dart';
 import 'package:news/core/theme/app_colors.dart';
+import 'package:news/l10n/app_localizations.dart';
 import '../../utils/responsive.dart';
 
 class GuestWidget extends StatelessWidget {
@@ -18,6 +19,8 @@ class GuestWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
@@ -60,7 +63,7 @@ class GuestWidget extends StatelessWidget {
                   onPressed: () =>
                       Navigator.pushNamed(context, SignupScreen.routeName),
                   child: Text(
-                    'CREATE ACCOUNT',
+                    loc.createAccount.toUpperCase(),
                     style: TextStyle(
                       fontSize: Responsive.scaleText(context, 14),
                     ),
@@ -75,7 +78,7 @@ class GuestWidget extends StatelessWidget {
                   onPressed: () =>
                       Navigator.pushNamed(context, LoginScreen.routeName),
                   child: Text(
-                    'LOGIN',
+                    loc.login.toUpperCase(),
                     style: TextStyle(
                       fontSize: Responsive.scaleText(context, 14),
                     ),

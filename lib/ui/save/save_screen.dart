@@ -24,10 +24,10 @@ class SaveScreen extends StatelessWidget {
           title: Text(AppLocalizations.of(context)!.appTitle.toUpperCase()),
         ),
         body: AppBackground(
-          child: const GuestWidget(
+          child:  GuestWidget(
             icon: Icons.bookmark_outline,
-            title: 'Your Private Library',
-            subtitle: 'Create an account to bookmark articles and build your curated intelligence feed.',
+            title: AppLocalizations.of(context)!.guestLibraryTitle,
+            subtitle: AppLocalizations.of(context)!.guestLibrarySubtitle,
           ),
         ),
       );

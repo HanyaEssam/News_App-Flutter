@@ -3,7 +3,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/models/article_model.dart';
 import '../bookmark/bookmark_button.dart';
 import 'package:news/ui/article_details/article_details_screen.dart';
-import '../../../core/utils/responsive.dart'; // 🔥 Import your helper
+import '../../../core/utils/responsive.dart';
 
 class SavedArticleCard extends StatelessWidget {
   final ArticleModel article;

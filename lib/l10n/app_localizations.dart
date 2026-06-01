@@ -631,6 +631,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update'**
   String get update;
+
+  /// No description provided for @guestProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest Profile'**
+  String get guestProfileTitle;
+
+  /// No description provided for @guestProfileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in to track your reading stats, manage your topics, and adjust your preferences.'**
+  String get guestProfileSubtitle;
+
+  /// No description provided for @guestLibraryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Private Library'**
+  String get guestLibraryTitle;
+
+  /// No description provided for @guestLibrarySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account to bookmark articles and build your curated intelligence feed.'**
+  String get guestLibrarySubtitle;
 }
 
 class _AppLocalizationsDelegate

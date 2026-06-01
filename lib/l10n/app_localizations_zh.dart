@@ -279,4 +279,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get update => '更新';
+
+  @override
+  String get guestProfileTitle => '访客资料';
+
+  @override
+  String get guestProfileSubtitle => '登录以跟踪您的阅读统计、管理您的主题并调整您的偏好设置。';
+
+  @override
+  String get guestLibraryTitle => '您的私人图书馆';
+
+  @override
+  String get guestLibrarySubtitle => '创建账户以收藏文章并打造您的个性化资讯流。';
 }
