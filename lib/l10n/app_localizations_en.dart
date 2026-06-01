@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Insightly';
+  String get appTitle => 'INSIGHTLY';
 
   @override
   String get dailyBriefing => 'Your daily briefing';
@@ -87,7 +87,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trendingLabel => 'Trending';
 
   @override
-  String get recent => 'Recent';
+  String get recent => 'RECENT';
 
   @override
   String get minRead => 'min read';
@@ -141,19 +141,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginSubtitle => 'Sign in to continue your curated narrative.';
 
   @override
-  String get emailAddress => 'Email Address';
+  String get emailAddress => 'EMAIL ADDRESS';
 
   @override
-  String get password => 'Password';
+  String get password => 'PASSWORD';
 
   @override
-  String get signIn => 'Sign In';
+  String get signIn => 'SIGN IN';
 
   @override
-  String get orContinueWith => 'Or continue with';
+  String get orContinueWith => 'OR CONTINUE WITH';
 
   @override
-  String get continueWithGoogle => 'Continue with Google';
+  String get continueWithGoogle => 'CONTINUE WITH GOOGLE';
 
   @override
   String get dontHaveAccount => 'Don\'t have an account? ';
@@ -162,10 +162,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create Account';
 
   @override
-  String get continueAsGuest => 'Continue as Guest';
+  String get continueAsGuest => 'CONTINUE AS GUEST';
 
   @override
-  String get footerCopyright => '© 2026 Insightly - Privacy & Terms.';
+  String get footerCopyright => '© 2026 INSIGHTLY. ALL RIGHTS RESERVED.';
 
   @override
   String get joinInsightly => 'Join Insightly';
@@ -174,7 +174,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signupSubtitle => 'Where the world meets your screen.';
 
   @override
-  String get fullName => 'Full Name';
+  String get fullName => 'FULL NAME';
 
   @override
   String get confirmPassword => 'Confirm Password';
@@ -195,19 +195,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordsDoNotMatch => 'Passwords do not match!';
 
   @override
-  String get passwordMinLength => 'Password must be at least 8 characters long.';
+  String get passwordMinLength =>
+      'Password must be at least 8 characters long.';
 
   @override
-  String get passwordUppercase => 'Password must contain at least one uppercase letter.';
+  String get passwordUppercase =>
+      'Password must contain at least one uppercase letter.';
 
   @override
-  String get passwordLowercase => 'Password must contain at least one lowercase letter.';
+  String get passwordLowercase =>
+      'Password must contain at least one lowercase letter.';
 
   @override
   String get passwordNumber => 'Password must contain at least one number.';
 
   @override
-  String get passwordSpecialChar => 'Password must contain at least one special character.';
+  String get passwordSpecialChar =>
+      'Password must contain at least one special character.';
 
   @override
   String get topTopic => 'Top Topic';
@@ -216,7 +220,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get designYourDaily => 'DESIGN YOUR DAILY';
 
   @override
-  String get pickTopicsSubtitle => 'Pick a few topics you love so we can tailor your feed just for you.';
+  String get pickTopicsInstruction =>
+      'Pick a few topics you love so we can tailor your feed just for you.';
 
   @override
   String calibrated(Object count) {
@@ -284,11 +289,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get guestProfileTitle => 'Guest Profile';
 
   @override
-  String get guestProfileSubtitle => 'Log in to track your reading stats, manage your topics, and adjust your preferences.';
+  String get guestProfileSubtitle =>
+      'Log in to track your reading stats, manage your topics, and adjust your preferences.';
 
   @override
   String get guestLibraryTitle => 'Your Private Library';
 
   @override
-  String get guestLibrarySubtitle => 'Create an account to bookmark articles and build your curated intelligence feed.';
+  String get guestLibrarySubtitle =>
+      'Create an account to bookmark articles and build your curated intelligence feed.';
+
+  @override
+  String commentsCount(Object count) {
+    return '$count COMMENTS';
+  }
+
+  @override
+  String get addToBriefing => '...ADD TO BRIEFING';
+
+  @override
+  String get postComment => 'POST COMMENT';
+
+  @override
+  String get noCommentsYet =>
+      'No comments yet. Be the first to share your thoughts!';
+
+  @override
+  String get completed => 'COMPLETED';
+
+  @override
+  String get extractingArticle => 'Extracting full article...';
+
+  @override
+  String get trending => 'TRENDING';
+
+  @override
+  String get comments => 'COMMENTS';
+
+  @override
+  String get maxTopicsAllowed => 'Max 5 topics allowed';
 }

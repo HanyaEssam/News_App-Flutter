@@ -66,17 +66,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (doc.exists && doc.data() != null) {
           await ThemeController.toggleTheme(doc.data()!['isDarkMode'] ?? true);
-          if (doc.data()!.containsKey('language') && context.mounted) {
-            Provider.of<LocaleProvider>(context, listen: false)
-                .setLocale(Locale(doc.data()!['language']));
-          }
+          // 🔥 REMOVED: Language override from Firestore
         }
 
         await SavedArticlesManager.loadUserSavedArticles();
 
         if (context.mounted) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/home', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         }
       }
     } catch (e) {
@@ -100,30 +96,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (doc.exists && doc.data() != null) {
           await ThemeController.toggleTheme(doc.data()!['isDarkMode'] ?? true);
-          if (doc.data()!.containsKey('language') && context.mounted) {
-            Provider.of<LocaleProvider>(context, listen: false)
-                .setLocale(Locale(doc.data()!['language']));
-          }
+          // 🔥 REMOVED: Language override from Firestore
 
           await SavedArticlesManager.loadUserSavedArticles();
 
           if (context.mounted) {
             final topics = doc.data()?['selectedTopics'] ?? [];
             if (topics.isEmpty) {
-              Navigator.pushReplacementNamed(
-                  context, InterestScreen.routeName);
+              Navigator.pushReplacementNamed(context, InterestScreen.routeName);
             } else {
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (route) => false);
+                context,
+                '/home',
+                (route) => false,
+              );
             }
           }
         } else {
           await SavedArticlesManager.loadUserSavedArticles();
 
+          // 🔥 Only set the language in Firestore if it's a brand new user
           final currentLocale =
-              Provider.of<LocaleProvider>(context, listen: false)
-                  .locale
-                  ?.languageCode ?? 'en';
+              Provider.of<LocaleProvider>(
+                context,
+                listen: false,
+              ).locale?.languageCode ??
+              'en';
 
           await FirebaseFirestore.instance
               .collection('users')
@@ -131,15 +129,15 @@ class _LoginScreenState extends State<LoginScreen> {
               .set({'language': currentLocale}, SetOptions(merge: true));
 
           if (context.mounted) {
-            Navigator.pushReplacementNamed(
-                context, InterestScreen.routeName);
+            Navigator.pushReplacementNamed(context, InterestScreen.routeName);
           }
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -171,10 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: LanguagePicker(),
                   ),
                   SizedBox(height: Responsive.scale(context, 20)),
-                  AuthHeader(
-                    title: loc.appTitle,
-                    subtitle: loc.loginSubtitle,
-                  ),
+                  AuthHeader(title: loc.appTitle, subtitle: loc.loginSubtitle),
                   SizedBox(height: Responsive.scale(context, 32)),
                   AuthCard(
                     child: Column(
@@ -193,7 +188,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: _obscurePassword,
                           controller: _passwordController,
                           onToggleVisibility: () => setState(
-                                  () => _obscurePassword = !_obscurePassword),
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
                         if (_errorMessage != null) ...[
                           SizedBox(height: Responsive.scale(context, 16)),
@@ -207,22 +203,24 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: _isLoading ? null : _handleSignIn,
                             child: _isLoading
                                 ? SizedBox(
-                              height: Responsive.scale(context, 20),
-                              width: Responsive.scale(context, 20),
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimary,
-                              ),
-                            )
+                                    height: Responsive.scale(context, 20),
+                                    width: Responsive.scale(context, 20),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
+                                    ),
+                                  )
                                 : Text(
-                              loc.signIn,
-                              style: TextStyle(
-                                fontSize:
-                                Responsive.scaleText(context, 14),
-                              ),
-                            ),
+                                    loc.signIn,
+                                    style: TextStyle(
+                                      fontSize: Responsive.scaleText(
+                                        context,
+                                        14,
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ),
                         SizedBox(height: Responsive.scale(context, 32)),
@@ -231,15 +229,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         SocialAuthButton(
                           text: loc.continueWithGoogle,
                           imagePath: 'assets/images/google.png',
-                          onPressed:
-                          _isLoading ? () {} : _handleGoogleSignIn,
+                          onPressed: _isLoading ? () {} : _handleGoogleSignIn,
                         ),
                         SizedBox(height: Responsive.scale(context, 32)),
                         AuthLinkText(
                           message: loc.dontHaveAccount,
                           linkText: loc.createAccount,
                           onTap: () => Navigator.pushReplacementNamed(
-                              context, '/signup'),
+                            context,
+                            '/signup',
+                          ),
                         ),
                         SizedBox(height: Responsive.scale(context, 24)),
                         SizedBox(
@@ -251,7 +250,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               SavedArticlesManager.clearSession();
                               if (context.mounted) {
                                 Navigator.pushNamedAndRemoveUntil(
-                                    context, '/home', (route) => false);
+                                  context,
+                                  '/home',
+                                  (route) => false,
+                                );
                               }
                             },
                             child: Text(

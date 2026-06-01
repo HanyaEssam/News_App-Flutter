@@ -216,7 +216,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get designYourDaily => '定制您的日报';
 
   @override
-  String get pickTopicsSubtitle => '选择您喜爱的几个主题，以便我们为您量身定制内容。';
+  String get pickTopicsInstruction =>
+      'Pick a few topics you love so we can tailor your feed just for you.';
 
   @override
   String calibrated(Object count) {
@@ -291,4 +292,33 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get guestLibrarySubtitle => '创建账户以收藏文章并打造您的个性化资讯流。';
+
+  @override
+  String commentsCount(Object count) {
+    return '$count 条评论';
+  }
+
+  @override
+  String get addToBriefing => '...添加到简报';
+
+  @override
+  String get postComment => '发表评论';
+
+  @override
+  String get noCommentsYet => '暂无评论。快来分享你的想法吧！';
+
+  @override
+  String get completed => '已完成';
+
+  @override
+  String get extractingArticle => '正在提取全文...';
+
+  @override
+  String get trending => 'TRENDING';
+
+  @override
+  String get comments => 'COMMENTS';
+
+  @override
+  String get maxTopicsAllowed => 'Max 5 topics allowed';
 }

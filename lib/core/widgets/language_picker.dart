@@ -138,15 +138,21 @@ class _LanguageTile extends StatelessWidget {
       ),
       trailing: isSelected
           ? Icon(
-        Icons.check_circle,
-        color: theme.colorScheme.primary,
-        size: Responsive.scale(context, 22),
-      )
+              Icons.check_circle,
+              color: theme.colorScheme.primary,
+              size: Responsive.scale(context, 22),
+            )
           : null,
-      onTap: () {
-        Provider.of<LocaleProvider>(context, listen: false)
-            .setLocale(Locale(code));
-        Navigator.pop(context);
+      onTap: () async {
+        // 🔥 Use setLocale here to trigger the persistence logic in LocaleProvider
+        await Provider.of<LocaleProvider>(
+          context,
+          listen: false,
+        ).setLocale(Locale(code));
+
+        if (context.mounted) {
+          Navigator.pop(context);
+        }
       },
     );
   }

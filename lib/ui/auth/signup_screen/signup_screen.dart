@@ -15,7 +15,8 @@ import '../../../core/widgets/loading_spinner.dart';
 import '../../../services/auth_service.dart';
 import '../../onboarding/screens/interest_screen.dart';
 import '../../../core/utils/responsive.dart';
-
+import 'package:provider/provider.dart';
+import '../../../core/utils/locale_provider.dart';
 
 class SignupScreen extends StatefulWidget {
   static const String routeName = '/signup';
@@ -83,6 +84,21 @@ class _SignupScreenState extends State<SignupScreen> {
       );
 
       if (user != null && mounted) {
+        // 🔥 Save the current selected language to Firestore for the new user
+        final currentLocale =
+            Provider.of<LocaleProvider>(
+              context,
+              listen: false,
+            ).locale?.languageCode ??
+            'en';
+
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'fullName': name,
+          'email': email,
+          'language': currentLocale,
+          'isDarkMode': true,
+        }, SetOptions(merge: true));
+
         Navigator.pushReplacementNamed(context, InterestScreen.routeName);
       }
     } catch (e) {
@@ -94,36 +110,36 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Future<void> _handleGoogleSignIn() async {
     setState(() => _isLoading = true);
-
     try {
       final user = await _authService.signInWithGoogle();
-
       if (user != null && mounted) {
         final doc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .get();
-
         if (doc.exists) {
-          if (doc.data()!.containsKey('isDarkMode')) {
-            ThemeController.toggleTheme(doc.data()!['isDarkMode']);
-          } else {
-            ThemeController.toggleTheme(true);
-          }
-
-          List topics = doc.data()?['selectedTopics'] ?? [];
-
-          if (topics.isEmpty) {
-            Navigator.pushReplacementNamed(context, InterestScreen.routeName);
-          } else {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/home', (route) => false);
-          }
+          // Returning user: Just navigate
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        } else {
+          // New Google user: Set language preference
+          final currentLocale =
+              Provider.of<LocaleProvider>(
+                context,
+                listen: false,
+              ).locale?.languageCode ??
+              'en';
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .set({'language': currentLocale}, SetOptions(merge: true));
+          Navigator.pushReplacementNamed(context, InterestScreen.routeName);
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      if (mounted)
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -140,15 +156,12 @@ class _SignupScreenState extends State<SignupScreen> {
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
             child: SingleChildScrollView(
-              padding: EdgeInsets.only(
-                left: Responsive.scale(context, 24),
-                right: Responsive.scale(context, 24),
-                bottom: Responsive.scale(context, 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.scale(context, 24),
+                vertical: Responsive.scale(context, 20),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: Responsive.scale(context, 12)),
                   const Align(
                     alignment: Alignment.centerRight,
                     child: LanguagePicker(),
@@ -182,7 +195,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           isPassword: true,
                           obscureText: _obscurePassword,
                           onToggleVisibility: () => setState(
-                                  () => _obscurePassword = !_obscurePassword),
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
                         SizedBox(height: Responsive.scale(context, 20)),
                         AuthTextField(
@@ -192,14 +206,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           isPassword: true,
                           obscureText: _obscureConfirm,
                           onToggleVisibility: () => setState(
-                                  () => _obscureConfirm = !_obscureConfirm),
+                            () => _obscureConfirm = !_obscureConfirm,
+                          ),
                         ),
                         if (_errorMessage != null) ...[
                           SizedBox(height: Responsive.scale(context, 24)),
                           AuthErrorBox(message: _errorMessage!),
-                          SizedBox(height: Responsive.scale(context, 24)),
-                        ] else
-                          SizedBox(height: Responsive.scale(context, 32)),
+                        ],
+                        SizedBox(height: Responsive.scale(context, 32)),
                         SizedBox(
                           width: double.infinity,
                           height: Responsive.scale(context, 52),
@@ -208,12 +222,14 @@ class _SignupScreenState extends State<SignupScreen> {
                             child: _isLoading
                                 ? const LoadingSpinner()
                                 : Text(
-                              loc.createAccount,
-                              style: TextStyle(
-                                fontSize:
-                                Responsive.scaleText(context, 14),
-                              ),
-                            ),
+                                    loc.createAccount,
+                                    style: TextStyle(
+                                      fontSize: Responsive.scaleText(
+                                        context,
+                                        14,
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ),
                         SizedBox(height: Responsive.scale(context, 20)),
@@ -223,22 +239,20 @@ class _SignupScreenState extends State<SignupScreen> {
                           text: loc.continueWithGoogle,
                           imagePath: 'assets/images/google.png',
                           iconColor: Colors.blue,
-                          onPressed:
-                          _isLoading ? () {} : _handleGoogleSignIn,
+                          onPressed: _isLoading ? () {} : _handleGoogleSignIn,
                         ),
                         SizedBox(height: Responsive.scale(context, 15)),
                         AuthLinkText(
                           message: loc.alreadyHaveAccount,
                           linkText: loc.login,
-                          onTap: () => Navigator.pushReplacementNamed(
-                              context, '/login'),
+                          onTap: () =>
+                              Navigator.pushReplacementNamed(context, '/login'),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: Responsive.scale(context, 20)),
+                  SizedBox(height: Responsive.scale(context, 32)),
                   AuthFooter(text: loc.footerCopyright),
-                  SizedBox(height: Responsive.scale(context, 24)),
                 ],
               ),
             ),

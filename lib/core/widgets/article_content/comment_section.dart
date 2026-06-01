@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:news/l10n/app_localizations.dart'; // Ensure this path is correct
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/models/article_model.dart';
 import '../../../../core/utils/guest_checker.dart';
@@ -77,9 +78,9 @@ class _CommentsSectionState extends State<CommentsSection> {
       if (mounted) FocusScope.of(context).unfocus();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to post comment: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to post comment: $e')));
       }
     } finally {
       if (mounted) setState(() => _isPosting = false);
@@ -134,6 +135,7 @@ class _CommentsSectionState extends State<CommentsSection> {
   @override
   Widget build(BuildContext context) {
     final color = widget.article.categoryColor;
+    final loc = AppLocalizations.of(context)!; // 🔥 Localization object
 
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
@@ -150,7 +152,7 @@ class _CommentsSectionState extends State<CommentsSection> {
             Row(
               children: [
                 Text(
-                  "Comments",
+                  loc.comments,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontSize: Responsive.scaleText(context, 22),
                   ),
@@ -163,8 +165,9 @@ class _CommentsSectionState extends State<CommentsSection> {
                   ),
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.15),
-                    borderRadius:
-                    BorderRadius.circular(Responsive.scale(context, 12)),
+                    borderRadius: BorderRadius.circular(
+                      Responsive.scale(context, 12),
+                    ),
                   ),
                   child: Text(
                     "$commentCount",
@@ -181,8 +184,9 @@ class _CommentsSectionState extends State<CommentsSection> {
               padding: EdgeInsets.all(Responsive.scale(context, 16)),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
-                borderRadius:
-                BorderRadius.circular(Responsive.scale(context, 16)),
+                borderRadius: BorderRadius.circular(
+                  Responsive.scale(context, 16),
+                ),
                 border: Border.all(color: AppColors.border.withOpacity(0.5)),
               ),
               child: Column(
@@ -196,18 +200,8 @@ class _CommentsSectionState extends State<CommentsSection> {
                       fontSize: Responsive.scaleText(context, 14),
                     ),
                     decoration: InputDecoration(
-                      hintText: "Add to the briefing...",
-                      hintStyle:
-                      Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: Responsive.scaleText(context, 14),
-                      ),
+                      hintText: loc.addToBriefing, // 🔥 Localized
                       border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      fillColor: Colors.transparent,
-                      filled: true,
                       contentPadding: EdgeInsets.zero,
                     ),
                   ),
@@ -216,43 +210,20 @@ class _CommentsSectionState extends State<CommentsSection> {
                     onPressed: _isPosting
                         ? null
                         : () {
-                      if (GuestChecker.checkAndPrompt(context)) return;
-                      _postComment();
-                    },
-                    style: FilledButton.styleFrom(
-                      backgroundColor:
-                      Theme.of(context).colorScheme.primary,
-                      foregroundColor:
-                      Theme.of(context).colorScheme.onPrimary,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Responsive.scale(context, 24),
-                        vertical: Responsive.scale(context, 14),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          Responsive.scale(context, 12),
-                        ),
-                      ),
-                    ),
+                            if (GuestChecker.checkAndPrompt(context)) return;
+                            _postComment();
+                          },
                     child: _isPosting
-                        ? SizedBox(
-                      width: Responsive.scale(context, 16),
-                      height: Responsive.scale(context, 16),
-                      child: const CircularProgressIndicator(
-                        color: AppColors.darkText,
-                        strokeWidth: 2,
-                      ),
-                    )
+                        ? const CircularProgressIndicator(
+                            color: AppColors.darkText,
+                            strokeWidth: 2,
+                          )
                         : Text(
-                      "POST COMMENT",
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelSmall
-                          ?.copyWith(
-                        color: AppColors.darkText,
-                        fontSize: Responsive.scaleText(context, 10),
-                      ),
-                    ),
+                            loc.postComment, // 🔥 Localized
+                            style: TextStyle(
+                              fontSize: Responsive.scaleText(context, 10),
+                            ),
+                          ),
                   ),
                 ],
               ),
@@ -266,7 +237,7 @@ class _CommentsSectionState extends State<CommentsSection> {
                   vertical: Responsive.scale(context, 20),
                 ),
                 child: Text(
-                  "No comments yet. Be the first to share your thoughts!",
+                  loc.noCommentsYet, // 🔥 Localized
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.mutedText,
                     fontSize: Responsive.scaleText(context, 14),
@@ -281,64 +252,16 @@ class _CommentsSectionState extends State<CommentsSection> {
                 separatorBuilder: (context, index) =>
                     SizedBox(height: Responsive.scale(context, 24)),
                 itemBuilder: (context, index) {
-                  var data = snapshot.data!.docs[index].data()
-                  as Map<String, dynamic>;
-
-                  String userName = data['userName'] ?? 'Reader';
-                  String text = data['text'] ?? '';
-                  String avatarUrl = data['avatarUrl'] ?? '';
-                  Timestamp? timestamp = data['timestamp'] as Timestamp?;
-
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildAvatar(avatarUrl, userName, color),
-                      SizedBox(width: Responsive.scale(context, 16)),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  userName,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(
-                                    color: AppColors.white,
-                                    fontSize:
-                                    Responsive.scaleText(context, 13),
-                                  ),
-                                ),
-                                SizedBox(width: Responsive.scale(context, 12)),
-                                Text(
-                                  _getTimeAgo(timestamp),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall
-                                      ?.copyWith(
-                                    fontSize:
-                                    Responsive.scaleText(context, 10),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: Responsive.scale(context, 8)),
-                            Text(
-                              text,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                fontSize:
-                                Responsive.scaleText(context, 14),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  var data =
+                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                  return ListTile(
+                    leading: _buildAvatar(
+                      data['avatarUrl'] ?? '',
+                      data['userName'] ?? 'Reader',
+                      color,
+                    ),
+                    title: Text(data['userName'] ?? 'Reader'),
+                    subtitle: Text(data['text'] ?? ''),
                   );
                 },
               ),

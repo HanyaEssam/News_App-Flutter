@@ -9,16 +9,16 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appTitle => 'إنسايتلي';
+  String get appTitle => 'إنسایتلي';
 
   @override
   String get dailyBriefing => 'موجزك اليومي';
 
   @override
-  String get trendingNow => 'الأكثر تداولاً';
+  String get trendingNow => 'الأكثر رواجاً الآن';
 
   @override
-  String get forYou => 'من أجلك';
+  String get forYou => 'لك';
 
   @override
   String get profile => 'الملف الشخصي';
@@ -27,19 +27,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settings => 'الإعدادات';
 
   @override
-  String get articlesRead => 'مقالات قرأتها';
+  String get articlesRead => 'المقالات المقروءة';
 
   @override
-  String get minutesSaved => 'دقائق وفرتها';
+  String get minutesSaved => 'الدقائق المحفوظة';
 
   @override
   String get appearance => 'المظهر';
 
   @override
-  String get darkMode => 'الوضع الليلي';
+  String get darkMode => 'الوضع المظلم';
 
   @override
-  String get lightMode => 'الوضع النهاري';
+  String get lightMode => 'الوضع الفاتح';
 
   @override
   String get language => 'اللغة';
@@ -51,10 +51,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get home => 'الرئيسية';
 
   @override
-  String get search => 'بحث';
+  String get search => 'البحث';
 
   @override
-  String get saved => 'العناصر المحفوظة';
+  String get saved => 'المحفوظات';
 
   @override
   String get tech => 'تكنولوجيا';
@@ -84,64 +84,64 @@ class AppLocalizationsAr extends AppLocalizations {
   String get general => 'عام';
 
   @override
-  String get trendingLabel => 'شائع';
+  String get trendingLabel => 'رائج';
 
   @override
   String get recent => 'حديث';
 
   @override
-  String get minRead => 'دقيقة قراءة';
+  String get minRead => 'دقيقة للقراءة';
 
   @override
   String get mainSource => 'المصدر الرئيسي';
 
   @override
   String basedOnInterest(Object category) {
-    return 'بناءً على اهتمامك في $category';
+    return 'بناءً على اهتمامك بـ $category';
   }
 
   @override
   String feedTitle(Object category) {
-    return 'أخبار $category';
+    return 'خلاصة $category';
   }
 
   @override
-  String get intelligence => 'الذكاء';
+  String get intelligence => 'ذكاء';
 
   @override
-  String get searchPageTitle => 'بحث';
+  String get searchPageTitle => 'البحث';
 
   @override
-  String get searchHint => 'ابحث عن الأخبار، المواضيع، أو المؤلفين';
+  String get searchHint => 'ابحث عن أخبار أو مواضيع أو مؤلفين';
 
   @override
   String get recentSearches => 'عمليات البحث الأخيرة';
 
   @override
-  String get trendingTopics => 'المواضيع الشائعة';
+  String get trendingTopics => 'المواضيع الرائجة';
 
   @override
-  String get savedPageTitle => 'العناصر المحفوظة';
+  String get savedPageTitle => 'المقالات المحفوظة';
 
   @override
   String savedArticlesCount(Object count) {
-    return 'المقالات المحفوظة $count';
+    return '$count مقالات محفوظة';
   }
 
   @override
   String get noSavedArticles => 'لا توجد مقالات محفوظة بعد.';
 
   @override
-  String get curationSpaceEmpty => 'مساحة الحفظ الخاصة بك فارغة.';
+  String get curationSpaceEmpty => 'مساحة التنسيق الخاصة بك فارغة.';
 
   @override
   String get startExploring => 'ابدأ الاستكشاف';
 
   @override
-  String get loginSubtitle => 'سجل الدخول لمتابعة رحلتك المعرفية.';
+  String get loginSubtitle => 'سجل الدخول لمتابعة سيرتك المنسقة.';
 
   @override
-  String get emailAddress => 'البريد الإلكتروني';
+  String get emailAddress => 'عنوان البريد الإلكتروني';
 
   @override
   String get password => 'كلمة المرور';
@@ -150,10 +150,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signIn => 'تسجيل الدخول';
 
   @override
-  String get orContinueWith => 'أو تابع باستخدام';
+  String get orContinueWith => 'أو تابع عبر';
 
   @override
-  String get continueWithGoogle => 'المتابعة مع جوجل';
+  String get continueWithGoogle => 'المتابعة عبر جوجل';
 
   @override
   String get dontHaveAccount => 'ليس لديك حساب؟ ';
@@ -162,13 +162,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createAccount => 'إنشاء حساب';
 
   @override
-  String get continueAsGuest => 'المتابعة كزائر';
+  String get continueAsGuest => 'المتابعة كضيف';
 
   @override
-  String get footerCopyright => '© 2026 إنسايتفول - الخصوصية والشروط.';
+  String get footerCopyright => '© 2026 إنسایتلي. جميع الحقوق محفوظة.';
 
   @override
-  String get joinInsightly => 'انضم إلى إنسايتلي';
+  String get joinInsightly => 'انضم إلى إنسایتلي';
 
   @override
   String get signupSubtitle => 'حيث يلتقي العالم بشاشتك.';
@@ -189,38 +189,44 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pleaseFillFields => 'يرجى ملء جميع الحقول';
 
   @override
-  String get invalidEmail => 'يرجى إدخال بريد إلكتروني صحيح';
+  String get invalidEmail => 'يرجى إدخال بريد إلكتروني صالح';
 
   @override
   String get passwordsDoNotMatch => 'كلمات المرور غير متطابقة!';
 
   @override
-  String get passwordMinLength => 'يجب أن تكون كلمة المرور 8 أحرف على الأقل.';
+  String get passwordMinLength =>
+      'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.';
 
   @override
-  String get passwordUppercase => 'يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل.';
+  String get passwordUppercase =>
+      'يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل.';
 
   @override
-  String get passwordLowercase => 'يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل.';
+  String get passwordLowercase =>
+      'يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل.';
 
   @override
-  String get passwordNumber => 'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.';
+  String get passwordNumber =>
+      'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.';
 
   @override
-  String get passwordSpecialChar => 'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.';
+  String get passwordSpecialChar =>
+      'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.';
 
   @override
-  String get topTopic => 'الموضوع المفضل';
+  String get topTopic => 'أهم المواضيع';
 
   @override
   String get designYourDaily => 'صمم موجزك اليومي';
 
   @override
-  String get pickTopicsSubtitle => 'اختر بعض المواضيع التي تحبها لنتمكن من تخصيص موجزك.';
+  String get pickTopicsInstruction =>
+      'اختر بضعة مواضيع تحبها حتى نتمكن من تخصيص خلاصتك لك.';
 
   @override
   String calibrated(Object count) {
-    return '$count من 5 مواضيع تم ضبطها';
+    return '$count من 5 مواضيع تمت معايرتها';
   }
 
   @override
@@ -275,20 +281,51 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updatePassword => 'تحديث كلمة المرور';
 
   @override
-  String get chooseAvatar => 'اختر الصورة الرمزية';
+  String get chooseAvatar => 'اختر صورة شخصية';
 
   @override
   String get update => 'تحديث';
 
   @override
-  String get guestProfileTitle => 'ملف الزائر';
+  String get guestProfileTitle => 'ملف تعريف ضيف';
 
   @override
-  String get guestProfileSubtitle => 'سجّل الدخول لتتبع إحصائيات القراءة وإدارة المواضيع وضبط التفضيلات.';
+  String get guestProfileSubtitle =>
+      'سجل الدخول لتتبع إحصائيات القراءة وإدارة مواضيعك وتعديل تفضيلاتك.';
 
   @override
   String get guestLibraryTitle => 'مكتبتك الخاصة';
 
   @override
-  String get guestLibrarySubtitle => 'أنشئ حسابًا لحفظ المقالات وبناء موجزك المعرفي المخصص.';
+  String get guestLibrarySubtitle =>
+      'أنشئ حساباً لحفظ المقالات وبناء خلاصة ذكائك المنسقة.';
+
+  @override
+  String commentsCount(Object count) {
+    return '$count تعليقات';
+  }
+
+  @override
+  String get addToBriefing => '...أضف إلى الموجز';
+
+  @override
+  String get postComment => 'نشر تعليق';
+
+  @override
+  String get noCommentsYet => 'لا توجد تعليقات بعد. كن أول من يشارك أفكاره!';
+
+  @override
+  String get completed => 'تم الإكمال';
+
+  @override
+  String get extractingArticle => 'جاري استخراج المقال الكامل...';
+
+  @override
+  String get trending => 'رائج';
+
+  @override
+  String get comments => 'التعليقات';
+
+  @override
+  String get maxTopicsAllowed => 'الحد الأقصى 5 مواضيع مسموح بها';
 }

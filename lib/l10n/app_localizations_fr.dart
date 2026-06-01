@@ -165,7 +165,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get continueAsGuest => 'Continuer en tant qu\'invité';
 
   @override
-  String get footerCopyright => '© 2026 Insightly - Confidentialité et conditions.';
+  String get footerCopyright =>
+      '© 2026 Insightly - Confidentialité et conditions.';
 
   @override
   String get joinInsightly => 'Rejoindre Insightly';
@@ -195,19 +196,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get passwordsDoNotMatch => 'Les mots de passe ne correspondent pas !';
 
   @override
-  String get passwordMinLength => 'Le mot de passe doit comporter au moins 8 caractères.';
+  String get passwordMinLength =>
+      'Le mot de passe doit comporter au moins 8 caractères.';
 
   @override
-  String get passwordUppercase => 'Le mot de passe doit contenir au moins une majuscule.';
+  String get passwordUppercase =>
+      'Le mot de passe doit contenir au moins une majuscule.';
 
   @override
-  String get passwordLowercase => 'Le mot de passe doit contenir au moins une minuscule.';
+  String get passwordLowercase =>
+      'Le mot de passe doit contenir au moins une minuscule.';
 
   @override
-  String get passwordNumber => 'Le mot de passe doit contenir au moins un chiffre.';
+  String get passwordNumber =>
+      'Le mot de passe doit contenir au moins un chiffre.';
 
   @override
-  String get passwordSpecialChar => 'Le mot de passe doit contenir au moins un caractère spécial.';
+  String get passwordSpecialChar =>
+      'Le mot de passe doit contenir au moins un caractère spécial.';
 
   @override
   String get topTopic => 'Sujet Principal';
@@ -216,7 +222,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get designYourDaily => 'PERSONNALISEZ VOTRE QUOTIDIEN';
 
   @override
-  String get pickTopicsSubtitle => 'Choisissez quelques sujets que vous aimez afin que nous puissions adapter votre flux.';
+  String get pickTopicsInstruction =>
+      'Pick a few topics you love so we can tailor your feed just for you.';
 
   @override
   String calibrated(Object count) {
@@ -284,11 +291,43 @@ class AppLocalizationsFr extends AppLocalizations {
   String get guestProfileTitle => 'Profil Invité';
 
   @override
-  String get guestProfileSubtitle => 'Connectez-vous pour suivre vos statistiques de lecture, gérer vos sujets et ajuster vos préférences.';
+  String get guestProfileSubtitle =>
+      'Connectez-vous pour suivre vos statistiques de lecture, gérer vos sujets et ajuster vos préférences.';
 
   @override
   String get guestLibraryTitle => 'Votre Bibliothèque Privée';
 
   @override
-  String get guestLibrarySubtitle => 'Créez un compte pour enregistrer des articles et construire votre fil d\'actualité personnalisé.';
+  String get guestLibrarySubtitle =>
+      'Créez un compte pour enregistrer des articles et construire votre fil d\'actualité personnalisé.';
+
+  @override
+  String commentsCount(Object count) {
+    return '$count commentaires';
+  }
+
+  @override
+  String get addToBriefing => '...ajouter au résumé';
+
+  @override
+  String get postComment => 'Publier un commentaire';
+
+  @override
+  String get noCommentsYet =>
+      'Aucun commentaire pour le moment. Soyez le premier à partager vos idées !';
+
+  @override
+  String get completed => 'Terminé';
+
+  @override
+  String get extractingArticle => 'Extraction de l\'article complet...';
+
+  @override
+  String get trending => 'TRENDING';
+
+  @override
+  String get comments => 'COMMENTS';
+
+  @override
+  String get maxTopicsAllowed => 'Max 5 topics allowed';
 }

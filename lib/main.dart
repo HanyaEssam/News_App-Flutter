@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:news/core/theme/app_theme.dart';
 import 'package:news/core/theme/theme_controller.dart';
-
 import 'package:news/ui/auth/login/login_screen.dart';
 import 'package:news/ui/auth/signup_screen/signup_screen.dart';
 import 'package:news/ui/onboarding/screens/interest_screen.dart';
@@ -11,26 +10,28 @@ import 'package:news/ui/home/screens/home_screen.dart';
 import 'package:news/ui/search/search_screen.dart';
 import 'package:news/ui/save/save_screen.dart';
 import 'package:news/ui/profile/profile_screen.dart';
-
 import 'package:firebase_core/firebase_core.dart';
-
 import 'firebase_options.dart';
 import 'package:news/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:news/core/utils/locale_provider.dart';
 
 void main() async {
+  // 1. Ensure Flutter bindings are ready
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
+  // 2. Initialize Firebase and Theme
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await ThemeController.init();
 
+  // 3. Initialize LocaleProvider and load settings synchronously before runApp
+  final localeProvider = LocaleProvider();
+  await localeProvider.initLocale();
+
+  // 4. Run the app, passing the pre-initialized provider
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => LocaleProvider(),
-      child: const MyApp(),
-    ),
+    ChangeNotifierProvider(create: (_) => localeProvider, child: const MyApp()),
   );
 }
 
@@ -39,30 +40,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localeProvider = Provider.of<LocaleProvider>(context);
-
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: ThemeController.themeMode,
-      builder: (context, themeMode, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: themeMode,
-          locale: localeProvider.locale,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          routes: {
-            SplashScreen.routeName: (_) => const SplashScreen(),
-            LoginScreen.routeName: (_) => const LoginScreen(),
-            HomeLayout.routeName: (_) => const HomeLayout(),
-            SearchScreen.routeName: (_) => const SearchScreen(),
-            SaveScreen.routeName: (_) => const SaveScreen(),
-            ProfileScreen.routeName: (_) => const ProfileScreen(),
-            SignupScreen.routeName: (_) => const SignupScreen(),
-            InterestScreen.routeName: (_) => const InterestScreen(),
+    // 5. Use Consumer to listen to LocaleProvider changes
+    // This ensures the entire MaterialApp rebuilds when the language changes
+    return Consumer<LocaleProvider>(
+      builder: (context, localeProvider, child) {
+        return ValueListenableBuilder<ThemeMode>(
+          valueListenable: ThemeController.themeMode,
+          builder: (context, themeMode, child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: themeMode,
+              // The locale is now reactive and persisted
+              locale: localeProvider.locale,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              routes: {
+                SplashScreen.routeName: (_) => const SplashScreen(),
+                LoginScreen.routeName: (_) => const LoginScreen(),
+                HomeLayout.routeName: (_) => const HomeLayout(),
+                SearchScreen.routeName: (_) => const SearchScreen(),
+                SaveScreen.routeName: (_) => const SaveScreen(),
+                ProfileScreen.routeName: (_) => const ProfileScreen(),
+                SignupScreen.routeName: (_) => const SignupScreen(),
+                InterestScreen.routeName: (_) => const InterestScreen(),
+              },
+              initialRoute: SplashScreen.routeName,
+            );
           },
-          initialRoute: SplashScreen.routeName,
         );
       },
     );

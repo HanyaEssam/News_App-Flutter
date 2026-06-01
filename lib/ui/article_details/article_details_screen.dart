@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:news/l10n/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/widgets/background_color/app_background.dart';
 import '../../../core/models/article_model.dart';
+import '../../../core/utils/responsive.dart';
+import '../../../core/widgets/background_color/app_background.dart';
 import 'package:news/core/widgets/article_content/article_content.dart';
 import 'package:news/core/widgets/article_content/comment_section.dart';
 import '../../core/widgets/bookmark/bookmark_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../core/utils/responsive.dart';
 
 class ArticleDetailsScreen extends StatefulWidget {
   static const String routeName = '/article-details';
@@ -20,12 +21,14 @@ class ArticleDetailsScreen extends StatefulWidget {
 }
 
 class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
+  // 🔥 METHOD IS NOW INSIDE THE CLASS SCOPE
   Future<void> _markArticleAsCompleted() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final userRef =
-    FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final userRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid);
     final articleTitle = widget.article.title;
     final articleCategory = widget.article.category.toLowerCase();
 
@@ -58,13 +61,13 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    BoxConstraints(maxWidth: Responsive.maxWidth(context));
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(
-          'INSIGHTLY',
+          loc.appTitle.toUpperCase(),
           style: TextStyle(fontSize: Responsive.scaleText(context, 18)),
         ),
         actions: [
@@ -82,13 +85,14 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
           bottom: true,
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: Responsive.maxWidth(context)),
+              constraints: BoxConstraints(
+                maxWidth: Responsive.maxWidth(context),
+              ),
               child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  left: Responsive.scale(context, 24),
-                  right: Responsive.scale(context, 24),
-                  bottom: Responsive.scale(context, 20),
-                ),                child: Column(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Responsive.scale(context, 24),
+                ),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ArticleContent(article: widget.article),
@@ -107,16 +111,12 @@ class _ArticleDetailsScreenState extends State<ArticleDetailsScreen> {
                           double.infinity,
                           Responsive.scale(context, 56),
                         ),
-                        backgroundColor:
-                        Theme.of(context).colorScheme.surface,
+                        backgroundColor: Theme.of(context).colorScheme.surface,
                       ),
                       child: Text(
-                        "COMPLETED",
-                        style:
-                        Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface,
+                        loc.completed,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: Responsive.scaleText(context, 12),
                         ),
                       ),

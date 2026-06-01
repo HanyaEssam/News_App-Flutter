@@ -65,7 +65,8 @@ import 'app_localizations_zh.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -73,7 +74,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -85,12 +87,13 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -98,13 +101,13 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('es'),
     Locale('fr'),
-    Locale('zh')
+    Locale('zh'),
   ];
 
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Insightly'**
+  /// **'INSIGHTLY'**
   String get appTitle;
 
   /// No description provided for @dailyBriefing.
@@ -260,7 +263,7 @@ abstract class AppLocalizations {
   /// No description provided for @recent.
   ///
   /// In en, this message translates to:
-  /// **'Recent'**
+  /// **'RECENT'**
   String get recent;
 
   /// No description provided for @minRead.
@@ -356,31 +359,31 @@ abstract class AppLocalizations {
   /// No description provided for @emailAddress.
   ///
   /// In en, this message translates to:
-  /// **'Email Address'**
+  /// **'EMAIL ADDRESS'**
   String get emailAddress;
 
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
-  /// **'Password'**
+  /// **'PASSWORD'**
   String get password;
 
   /// No description provided for @signIn.
   ///
   /// In en, this message translates to:
-  /// **'Sign In'**
+  /// **'SIGN IN'**
   String get signIn;
 
   /// No description provided for @orContinueWith.
   ///
   /// In en, this message translates to:
-  /// **'Or continue with'**
+  /// **'OR CONTINUE WITH'**
   String get orContinueWith;
 
   /// No description provided for @continueWithGoogle.
   ///
   /// In en, this message translates to:
-  /// **'Continue with Google'**
+  /// **'CONTINUE WITH GOOGLE'**
   String get continueWithGoogle;
 
   /// No description provided for @dontHaveAccount.
@@ -398,13 +401,13 @@ abstract class AppLocalizations {
   /// No description provided for @continueAsGuest.
   ///
   /// In en, this message translates to:
-  /// **'Continue as Guest'**
+  /// **'CONTINUE AS GUEST'**
   String get continueAsGuest;
 
   /// No description provided for @footerCopyright.
   ///
   /// In en, this message translates to:
-  /// **'© 2026 Insightly - Privacy & Terms.'**
+  /// **'© 2026 INSIGHTLY. ALL RIGHTS RESERVED.'**
   String get footerCopyright;
 
   /// No description provided for @joinInsightly.
@@ -422,7 +425,7 @@ abstract class AppLocalizations {
   /// No description provided for @fullName.
   ///
   /// In en, this message translates to:
-  /// **'Full Name'**
+  /// **'FULL NAME'**
   String get fullName;
 
   /// No description provided for @confirmPassword.
@@ -503,11 +506,11 @@ abstract class AppLocalizations {
   /// **'DESIGN YOUR DAILY'**
   String get designYourDaily;
 
-  /// No description provided for @pickTopicsSubtitle.
+  /// No description provided for @pickTopicsInstruction.
   ///
   /// In en, this message translates to:
   /// **'Pick a few topics you love so we can tailor your feed just for you.'**
-  String get pickTopicsSubtitle;
+  String get pickTopicsInstruction;
 
   /// No description provided for @calibrated.
   ///
@@ -652,9 +655,64 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create an account to bookmark articles and build your curated intelligence feed.'**
   String get guestLibrarySubtitle;
+
+  /// No description provided for @commentsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} COMMENTS'**
+  String commentsCount(Object count);
+
+  /// No description provided for @addToBriefing.
+  ///
+  /// In en, this message translates to:
+  /// **'...ADD TO BRIEFING'**
+  String get addToBriefing;
+
+  /// No description provided for @postComment.
+  ///
+  /// In en, this message translates to:
+  /// **'POST COMMENT'**
+  String get postComment;
+
+  /// No description provided for @noCommentsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet. Be the first to share your thoughts!'**
+  String get noCommentsYet;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'COMPLETED'**
+  String get completed;
+
+  /// No description provided for @extractingArticle.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracting full article...'**
+  String get extractingArticle;
+
+  /// No description provided for @trending.
+  ///
+  /// In en, this message translates to:
+  /// **'TRENDING'**
+  String get trending;
+
+  /// No description provided for @comments.
+  ///
+  /// In en, this message translates to:
+  /// **'COMMENTS'**
+  String get comments;
+
+  /// No description provided for @maxTopicsAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Max 5 topics allowed'**
+  String get maxTopicsAllowed;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -663,28 +721,32 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['ar', 'en', 'es', 'fr', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['ar', 'en', 'es', 'fr', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ar': return AppLocalizationsAr();
-    case 'en': return AppLocalizationsEn();
-    case 'es': return AppLocalizationsEs();
-    case 'fr': return AppLocalizationsFr();
-    case 'zh': return AppLocalizationsZh();
+    case 'ar':
+      return AppLocalizationsAr();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

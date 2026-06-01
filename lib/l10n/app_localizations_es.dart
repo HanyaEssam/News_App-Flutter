@@ -195,19 +195,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get passwordsDoNotMatch => '¡Las contraseñas no coinciden!';
 
   @override
-  String get passwordMinLength => 'La contraseña debe tener al menos 8 caracteres.';
+  String get passwordMinLength =>
+      'La contraseña debe tener al menos 8 caracteres.';
 
   @override
-  String get passwordUppercase => 'La contraseña debe contener al menos una mayúscula.';
+  String get passwordUppercase =>
+      'La contraseña debe contener al menos una mayúscula.';
 
   @override
-  String get passwordLowercase => 'La contraseña debe contener al menos una minúscula.';
+  String get passwordLowercase =>
+      'La contraseña debe contener al menos una minúscula.';
 
   @override
-  String get passwordNumber => 'La contraseña debe contener al menos un número.';
+  String get passwordNumber =>
+      'La contraseña debe contener al menos un número.';
 
   @override
-  String get passwordSpecialChar => 'La contraseña debe contener al menos un carácter especial.';
+  String get passwordSpecialChar =>
+      'La contraseña debe contener al menos un carácter especial.';
 
   @override
   String get topTopic => 'Tema Principal';
@@ -216,7 +221,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get designYourDaily => 'DISEÑA TU RESUMEN DIARIO';
 
   @override
-  String get pickTopicsSubtitle => 'Elige algunos temas que te encanten para personalizar tu feed.';
+  String get pickTopicsInstruction =>
+      'Pick a few topics you love so we can tailor your feed just for you.';
 
   @override
   String calibrated(Object count) {
@@ -284,11 +290,43 @@ class AppLocalizationsEs extends AppLocalizations {
   String get guestProfileTitle => 'Perfil de Invitado';
 
   @override
-  String get guestProfileSubtitle => 'Inicia sesión para seguir tus estadísticas de lectura, gestionar tus temas y ajustar tus preferencias.';
+  String get guestProfileSubtitle =>
+      'Inicia sesión para seguir tus estadísticas de lectura, gestionar tus temas y ajustar tus preferencias.';
 
   @override
   String get guestLibraryTitle => 'Tu Biblioteca Privada';
 
   @override
-  String get guestLibrarySubtitle => 'Crea una cuenta para guardar artículos y crear tu feed de noticias personalizado.';
+  String get guestLibrarySubtitle =>
+      'Crea una cuenta para guardar artículos y crear tu feed de noticias personalizado.';
+
+  @override
+  String commentsCount(Object count) {
+    return '$count comentarios';
+  }
+
+  @override
+  String get addToBriefing => '...añadir al resumen';
+
+  @override
+  String get postComment => 'Publicar comentario';
+
+  @override
+  String get noCommentsYet =>
+      'No hay comentarios todavía. ¡Sé el primero en compartir tus ideas!';
+
+  @override
+  String get completed => 'Completado';
+
+  @override
+  String get extractingArticle => 'Extrayendo el artículo completo...';
+
+  @override
+  String get trending => 'TRENDING';
+
+  @override
+  String get comments => 'COMMENTS';
+
+  @override
+  String get maxTopicsAllowed => 'Max 5 topics allowed';
 }
