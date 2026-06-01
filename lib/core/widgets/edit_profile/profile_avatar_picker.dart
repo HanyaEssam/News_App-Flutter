@@ -34,7 +34,6 @@ class ProfileAvatarPicker extends StatelessWidget {
                   color: theme.colorScheme.primary,
                   width: 2,
                 ),
-                // 🔥 Only show an image if they actually have one
                 image: avatarUrl.isNotEmpty
                     ? DecorationImage(
                   image: avatarUrl.startsWith('http')
@@ -44,7 +43,6 @@ class ProfileAvatarPicker extends StatelessWidget {
                 )
                     : null,
               ),
-              // 🔥 Show the default person icon if it is empty
               child: avatarUrl.isEmpty
                   ? Icon(
                 Icons.person,

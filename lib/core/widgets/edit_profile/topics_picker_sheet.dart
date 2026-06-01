@@ -104,7 +104,7 @@ class _TopicsPickerSheetState extends State<TopicsPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!; // 🔥 Access translations
+    final loc = AppLocalizations.of(context)!;
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -117,7 +117,7 @@ class _TopicsPickerSheetState extends State<TopicsPickerSheet> {
             Text(
               loc.yourTopicsTitle,
               style: Theme.of(context).textTheme.labelMedium,
-            ), // 🔥 Translated
+            ),
             SizedBox(height: Responsive.scale(context, 16)),
             Flexible(
               child: ListView.builder(
@@ -128,7 +128,7 @@ class _TopicsPickerSheetState extends State<TopicsPickerSheet> {
                   return ListTile(
                     title: Text(
                       _getTranslatedTopic(context, topic),
-                    ), // 🔥 Translated
+                    ),
                     trailing: _selected.contains(topic)
                         ? Icon(
                             Icons.check_circle,

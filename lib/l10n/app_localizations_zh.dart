@@ -9,13 +9,13 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appTitle => 'Insightly';
+  String get appTitle => 'INSIGHTLY';
 
   @override
   String get dailyBriefing => '每日简报';
 
   @override
-  String get trendingNow => '当前趋势';
+  String get trendingNow => '热门趋势';
 
   @override
   String get forYou => '为你推荐';
@@ -30,7 +30,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get articlesRead => '已读文章';
 
   @override
-  String get minutesSaved => '节省的分钟数';
+  String get minutesSaved => '节省时间';
 
   @override
   String get appearance => '外观';
@@ -54,7 +54,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get search => '搜索';
 
   @override
-  String get saved => '已保存';
+  String get saved => '收藏';
 
   @override
   String get tech => '科技';
@@ -102,11 +102,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String feedTitle(Object category) {
-    return '$category 新闻';
+    return '$category 动态';
   }
 
   @override
-  String get intelligence => '智能';
+  String get intelligence => '情报';
 
   @override
   String get searchPageTitle => '搜索';
@@ -121,27 +121,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trendingTopics => '热门话题';
 
   @override
-  String get savedPageTitle => '已保存的文章';
+  String get savedPageTitle => '收藏文章';
 
   @override
   String savedArticlesCount(Object count) {
-    return '已保存 $count 篇文章';
+    return '$count 篇收藏文章';
   }
 
   @override
-  String get noSavedArticles => '暂无已保存的文章。';
+  String get noSavedArticles => '暂无收藏文章。';
 
   @override
-  String get curationSpaceEmpty => '您的保存空间为空。';
+  String get curationSpaceEmpty => '您的策展空间是空的。';
 
   @override
   String get startExploring => '开始探索';
 
   @override
-  String get loginSubtitle => '登录以继续您的知识之旅。';
+  String get loginSubtitle => '登录以继续您的定制叙述。';
 
   @override
-  String get emailAddress => '电子邮件地址';
+  String get emailAddress => '电子邮箱';
 
   @override
   String get password => '密码';
@@ -150,28 +150,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get signIn => '登录';
 
   @override
-  String get orContinueWith => '或使用以下方式继续';
+  String get orContinueWith => '或使用以下方式登录';
 
   @override
-  String get continueWithGoogle => '使用 Google 账号继续';
+  String get continueWithGoogle => '使用 Google 登录';
 
   @override
-  String get dontHaveAccount => '还没有账号？';
+  String get dontHaveAccount => '还没有账户？';
 
   @override
-  String get createAccount => '创建账号';
+  String get createAccount => '注册';
 
   @override
   String get continueAsGuest => '以访客身份继续';
 
   @override
-  String get footerCopyright => '© 2026 Insightly - 隐私与条款。';
+  String get footerCopyright => '© 2026 INSIGHTLY. 保留所有权利。';
 
   @override
   String get joinInsightly => '加入 Insightly';
 
   @override
-  String get signupSubtitle => '世界在这里与您的屏幕相遇。';
+  String get signupSubtitle => '世界与您的屏幕相遇。';
 
   @override
   String get fullName => '全名';
@@ -180,7 +180,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get confirmPassword => '确认密码';
 
   @override
-  String get alreadyHaveAccount => '已经有账号？';
+  String get alreadyHaveAccount => '已有账户？';
 
   @override
   String get login => '登录';
@@ -189,13 +189,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pleaseFillFields => '请填写所有字段';
 
   @override
-  String get invalidEmail => '请输入有效的电子邮件地址';
+  String get invalidEmail => '请输入有效的电子邮箱';
 
   @override
   String get passwordsDoNotMatch => '密码不匹配！';
 
   @override
-  String get passwordMinLength => '密码必须至少包含 8 个字符。';
+  String get passwordMinLength => '密码至少需要 8 个字符。';
 
   @override
   String get passwordUppercase => '密码必须包含至少一个大写字母。';
@@ -210,25 +210,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get passwordSpecialChar => '密码必须包含至少一个特殊字符。';
 
   @override
-  String get topTopic => '主要主题';
+  String get topTopic => '热门话题';
 
   @override
-  String get designYourDaily => '定制您的日报';
+  String get designYourDaily => '设计您的每日动态';
 
   @override
-  String get pickTopicsInstruction =>
-      'Pick a few topics you love so we can tailor your feed just for you.';
+  String get pickTopicsInstruction => '选择几个您喜欢的主题，以便我们为您定制动态。';
 
   @override
   String calibrated(Object count) {
-    return '已完成 $count / 5 个主题设置';
+    return '已选择 $count/5 个主题';
   }
 
   @override
   String get continueBriefing => '继续简报';
 
   @override
-  String get editProfile => '编辑个人资料';
+  String get editProfile => '编辑资料';
 
   @override
   String get personalInfo => '个人信息';
@@ -243,7 +242,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get security => '安全';
 
   @override
-  String get changePassword => '更改密码';
+  String get changePassword => '修改密码';
 
   @override
   String get preferences => '偏好设置';
@@ -252,16 +251,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get yourTopics => '您关注的主题';
 
   @override
-  String get selected => '已选择';
+  String get selected => '已选';
 
   @override
   String get none => '无';
 
   @override
-  String get yourTopicsTitle => '您关注的主题';
+  String get yourTopicsTitle => '您的主题';
 
   @override
-  String get changePasswordTitle => '更改密码';
+  String get changePasswordTitle => '修改密码';
 
   @override
   String get currentPassword => '当前密码';
@@ -285,13 +284,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get guestProfileTitle => '访客资料';
 
   @override
-  String get guestProfileSubtitle => '登录以跟踪您的阅读统计、管理您的主题并调整您的偏好设置。';
+  String get guestProfileSubtitle => '登录以跟踪您的阅读统计数据、管理主题并调整偏好。';
 
   @override
   String get guestLibraryTitle => '您的私人图书馆';
 
   @override
-  String get guestLibrarySubtitle => '创建账户以收藏文章并打造您的个性化资讯流。';
+  String get guestLibrarySubtitle => '创建一个账户以收藏文章并建立您的策展情报流。';
 
   @override
   String commentsCount(Object count) {
@@ -305,7 +304,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get postComment => '发表评论';
 
   @override
-  String get noCommentsYet => '暂无评论。快来分享你的想法吧！';
+  String get noCommentsYet => '暂无评论。成为第一个分享想法的人！';
 
   @override
   String get completed => '已完成';
@@ -314,11 +313,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get extractingArticle => '正在提取全文...';
 
   @override
-  String get trending => 'TRENDING';
+  String get trending => '热门';
 
   @override
-  String get comments => 'COMMENTS';
+  String get comments => '评论';
 
   @override
-  String get maxTopicsAllowed => 'Max 5 topics allowed';
+  String get maxTopicsAllowed => '最多允许选择 5 个主题';
 }
