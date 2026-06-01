@@ -76,7 +76,6 @@ abstract class AppTheme{
       //app text styles
       textTheme: TextTheme(
         // Very big title
-        // Example: DESIGN YOUR DAILY
         displayLarge: const TextStyle(
           fontFamily: 'Times New Roman',
           fontSize: 40,

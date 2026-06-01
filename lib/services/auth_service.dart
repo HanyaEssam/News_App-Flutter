@@ -121,7 +121,7 @@ class AuthService {
 
   Future<void> signOut() async {
     try {
-      // 🔥 FIX: Completely severs the connection to the Google account
+      //  Completely severs the connection to the Google account
       await _googleSignIn.disconnect();
     } catch (e) {
       print("Google disconnect error: $e");

@@ -195,23 +195,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordsDoNotMatch => 'Passwords do not match!';
 
   @override
-  String get passwordMinLength =>
-      'Password must be at least 8 characters long.';
+  String get passwordMinLength => 'Password must be at least 8 characters long.';
 
   @override
-  String get passwordUppercase =>
-      'Password must contain at least one uppercase letter.';
+  String get passwordUppercase => 'Password must contain at least one uppercase letter.';
 
   @override
-  String get passwordLowercase =>
-      'Password must contain at least one lowercase letter.';
+  String get passwordLowercase => 'Password must contain at least one lowercase letter.';
 
   @override
   String get passwordNumber => 'Password must contain at least one number.';
 
   @override
-  String get passwordSpecialChar =>
-      'Password must contain at least one special character.';
+  String get passwordSpecialChar => 'Password must contain at least one special character.';
 
   @override
   String get topTopic => 'Top Topic';
@@ -220,8 +216,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get designYourDaily => 'DESIGN YOUR DAILY';
 
   @override
-  String get pickTopicsSubtitle =>
-      'Pick a few topics you love so we can tailor your feed just for you.';
+  String get pickTopicsSubtitle => 'Pick a few topics you love so we can tailor your feed just for you.';
 
   @override
   String calibrated(Object count) {

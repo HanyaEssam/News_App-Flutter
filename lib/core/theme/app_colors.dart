@@ -53,6 +53,3 @@ abstract class AppColors{
   static const Color lightBorder = Color(0xFFB8D9D7);
   static const Color lightError = Color(0xFFD7383B);
 }
- //const Color(0xFF00141A),
- //const Color(0xFF8DEDEC), // Color when selected
-//unselectedItemColor: Colors.white54,        // Color when unselected

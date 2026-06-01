@@ -165,8 +165,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get continueAsGuest => 'Continuer en tant qu\'invité';
 
   @override
-  String get footerCopyright =>
-      '© 2026 Insightly - Confidentialité et conditions.';
+  String get footerCopyright => '© 2026 Insightly - Confidentialité et conditions.';
 
   @override
   String get joinInsightly => 'Rejoindre Insightly';
@@ -196,24 +195,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get passwordsDoNotMatch => 'Les mots de passe ne correspondent pas !';
 
   @override
-  String get passwordMinLength =>
-      'Le mot de passe doit comporter au moins 8 caractères.';
+  String get passwordMinLength => 'Le mot de passe doit comporter au moins 8 caractères.';
 
   @override
-  String get passwordUppercase =>
-      'Le mot de passe doit contenir au moins une majuscule.';
+  String get passwordUppercase => 'Le mot de passe doit contenir au moins une majuscule.';
 
   @override
-  String get passwordLowercase =>
-      'Le mot de passe doit contenir au moins une minuscule.';
+  String get passwordLowercase => 'Le mot de passe doit contenir au moins une minuscule.';
 
   @override
-  String get passwordNumber =>
-      'Le mot de passe doit contenir au moins un chiffre.';
+  String get passwordNumber => 'Le mot de passe doit contenir au moins un chiffre.';
 
   @override
-  String get passwordSpecialChar =>
-      'Le mot de passe doit contenir au moins un caractère spécial.';
+  String get passwordSpecialChar => 'Le mot de passe doit contenir au moins un caractère spécial.';
 
   @override
   String get topTopic => 'Sujet Principal';
@@ -222,8 +216,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get designYourDaily => 'PERSONNALISEZ VOTRE QUOTIDIEN';
 
   @override
-  String get pickTopicsSubtitle =>
-      'Choisissez quelques sujets que vous aimez afin que nous puissions adapter votre flux.';
+  String get pickTopicsSubtitle => 'Choisissez quelques sujets que vous aimez afin que nous puissions adapter votre flux.';
 
   @override
   String calibrated(Object count) {

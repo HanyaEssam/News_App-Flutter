@@ -195,24 +195,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get passwordsDoNotMatch => '¡Las contraseñas no coinciden!';
 
   @override
-  String get passwordMinLength =>
-      'La contraseña debe tener al menos 8 caracteres.';
+  String get passwordMinLength => 'La contraseña debe tener al menos 8 caracteres.';
 
   @override
-  String get passwordUppercase =>
-      'La contraseña debe contener al menos una mayúscula.';
+  String get passwordUppercase => 'La contraseña debe contener al menos una mayúscula.';
 
   @override
-  String get passwordLowercase =>
-      'La contraseña debe contener al menos una minúscula.';
+  String get passwordLowercase => 'La contraseña debe contener al menos una minúscula.';
 
   @override
-  String get passwordNumber =>
-      'La contraseña debe contener al menos un número.';
+  String get passwordNumber => 'La contraseña debe contener al menos un número.';
 
   @override
-  String get passwordSpecialChar =>
-      'La contraseña debe contener al menos un carácter especial.';
+  String get passwordSpecialChar => 'La contraseña debe contener al menos un carácter especial.';
 
   @override
   String get topTopic => 'Tema Principal';
@@ -221,8 +216,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get designYourDaily => 'DISEÑA TU RESUMEN DIARIO';
 
   @override
-  String get pickTopicsSubtitle =>
-      'Elige algunos temas que te encanten para personalizar tu feed.';
+  String get pickTopicsSubtitle => 'Elige algunos temas que te encanten para personalizar tu feed.';
 
   @override
   String calibrated(Object count) {

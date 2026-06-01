@@ -198,20 +198,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get passwordMinLength => 'يجب أن تكون كلمة المرور 8 أحرف على الأقل.';
 
   @override
-  String get passwordUppercase =>
-      'يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل.';
+  String get passwordUppercase => 'يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل.';
 
   @override
-  String get passwordLowercase =>
-      'يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل.';
+  String get passwordLowercase => 'يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل.';
 
   @override
-  String get passwordNumber =>
-      'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.';
+  String get passwordNumber => 'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.';
 
   @override
-  String get passwordSpecialChar =>
-      'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.';
+  String get passwordSpecialChar => 'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.';
 
   @override
   String get topTopic => 'الموضوع المفضل';
@@ -220,8 +216,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get designYourDaily => 'صمم موجزك اليومي';
 
   @override
-  String get pickTopicsSubtitle =>
-      'اختر بعض المواضيع التي تحبها لنتمكن من تخصيص موجزك.';
+  String get pickTopicsSubtitle => 'اختر بعض المواضيع التي تحبها لنتمكن من تخصيص موجزك.';
 
   @override
   String calibrated(Object count) {

@@ -27,7 +27,7 @@ class ArticleModel {
 
   });
 
-  // ✅ NEW: Converts the Article into JSON for Firebase
+  //  Converts the Article into JSON for Firebase
   Map<String, dynamic> toMap() {
     return {
       'title': title,
@@ -37,13 +37,12 @@ class ArticleModel {
       'date': date,
       'time': time,
       'imageUrl': imageUrl,
-      'categoryColor': categoryColor.value, // 🔥 Save color as an Integer
+      'categoryColor': categoryColor.value,
       'readtime': readtime,
-
     };
   }
 
-  // ✅ NEW: Converts Firebase JSON back into an Article
+  //  Converts Firebase JSON back into an Article
   factory ArticleModel.fromMap(Map<String, dynamic> map) {
     return ArticleModel(
       title: map['title'] ?? '',
@@ -53,7 +52,7 @@ class ArticleModel {
       date: map['date'] ?? '',
       time: map['time'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
-      // 🔥 Convert Integer back to Color, fallback to blue if missing
+      // Convert Integer back to Color, fallback to blue if missing
       categoryColor: map['categoryColor'] != null
           ? Color(map['categoryColor'])
           : Colors.blue,
