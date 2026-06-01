@@ -16,6 +16,7 @@ import '../../../core/widgets/guest/guest_widget.dart';
 import 'package:news/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../../core/utils/locale_provider.dart';
+import 'package:news/l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = '/profile';
@@ -215,11 +216,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: Text(AppLocalizations.of(context)!.appTitle.toUpperCase()),
         ),
         body: AppBackground(
-          child: const GuestWidget(
+          child: GuestWidget(
             icon: Icons.person_outline,
-            title: 'Guest Profile',
-            subtitle:
-            'Log in to track your reading stats, manage your topics, and adjust your preferences.',
+            title: AppLocalizations.of(context)!.guestProfileTitle,
+            subtitle: AppLocalizations.of(context)!.guestProfileSubtitle,
           ),
         ),
       );

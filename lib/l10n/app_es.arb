@@ -87,5 +87,9 @@
   "confirmPasswordTitle": "CONFIRMAR CONTRASEÑA",
   "updatePassword": "ACTUALIZAR CONTRASEÑA",
   "chooseAvatar": "ELEGIR AVATAR",
-  "update": "Actualizar"
+  "update": "Actualizar",
+  "guestProfileTitle": "Perfil de Invitado",
+  "guestProfileSubtitle": "Inicia sesión para seguir tus estadísticas de lectura, gestionar tus temas y ajustar tus preferencias.",
+  "guestLibraryTitle": "Tu Biblioteca Privada",
+  "guestLibrarySubtitle": "Crea una cuenta para guardar artículos y crear tu feed de noticias personalizado."
 }

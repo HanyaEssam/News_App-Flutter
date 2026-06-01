@@ -279,4 +279,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get update => 'Mettre à jour';
+
+  @override
+  String get guestProfileTitle => 'Profil Invité';
+
+  @override
+  String get guestProfileSubtitle =>
+      'Connectez-vous pour suivre vos statistiques de lecture, gérer vos sujets et ajuster vos préférences.';
+
+  @override
+  String get guestLibraryTitle => 'Votre Bibliothèque Privée';
+
+  @override
+  String get guestLibrarySubtitle =>
+      'Créez un compte pour enregistrer des articles et construire votre fil d\'actualité personnalisé.';
 }

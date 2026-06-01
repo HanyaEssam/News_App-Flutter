@@ -87,5 +87,9 @@
   "confirmPasswordTitle": "تأكيد كلمة المرور",
   "updatePassword": "تحديث كلمة المرور",
   "chooseAvatar": "اختر الصورة الرمزية",
-  "update": "تحديث"
+  "update": "تحديث",
+  "guestProfileTitle": "ملف الزائر",
+  "guestProfileSubtitle": "سجّل الدخول لتتبع إحصائيات القراءة وإدارة المواضيع وضبط التفضيلات.",
+  "guestLibraryTitle": "مكتبتك الخاصة",
+  "guestLibrarySubtitle": "أنشئ حسابًا لحفظ المقالات وبناء موجزك المعرفي المخصص."
 }
