@@ -284,13 +284,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get guestProfileTitle => 'ملف الزائر';
 
   @override
-  String get guestProfileSubtitle =>
-      'سجّل الدخول لتتبع إحصائيات القراءة وإدارة المواضيع وضبط التفضيلات.';
+  String get guestProfileSubtitle => 'سجّل الدخول لتتبع إحصائيات القراءة وإدارة المواضيع وضبط التفضيلات.';
 
   @override
   String get guestLibraryTitle => 'مكتبتك الخاصة';
 
   @override
-  String get guestLibrarySubtitle =>
-      'أنشئ حسابًا لحفظ المقالات وبناء موجزك المعرفي المخصص.';
+  String get guestLibrarySubtitle => 'أنشئ حسابًا لحفظ المقالات وبناء موجزك المعرفي المخصص.';
 }

@@ -284,13 +284,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get guestProfileTitle => 'Guest Profile';
 
   @override
-  String get guestProfileSubtitle =>
-      'Log in to track your reading stats, manage your topics, and adjust your preferences.';
+  String get guestProfileSubtitle => 'Log in to track your reading stats, manage your topics, and adjust your preferences.';
 
   @override
   String get guestLibraryTitle => 'Your Private Library';
 
   @override
-  String get guestLibrarySubtitle =>
-      'Create an account to bookmark articles and build your curated intelligence feed.';
+  String get guestLibrarySubtitle => 'Create an account to bookmark articles and build your curated intelligence feed.';
 }

@@ -284,13 +284,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get guestProfileTitle => 'Perfil de Invitado';
 
   @override
-  String get guestProfileSubtitle =>
-      'Inicia sesión para seguir tus estadísticas de lectura, gestionar tus temas y ajustar tus preferencias.';
+  String get guestProfileSubtitle => 'Inicia sesión para seguir tus estadísticas de lectura, gestionar tus temas y ajustar tus preferencias.';
 
   @override
   String get guestLibraryTitle => 'Tu Biblioteca Privada';
 
   @override
-  String get guestLibrarySubtitle =>
-      'Crea una cuenta para guardar artículos y crear tu feed de noticias personalizado.';
+  String get guestLibrarySubtitle => 'Crea una cuenta para guardar artículos y crear tu feed de noticias personalizado.';
 }
